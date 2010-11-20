@@ -14,10 +14,6 @@ func NoteToFreq(note string) float64 {
 
 	var cents int
 	switch note[0] {
-	case 'A':
-		cents = -300
-	case 'B':
-		cents = -100
 	case 'C':
 	case 'D':
 		cents = 200
@@ -26,7 +22,11 @@ func NoteToFreq(note string) float64 {
 	case 'F':
 		cents = 500
 	case 'G':
-		cents = 600
+		cents = 700
+	case 'A':
+		cents = 900
+	case 'B':
+		cents = 1100
 	default:
 		return 0
 	}

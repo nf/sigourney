@@ -18,4 +18,3 @@ type Note struct {
 }
 type Sample float64
 type Buf []Sample
-
