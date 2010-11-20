@@ -4,49 +4,94 @@ import (
 	"math"
 )
 
-type Oscillator struct {
-	q []Note
-	n Note // current note
-	p int // note play position
+type Processor interface {
+	Process(Sample, Instructor) Sample
 }
 
-func (osc *Oscillator) Run(in chan interface{}) chan Buf {
+type Instructor interface {
+	Command() interface{}
+	Advance(int) int
+}
+
+type Module struct {
+	p Processor
+	i Instructor
+}
+
+func NewModule(p Processor, i Instructor) *Module {
+	return &Module{p, i}
+}
+
+func (m *Module) Run(in chan Buf) chan Buf {
 	out := make(chan Buf)
-	go osc.play(in, out)
+	go func() {
+		for b := range in {
+			for i := range b {
+				b[i] = m.p.Process(b[i], m.i)
+			}
+			out <- b
+		}
+	}()
 	return out
 }
 
-func (osc *Oscillator) play(in chan interface{}, out chan Buf) {
-	for {
-		switch m := (<-in).(type) {
-		case Note:
-			osc.q = append(osc.q, m)
-		case Buf:
-			for i := range m {
-				m[i] = osc.sample()
-			}
-			out <- m
-		}
-	}
+type Oscillator struct{}
+
+func (osc *Oscillator) Process(s Sample, i Instructor) Sample {
+	n := i.Command().(Note)
+	p := i.Advance(1)
+	s = Sample(math.Sin(n.Freq*sampleSize*float64(p)) * n.Amp)
+	return s
 }
 
-// Sample returns the current sample and advances the playhead
-func (osc *Oscillator) sample() Sample {
-	if osc.p >= osc.n.Duration {
+type AmpEnvelope struct {
+	Attack  int
+	Release int
+}
+
+func (amp *AmpEnvelope) Process(s Sample, i Instructor) Sample {
+	n := i.Command().(Note)
+	p := i.Advance(1)
+	var f float64 = 1.0
+	if amp.Attack > p {
+		a := float64(amp.Attack)
+		f = 1.0 - (a-float64(p))/a
+	}
+	if amp.Release > n.Duration-p {
+		f = float64(n.Duration-p) / float64(amp.Release)
+	}
+	s = Sample(float64(s) * f)
+	return s
+}
+
+type NoteLane struct {
+	Q  []Note
+	qp int // queue position
+	n  Note
+	np int // note position
+}
+
+func (l *NoteLane) Command() interface{} {
+	if l.np >= l.n.Duration {
 		for {
-			if len(osc.q) == 0 {
-				return 0
+			if l.qp >= len(l.Q) {
+				// end of notes
+				return Note{}
 			}
-			osc.n = osc.q[0]
-			if osc.p < osc.n.Duration {
-				break // play this note
+			l.n = l.Q[l.qp]
+			if l.np < l.n.Duration {
+				break // play note
 			}
-			// finished current note, shift off
-			osc.q = osc.q[1:]
-			osc.p = 0
+			// finished note
+			l.qp++
+			l.np = 0
 		}
 	}
-	osc.p++
-	s := math.Sin(float64(osc.p) * osc.n.Freq * sampleSize) * osc.n.Amp
-	return Sample(s)
+	return l.n
+}
+
+func (l *NoteLane) Advance(i int) int {
+	j := l.np
+	l.np += i
+	return j
 }

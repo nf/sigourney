@@ -19,19 +19,21 @@ var song = []string{
 
 const (
 	noteDuration = waveHz / 0.1
-	songLength = waveHz * 10 
+	songLength   = waveHz * 10
 )
 
 func main() {
-	osc := new(Oscillator)
-
-	in := make(chan interface{})
-	out := osc.Run(in)
-
+	// build song
+	var q []Note
 	for _, n := range song {
-		in <- Note{NoteToFreq(n), 1.0, 8000}
-		in <- Note{0, 0, 2000}
+		q = append(q, Note{NoteToFreq(n), 1.0, 8000}, Note{0, 0, 2000})
 	}
+
+	osc := NewModule(&Oscillator{}, &NoteLane{Q: q})
+	env := NewModule(&AmpEnvelope{200, 1000}, &NoteLane{Q: q})
+
+	in := make(chan Buf)
+	out := env.Run(osc.Run(in))
 
 	in <- make(Buf, 1000)
 
@@ -44,7 +46,7 @@ func main() {
 		}
 		played += len(b)
 		if played < songLength {
-			in <- b	
+			in <- b
 		} else {
 			break
 		}
