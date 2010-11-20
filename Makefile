@@ -6,6 +6,9 @@ include $(GOROOT)/src/Make.inc
 
 TARG=gosynth
 GOFILES=\
+	main.go\
+	note.go\
 	osc.go\
+	struct.go\
 
 include $(GOROOT)/src/Make.cmd
