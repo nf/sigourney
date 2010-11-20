@@ -6,6 +6,7 @@ import (
 
 type Oscillator struct {
 	q []Note
+	n Note // current note
 	p int // note play position
 }
 
@@ -22,33 +23,30 @@ func (osc *Oscillator) play(in chan interface{}, out chan Buf) {
 			osc.q = append(osc.q, m)
 		case Buf:
 			for i := range m {
-				n := osc.note()
-				s := math.Sin(float64(osc.p) * n.Freq * sampleSize)
-				s *= n.Amp
-				m[i] = Sample(s)
-				osc.p++
+				m[i] = osc.sample()
 			}
 			out <- m
 		}
 	}
 }
 
-// note returns the currently playing note
-func (osc *Oscillator) note() Note {
-	var n Note
-	for {
-		if len(osc.q) == 0 {
-			n = Note{}
-			break
+// Sample returns the current sample and advances the playhead
+func (osc *Oscillator) sample() Sample {
+	if osc.p >= osc.n.Duration {
+		for {
+			if len(osc.q) == 0 {
+				return 0
+			}
+			osc.n = osc.q[0]
+			if osc.p < osc.n.Duration {
+				break // play this note
+			}
+			// finished current note, shift off
+			osc.q = osc.q[1:]
+			osc.p = 0
 		}
-		n = osc.q[0]
-		if osc.p < n.Duration {
-			// still playing this note
-			break
-		}
-		// finished current note, shift off
-		osc.q = osc.q[1:]
-		osc.p = 0
 	}
-	return n
+	osc.p++
+	s := math.Sin(float64(osc.p) * osc.n.Freq * sampleSize) * osc.n.Amp
+	return Sample(s)
 }
