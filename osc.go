@@ -17,54 +17,82 @@ var (
 	sampleSize float64 = 2 * math.Pi / waveHz
 )
 
-type Freq float64
-type Amp float64
-type Sample int16
+type Note struct {
+	Freq float64
+	Amp float64
+	Duration int
+}
+type Sample float64
 type Buf []Sample
 
-func osc(in chan interface{}) chan Buf {
+type Oscillator struct {
+	q []Note
+	p int // note play position
+	freq, amp float64
+}
+
+func (osc *Oscillator) Run(in chan interface{}) chan Buf {
 	out := make(chan Buf)
-	go func() {
-		var p int
-		var freq float64
-		var amp float64
-		for {
-			switch m := (<-in).(type) {
-			case Freq:
-				freq = float64(m) * sampleSize
-			case Amp:
-				amp = float64(m) * waveAmp
-			case Buf:
-				for i := range m {
-					f := math.Sin(float64(p)*freq) * amp
-					m[i] = Sample(f)
-					p++
-				}
-				out <- m
-			}
-		}
-	}()
+	go osc.play(in, out)
 	return out
 }
 
-func main() {
-	w := &wav.File{
-		SampleRate: waveHz,
-		SignificantBits: 16,
-		Channels: 1,
+func (osc *Oscillator) play(in chan interface{}, out chan Buf) {
+	for {
+		switch m := (<-in).(type) {
+		case Note:
+			osc.q = append(osc.q, m)
+		case Buf:
+			for i := range m {
+				n := osc.note()
+				s := math.Sin(float64(osc.p)*n.Freq*sampleSize)
+				s *= n.Amp
+				m[i] = Sample(s)
+				osc.p++
+			}
+			out <- m
+		}
 	}
+}
+
+func (osc *Oscillator) note() Note {
+	var n Note
+	for {
+		if len(osc.q) == 0 {
+			n = Note{}
+			break
+		}
+		n = osc.q[0]
+		if osc.p < n.Duration {
+			// still playing this note
+			break
+		}
+		// finished current note, shift off
+		osc.q = osc.q[1:]
+		osc.p = 0
+	}
+	return n
+}
+
+func main() {
+	osc := new(Oscillator)
 
 	in := make(chan interface{})
-	out := osc(in)
-	in <- Amp(0.8)
-	in <- Freq(440)
+	out := osc.Run(in)
+
+	// song
+	in <- Note{440, 0.8, 11025}
+	in <- Note{880, 0.6, 11025}
+	in <- Note{220, 0.4, 11025}
+	in <- Note{440, 0.2, 11025}
+
 	in <- make(Buf, 44100)
 
 	// fill buf with wave data
 	var buf bytes.Buffer
 	for b := range out {
 		for _, v := range b {
-			binary.Write(&buf, binary.LittleEndian, v)
+			binary.Write(&buf, binary.LittleEndian, int16(v * waveAmp))
 		}
 		close(out) // FIXME
 	}
@@ -75,8 +103,12 @@ func main() {
 	}
 	defer f.Close()
 
-	err = w.WriteData(f, buf.Bytes())
-	if err != nil {
+	w := &wav.File{
+		SampleRate: waveHz,
+		SignificantBits: 16,
+		Channels: 1,
+	}
+	if err := w.WriteData(f, buf.Bytes()); err != nil {
 		panic(err)
 	}
 }
