@@ -52,7 +52,7 @@ func main() {
 		}
 	}
 
-	f, err := os.Open("test.wav", os.O_WRONLY|os.O_CREAT|os.O_TRUNC, 0644)
+	f, err := os.Create("test.wav")
 	if err != nil {
 		panic(err)
 	}
