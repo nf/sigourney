@@ -5,6 +5,14 @@ import (
 	"strconv"
 )
 
+// Note is a note on the chromatic scale.
+// 128 is middle C, 129 is C#, 127 is B, and so on.
+type Note byte
+
+func (n Note) Frequency() float64 {
+	return 0
+}
+
 // NoteToFreq parses a note of the form C-4, D#5, etc and 
 // returns its frequency in Hz
 func NoteToFreq(note string) float64 {
