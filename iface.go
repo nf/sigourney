@@ -1,8 +1,6 @@
 package main
 
-import (
-	"math"
-)
+import "math"
 
 const (
 	waveHz             = 44100
@@ -12,17 +10,8 @@ const (
 
 type Sample float64
 
-type TriggerType int
-
-const (
-	Panic TriggerType = iota
-	NoteOn
-	NoteOff
-)
-
 type Processor interface {
 	Process([]Sample)
-	Trigger(TriggerType, interface{})
 }
 
 type SimpleOsc struct {
@@ -37,7 +26,38 @@ func (o *SimpleOsc) Process(s []Sample) {
 	}
 }
 
-func (o *SimpleOsc) Trigger(t TriggerType, note interface{}) {
-	o.freq = 440
-	o.pos = 0
+type Amp struct {
+	sig, ctl Processor
+	buf      []Sample // for ctl
+}
+
+func (a *Amp) Process(s []Sample) {
+	if a.buf == nil {
+		a.buf = make([]Sample, len(s))
+	}
+	a.ctl.Process(a.buf)
+	a.sig.Process(s)
+	for i := range s {
+		s[i] *= a.buf[i]
+	}
+}
+
+type Env struct {
+	attack, decay int
+	p             int
+}
+
+func (e *Env) Process(s []Sample) {
+	for i := range s {
+		switch {
+		case e.p <= e.attack:
+			s[i] = Sample(e.p) / Sample(e.attack)
+		default:
+			s[i] = 1.0 - Sample(e.p-e.attack)/Sample(e.decay)
+		}
+		e.p++
+		if e.p > e.attack+e.decay {
+			e.p = 0
+		}
+	}
 }
