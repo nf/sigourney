@@ -18,7 +18,11 @@ func main() {
 	// Build signal chain.
 	var p Processor
 	p = track(&SimpleOsc{})
-	p = track(&Amp{sig: p, ctl: track(&Env{attack: waveHz / 100, decay: waveHz / 3})})
+	p = track(&Amp{
+		sig: p,
+		ctl: track(&Env{attack: waveHz / 100, decay: waveHz / 3}),
+		//ctl: track(&Value{1}),
+	})
 
 	a := &audio{ps: ps, root: p, buf: make([]Sample, nSamples)}
 	stream, err := portaudio.OpenDefaultStream(0, 1, waveHz, nSamples, a)

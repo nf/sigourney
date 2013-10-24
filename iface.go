@@ -82,3 +82,15 @@ func (e *Env) Tick() {
 	e.pos += nSamples
 	e.pos %= e.attack + e.decay
 }
+
+type Value struct {
+	v Sample
+}
+
+func (v *Value) Process(s []Sample) {
+	for i := range s {
+		s[i] = v.v
+	}
+}
+
+func (*Value) Tick() {}
