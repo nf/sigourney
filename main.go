@@ -17,7 +17,7 @@ func main() {
 
 	// Build signal chain.
 	var p Processor
-	p = track(&SimpleOsc{freq: 220})
+	p = track(&SimpleOsc{})
 	p = track(&Amp{sig: p, ctl: track(&Env{attack: waveHz / 100, decay: waveHz / 3})})
 
 	a := &audio{ps: ps, root: p, buf: make([]Sample, nSamples)}

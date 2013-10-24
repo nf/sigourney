@@ -21,16 +21,16 @@ type Processor interface {
 }
 
 type SimpleOsc struct {
-	freq float64 // Hz
-	pos  int
+	f   Sample // 0.1/oct, 0 == 440Hz
+	pos int
 }
 
 func (o *SimpleOsc) Process(s []Sample) {
-	fs := o.freq * sampleSize
-	p := float64(o.pos)
+	step := 440 * math.Exp2(float64(o.f)*10) * sampleSize
+	p := float64(o.pos) * step
 	for i := range s {
-		s[i] = Sample(math.Sin(fs * p))
-		p++
+		s[i] = Sample(math.Sin(p))
+		p += step
 	}
 }
 
