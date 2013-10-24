@@ -39,18 +39,15 @@ func (o *SimpleOsc) Tick() {
 }
 
 type Amp struct {
-	sig, ctl Processor
-	buf      []Sample // for ctl
+	sig Processor
+	ctl *Source
 }
 
 func (a *Amp) Process(s []Sample) {
-	if a.buf == nil {
-		a.buf = make([]Sample, len(s))
-	}
-	a.ctl.Process(a.buf)
 	a.sig.Process(s)
+	ctl := a.ctl.Process()
 	for i := range s {
-		s[i] *= a.buf[i]
+		s[i] *= ctl[i]
 	}
 }
 
@@ -94,3 +91,20 @@ func (v *Value) Process(s []Sample) {
 }
 
 func (*Value) Tick() {}
+
+func NewSource(p Processor) *Source {
+	return &Source{p: p}
+}
+
+type Source struct {
+	p Processor
+	b []Sample
+}
+
+func (s *Source) Process() []Sample {
+	if s.b == nil {
+		s.b = make([]Sample, nSamples)
+	}
+	s.p.Process(s.b)
+	return s.b
+}

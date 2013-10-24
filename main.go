@@ -20,7 +20,7 @@ func main() {
 	p = track(&SimpleOsc{})
 	p = track(&Amp{
 		sig: p,
-		ctl: track(&Env{attack: waveHz / 100, decay: waveHz / 3}),
+		ctl: NewSource(track(&Env{attack: waveHz / 100, decay: waveHz / 3})),
 		//ctl: track(&Value{1}),
 	})
 
