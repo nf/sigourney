@@ -3,6 +3,11 @@ package main
 import "math"
 
 const (
+	nChannels = 1
+	nSamples  = 256 * nChannels
+)
+
+const (
 	waveHz             = 44100
 	waveAmp            = 32768
 	sampleSize float64 = 2 * math.Pi / waveHz
@@ -12,6 +17,7 @@ type Sample float64
 
 type Processor interface {
 	Process([]Sample)
+	Tick()
 }
 
 type SimpleOsc struct {
@@ -20,10 +26,16 @@ type SimpleOsc struct {
 }
 
 func (o *SimpleOsc) Process(s []Sample) {
+	fs := o.freq * sampleSize
+	p := float64(o.pos)
 	for i := range s {
-		s[i] = Sample(math.Sin(o.freq * sampleSize * float64(o.pos)))
-		o.pos++
+		s[i] = Sample(math.Sin(fs * p))
+		p++
 	}
+}
+
+func (o *SimpleOsc) Tick() {
+	o.pos += nSamples
 }
 
 type Amp struct {
@@ -42,22 +54,31 @@ func (a *Amp) Process(s []Sample) {
 	}
 }
 
+func (*Amp) Tick() {}
+
 type Env struct {
 	attack, decay int
-	p             int
+	pos           int
 }
 
 func (e *Env) Process(s []Sample) {
+	p := Sample(e.pos)
+	att, dec := Sample(e.attack), Sample(e.decay)
+	period := Sample(e.attack + e.decay)
 	for i := range s {
-		switch {
-		case e.p <= e.attack:
-			s[i] = Sample(e.p) / Sample(e.attack)
-		default:
-			s[i] = 1.0 - Sample(e.p-e.attack)/Sample(e.decay)
+		if p <= att {
+			s[i] = p / att
+		} else {
+			s[i] = 1.0 - (p-att)/dec
 		}
-		e.p++
-		if e.p > e.attack+e.decay {
-			e.p = 0
+		p++
+		if p > period {
+			p = 0
 		}
 	}
+}
+
+func (e *Env) Tick() {
+	e.pos += nSamples
+	e.pos %= e.attack + e.decay
 }

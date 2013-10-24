@@ -7,17 +7,20 @@ import (
 	"code.google.com/p/portaudio-go/portaudio"
 )
 
-const (
-	nChannels = 1
-	nSamples  = 256 * nChannels
-)
-
 func main() {
-	var p Processor
-	p = &SimpleOsc{freq: 220}
-	p = &Amp{sig: p, ctl: &Env{attack: waveHz / 100, decay: waveHz / 3}}
+	// Collect processors so we can call tick on each once per frame.
+	var ps []Processor
+	track := func(p Processor) Processor {
+		ps = append(ps, p)
+		return p
+	}
 
-	a := &audio{p: p, buf: make([]Sample, nSamples)}
+	// Build signal chain.
+	var p Processor
+	p = track(&SimpleOsc{freq: 220})
+	p = track(&Amp{sig: p, ctl: track(&Env{attack: waveHz / 100, decay: waveHz / 3})})
+
+	a := &audio{ps: ps, root: p, buf: make([]Sample, nSamples)}
 	stream, err := portaudio.OpenDefaultStream(0, 1, waveHz, nSamples, a)
 	if err != nil {
 		log.Fatal(err)
@@ -47,14 +50,17 @@ func main() {
 }
 
 type audio struct {
-	p   Processor
-	buf []Sample
-	i   int
+	ps   []Processor
+	root Processor
+	buf  []Sample
 }
 
 func (a *audio) ProcessAudio(_, out []int16) {
-	a.p.Process(a.buf)
+	a.root.Process(a.buf)
 	for i := range a.buf {
 		out[i] = int16(a.buf[i] * waveAmp)
+	}
+	for _, p := range a.ps {
+		p.Tick()
 	}
 }
