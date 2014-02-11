@@ -14,13 +14,29 @@ func main() {
 	e := NewEngine()
 
 	osc := &SimpleOsc{}
-	env := &Env{attack: waveHz / 100, decay: waveHz / 3}
-	e.Track(osc, env)
+	e.Track(osc)
+
+	env := &Env{}
+	env.SetInput("att", Value(1))
+	env.SetInput("dec", Value(1))
+
+	amp3 := &Amp{}
+	amp3.SetInput("car", env)
+	amp3.SetInput("mod", Value(0.1))
+
+	env2 := &Env{}
+	env2.SetInput("att", Value(0.001))
+	env2.SetInput("dec", amp3)
 
 	amp := &Amp{}
 	amp.SetInput("car", osc)
-	amp.SetInput("mod", env)
-	e.SetInput("", amp)
+	amp.SetInput("mod", env2)
+
+	amp2 := &Amp{}
+	amp2.SetInput("car", amp)
+	amp2.SetInput("mod", Value(0.5))
+
+	e.SetInput("", amp2)
 
 	if err := e.Start(); err != nil {
 		log.Println(err)
