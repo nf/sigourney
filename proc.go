@@ -4,7 +4,7 @@ import "math"
 
 func NewOsc() *Osc {
 	o := &Osc{}
-	o.sinks("pitch", &o.pitch)
+	o.inputs("pitch", &o.pitch)
 	return o
 }
 
@@ -31,7 +31,7 @@ func (o *Osc) Process(s []Sample) {
 
 func NewAmp() *Amp {
 	a := &Amp{}
-	a.sinks("car", &a.car, "mod", &a.mod)
+	a.inputs("car", &a.car, "mod", &a.mod)
 	return a
 }
 
@@ -51,7 +51,7 @@ func (a *Amp) Process(s []Sample) {
 
 func NewSum() *Sum {
 	s := &Sum{}
-	s.sinks("car", &s.car, "mod", &s.mod)
+	s.inputs("car", &s.car, "mod", &s.mod)
 	return s
 }
 
@@ -71,7 +71,7 @@ func (a *Sum) Process(s []Sample) {
 
 func NewEnv() *Env {
 	e := &Env{}
-	e.sinks("att", &e.att, "dec", &e.dec)
+	e.inputs("att", &e.att, "dec", &e.dec)
 	return e
 }
 
@@ -120,7 +120,7 @@ type sink struct {
 	inputs map[string]interface{}
 }
 
-func (s *sink) sinks(args ...interface{}) {
+func (s *sink) inputs(args ...interface{}) {
 	s.inputs = make(map[string]interface{})
 	if len(args)%2 != 0 {
 		panic("odd number of args")

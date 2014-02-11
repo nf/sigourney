@@ -63,7 +63,7 @@ func main() {
 
 func NewEngine() *Engine {
 	e := &Engine{done: make(chan error)}
-	e.sinks("root", &e.root)
+	e.inputs("root", &e.root)
 	return e
 }
 
