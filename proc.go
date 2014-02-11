@@ -117,11 +117,11 @@ func (v Value) Process(s []Sample) {
 }
 
 type sink struct {
-	inputs map[string]interface{}
+	m map[string]interface{}
 }
 
 func (s *sink) inputs(args ...interface{}) {
-	s.inputs = make(map[string]interface{})
+	s.m = make(map[string]interface{})
 	if len(args)%2 != 0 {
 		panic("odd number of args")
 	}
@@ -131,15 +131,15 @@ func (s *sink) inputs(args ...interface{}) {
 			panic("invalid args; expected string")
 		}
 		i++
-		s.inputs[name] = args[i]
+		s.m[name] = args[i]
 	}
 }
 
 func (s *sink) Input(name string, p Processor) {
-	if s.inputs == nil {
+	if s.m == nil {
 		panic("no inputs registered")
 	}
-	i, ok := s.inputs[name]
+	i, ok := s.m[name]
 	if !ok {
 		panic("bad input name: " + name)
 	}
