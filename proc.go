@@ -62,6 +62,34 @@ func (a *Amp) SetInput(name string, p Processor) {
 	}
 }
 
+type Sum struct {
+	car Processor
+	mod *Source
+}
+
+func (a *Sum) Process(s []Sample) {
+	a.car.Process(s)
+	m := a.mod.Process()
+	for i := range s {
+		s[i] += m[i]
+	}
+}
+
+func (a *Sum) SetInput(name string, p Processor) {
+	switch name {
+	case "car":
+		a.car = p
+	case "mod":
+		if a.mod == nil {
+			a.mod = NewSource(p)
+		} else {
+			a.mod.SetInput("", p)
+		}
+	default:
+		panic("bad input")
+	}
+}
+
 type Env struct {
 	att, dec *Source
 	down     bool

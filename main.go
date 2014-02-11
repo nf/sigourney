@@ -13,37 +13,40 @@ func main() {
 
 	e := NewEngine()
 
-	osc2 := &SimpleOsc{}
-	osc2.SetInput("pitch", Value(-0.1))
+	oscMod := &SimpleOsc{}
+	oscMod.SetInput("pitch", Value(-0.1))
 
-	amp4 := &Amp{}
-	amp4.SetInput("car", osc2)
-	amp4.SetInput("mod", Value(0.1))
+	oscModAmp := &Amp{}
+	oscModAmp.SetInput("car", oscMod)
+	oscModAmp.SetInput("mod", Value(0.1))
 
 	osc := &SimpleOsc{}
-	osc.SetInput("pitch", amp4)
+	osc.SetInput("pitch", oscModAmp)
+
+	envMod := &SimpleOsc{}
+	envMod.SetInput("pitch", Value(-1))
+
+	envModAmp := &Amp{}
+	envModAmp.SetInput("car", envMod)
+	envModAmp.SetInput("mod", Value(0.02))
+
+	envModSum := &Sum{}
+	envModSum.SetInput("car", envModAmp)
+	envModSum.SetInput("mod", Value(0.021))
 
 	env := &Env{}
-	env.SetInput("att", Value(1))
-	env.SetInput("dec", Value(1))
-
-	amp3 := &Amp{}
-	amp3.SetInput("car", env)
-	amp3.SetInput("mod", Value(0.1))
-
-	env2 := &Env{}
-	env2.SetInput("att", Value(0.001))
-	env2.SetInput("dec", amp3)
+	env.SetInput("att", Value(0.0001))
+	env.SetInput("dec", envModSum)
 
 	amp := &Amp{}
 	amp.SetInput("car", osc)
-	amp.SetInput("mod", env2)
+	amp.SetInput("mod", env)
 
-	amp2 := &Amp{}
-	amp2.SetInput("car", amp)
-	amp2.SetInput("mod", Value(0.5))
+	ampAmp := &Amp{}
+	ampAmp.SetInput("car", amp)
+	ampAmp.SetInput("mod", Value(0.5))
 
-	e.SetInput("", amp2)
+	e.SetInput("", ampAmp)
 
 	if err := e.Start(); err != nil {
 		log.Println(err)
