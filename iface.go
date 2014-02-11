@@ -15,9 +15,16 @@ const (
 
 type Sample float64
 
+type Ticker interface {
+	Tick()
+}
+
 type Processor interface {
 	Process([]Sample)
-	Tick()
+}
+
+type Sink interface {
+	SetInput(name string, g Processor)
 }
 
 type SimpleOsc struct {
@@ -39,19 +46,32 @@ func (o *SimpleOsc) Tick() {
 }
 
 type Amp struct {
-	sig Processor
-	ctl *Source
+	car Processor
+	mod *Source
 }
 
 func (a *Amp) Process(s []Sample) {
-	a.sig.Process(s)
-	ctl := a.ctl.Process()
+	a.car.Process(s)
+	m := a.mod.Process()
 	for i := range s {
-		s[i] *= ctl[i]
+		s[i] *= m[i]
 	}
 }
 
-func (*Amp) Tick() {}
+func (a *Amp) SetInput(name string, p Processor) {
+	switch name {
+	case "car":
+		a.car = p
+	case "mod":
+		if a.mod == nil {
+			a.mod = NewSource(p)
+		} else {
+			a.mod.SetInput("", p)
+		}
+	default:
+		panic("bad input")
+	}
+}
 
 type Env struct {
 	attack, decay int
@@ -90,8 +110,6 @@ func (v *Value) Process(s []Sample) {
 	}
 }
 
-func (*Value) Tick() {}
-
 func NewSource(p Processor) *Source {
 	return &Source{p: p}
 }
@@ -107,4 +125,8 @@ func (s *Source) Process() []Sample {
 	}
 	s.p.Process(s.b)
 	return s.b
+}
+
+func (s *Source) SetInput(_ string, p Processor) {
+	s.p = p
 }
