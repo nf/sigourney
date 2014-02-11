@@ -19,6 +19,7 @@ package main
 import (
 	"log"
 	"os"
+	"github.com/nf/gosynth/fix"
 
 	"code.google.com/p/portaudio-go/portaudio"
 )
@@ -29,29 +30,31 @@ func main() {
 
 	e := NewEngine()
 
+	v := func(f float64) Value { return Value(fix.Float(f)) }
+
 	oscMod := NewOsc()
-	oscMod.Input("pitch", Value(-0.1))
+	oscMod.Input("pitch", v(-0.1))
 
 	oscModAmp := NewAmp()
 	oscModAmp.Input("car", oscMod)
-	oscModAmp.Input("mod", Value(0.1))
+	oscModAmp.Input("mod", v(0.1))
 
 	osc := NewOsc()
 	osc.Input("pitch", oscModAmp)
 
 	envMod := NewOsc()
-	envMod.Input("pitch", Value(-1))
+	envMod.Input("pitch", v(-1))
 
 	envModAmp := NewAmp()
 	envModAmp.Input("car", envMod)
-	envModAmp.Input("mod", Value(0.02))
+	envModAmp.Input("mod", v(0.02))
 
 	envModSum := NewSum()
 	envModSum.Input("car", envModAmp)
-	envModSum.Input("mod", Value(0.021))
+	envModSum.Input("mod", v(0.021))
 
 	env := NewEnv()
-	env.Input("att", Value(0.0001))
+	env.Input("att", v(0.0001))
 	env.Input("dec", envModSum)
 
 	amp := NewAmp()
@@ -60,7 +63,7 @@ func main() {
 
 	ampAmp := NewAmp()
 	ampAmp.Input("car", amp)
-	ampAmp.Input("mod", Value(0.5))
+	ampAmp.Input("mod", v(0.5))
 
 	e.Input("root", ampAmp)
 

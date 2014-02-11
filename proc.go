@@ -16,7 +16,11 @@ limitations under the License.
 
 package main
 
-import "math"
+import (
+	"math"
+
+	"github.com/nf/gosynth/fix"
+)
 
 func NewOsc() *Osc {
 	o := &Osc{}
@@ -35,8 +39,8 @@ func (o *Osc) Process(s []Sample) {
 	pitch := o.pitch.Process()
 	p := o.pos
 	for i := range s {
-		s[i] = Sample(math.Sin(p * 2 * math.Pi))
-		hz := 440 * math.Exp2(float64(pitch[i])*10)
+		s[i] = Sample(fix.Float(math.Sin(p * 2 * math.Pi)))
+		hz := 440 * math.Exp2(fix.Num(pitch[i]).Float()*10)
 		p += hz / waveHz
 		if p > 100 {
 			p -= 100
@@ -61,7 +65,7 @@ func (a *Amp) Process(s []Sample) {
 	a.car.Process(s)
 	m := a.mod.Process()
 	for i := range s {
-		s[i] *= m[i]
+		s[i] = Sample(fix.Num(s[i]).Mul(fix.Num(m[i])))
 	}
 }
 
@@ -99,29 +103,34 @@ type Env struct {
 	v    Sample
 }
 
+var (
+	envF = fix.Int(waveHz * 10)
+	fix1 = fix.Int(1)
+)
+
 func (e *Env) Process(s []Sample) {
 	att, dec := e.att.Process(), e.dec.Process()
-	v := e.v
+	v := fix.Num(e.v)
 	for i := range s {
 		if e.down {
 			if d := dec[i]; d > 0 {
-				v -= 1 / (d * waveHz * 10)
+				v -= fix1.Div(fix.Num(d).Mul(envF))
 			}
 		} else {
 			if a := att[i]; a > 0 {
-				v += 1 / (a * waveHz * 10)
+				v += fix1.Div(fix.Num(a).Mul(envF))
 			}
 		}
 		if v <= 0 {
 			v = 0
 			e.down = false
-		} else if v >= 1 {
-			v = 1
+		} else if v >= fix1 {
+			v = fix1
 			e.down = true
 		}
-		s[i] = v
+		s[i] = Sample(v)
 	}
-	e.v = v
+	e.v = Sample(v)
 }
 
 type Value Sample

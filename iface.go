@@ -16,6 +16,8 @@ limitations under the License.
 
 package main
 
+import "github.com/nf/gosynth/fix"
+
 const (
 	nChannels = 1
 	nSamples  = 256 * nChannels
@@ -26,7 +28,7 @@ const (
 	waveAmp = 32768
 )
 
-type Sample float64
+type Sample fix.Num
 
 type Processor interface {
 	Process([]Sample)
