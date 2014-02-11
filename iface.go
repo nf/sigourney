@@ -35,3 +35,53 @@ type Processor interface {
 type Sink interface {
 	Input(name string, g Processor)
 }
+
+type sink struct {
+	m map[string]interface{}
+}
+
+func (s *sink) inputs(args ...interface{}) {
+	s.m = make(map[string]interface{})
+	if len(args)%2 != 0 {
+		panic("odd number of args")
+	}
+	for i := 0; i < len(args); i++ {
+		name, ok := args[i].(string)
+		if !ok {
+			panic("invalid args; expected string")
+		}
+		i++
+		s.m[name] = args[i]
+	}
+}
+
+func (s *sink) Input(name string, p Processor) {
+	if s.m == nil {
+		panic("no inputs registered")
+	}
+	i, ok := s.m[name]
+	if !ok {
+		panic("bad input name: " + name)
+	}
+	switch v := i.(type) {
+	case *Processor:
+		*v = p
+	case *source:
+		if (*v).b == nil {
+			(*v).b = make([]Sample, nSamples)
+		}
+		(*v).p = p
+	default:
+		panic("bad input type")
+	}
+}
+
+type source struct {
+	p Processor
+	b []Sample
+}
+
+func (s *source) Process() []Sample {
+	s.p.Process(s.b)
+	return s.b
+}
