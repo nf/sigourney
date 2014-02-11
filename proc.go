@@ -10,7 +10,7 @@ func NewOsc() *Osc {
 
 type Osc struct {
 	sink
-	pitch *source // 0.1/oct, 0 == 440Hz
+	pitch source // 0.1/oct, 0 == 440Hz
 
 	pos float64
 }
@@ -38,7 +38,7 @@ func NewAmp() *Amp {
 type Amp struct {
 	sink
 	car Processor
-	mod *source
+	mod source
 }
 
 func (a *Amp) Process(s []Sample) {
@@ -58,7 +58,7 @@ func NewSum() *Sum {
 type Sum struct {
 	sink
 	car Processor
-	mod *source
+	mod source
 }
 
 func (a *Sum) Process(s []Sample) {
@@ -77,7 +77,7 @@ func NewEnv() *Env {
 
 type Env struct {
 	sink
-	att, dec *source
+	att, dec source
 
 	down bool
 	v    Sample
@@ -146,12 +146,11 @@ func (s *sink) SetInput(name string, p Processor) {
 	switch v := i.(type) {
 	case *Processor:
 		*v = p
-	case **source:
-		if *v == nil {
-			*v = &source{p: p, b: make([]Sample, nSamples)}
-		} else {
-			(*v).p = p
+	case *source:
+		if (*v).b == nil {
+			(*v).b = make([]Sample, nSamples)
 		}
+		(*v).p = p
 	default:
 		panic("bad input type")
 	}
