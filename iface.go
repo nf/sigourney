@@ -17,5 +17,5 @@ type Processor interface {
 }
 
 type Sink interface {
-	SetInput(name string, g Processor)
+	Input(name string, g Processor)
 }

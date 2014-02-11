@@ -135,7 +135,7 @@ func newSink(s *sink, args ...interface{}) {
 	}
 }
 
-func (s *sink) SetInput(name string, p Processor) {
+func (s *sink) Input(name string, p Processor) {
 	if s.inputs == nil {
 		panic("no inputs registered")
 	}
