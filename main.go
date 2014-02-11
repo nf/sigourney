@@ -46,7 +46,7 @@ func main() {
 	ampAmp.SetInput("car", amp)
 	ampAmp.SetInput("mod", Value(0.5))
 
-	e.SetInput("", ampAmp)
+	e.SetInput("root", ampAmp)
 
 	if err := e.Start(); err != nil {
 		log.Println(err)
@@ -62,24 +62,23 @@ func main() {
 }
 
 func NewEngine() *Engine {
-	return &Engine{buf: make([]Sample, nSamples), done: make(chan error)}
+	e := &Engine{done: make(chan error)}
+	newSink(&e.sink, "root", &e.root)
+	return e
 }
 
 type Engine struct {
-	buf  []Sample
-	root Processor
+	sink
+	root source
+
 	done chan error
 }
 
 func (e *Engine) processAudio(_, out []int16) {
-	e.root.Process(e.buf)
-	for i := range e.buf {
-		out[i] = int16(e.buf[i] * waveAmp)
+	buf := e.root.Process()
+	for i := range buf {
+		out[i] = int16(buf[i] * waveAmp)
 	}
-}
-
-func (e *Engine) SetInput(_ string, p Processor) {
-	e.root = p
 }
 
 func (e *Engine) Start() error {
