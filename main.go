@@ -68,7 +68,7 @@ type Engine struct {
 	done chan error
 }
 
-func (e *Engine) ProcessAudio(_, out []int16) {
+func (e *Engine) processAudio(_, out []int16) {
 	e.root.Process(e.buf)
 	for i := range e.buf {
 		out[i] = int16(e.buf[i] * waveAmp)
@@ -80,7 +80,7 @@ func (e *Engine) SetInput(_ string, p Processor) {
 }
 
 func (e *Engine) Start() error {
-	stream, err := portaudio.OpenDefaultStream(0, 1, waveHz, nSamples, e.ProcessAudio)
+	stream, err := portaudio.OpenDefaultStream(0, 1, waveHz, nSamples, e.processAudio)
 	if err != nil {
 		return err
 	}
