@@ -2,12 +2,20 @@ package main
 
 import "math"
 
-type SimpleOsc struct {
-	pitch *Source // 0.1/oct, 0 == 440Hz
-	pos   float64
+func NewOsc() *Osc {
+	o := &Osc{}
+	newSink(&o.sink, "pitch", &o.pitch)
+	return o
 }
 
-func (o *SimpleOsc) Process(s []Sample) {
+type Osc struct {
+	sink
+	pitch *source // 0.1/oct, 0 == 440Hz
+
+	pos float64
+}
+
+func (o *Osc) Process(s []Sample) {
 	pitch := o.pitch.Process()
 	p := o.pos
 	for i := range s {
@@ -21,22 +29,16 @@ func (o *SimpleOsc) Process(s []Sample) {
 	o.pos = p
 }
 
-func (o *SimpleOsc) SetInput(name string, p Processor) {
-	switch name {
-	case "pitch":
-		if o.pitch == nil {
-			o.pitch = NewSource(p)
-		} else {
-			o.pitch.SetInput("", p)
-		}
-	default:
-		panic("bad input")
-	}
+func NewAmp() *Amp {
+	a := &Amp{}
+	newSink(&a.sink, "car", &a.car, "mod", &a.mod)
+	return a
 }
 
 type Amp struct {
+	sink
 	car Processor
-	mod *Source
+	mod *source
 }
 
 func (a *Amp) Process(s []Sample) {
@@ -47,24 +49,16 @@ func (a *Amp) Process(s []Sample) {
 	}
 }
 
-func (a *Amp) SetInput(name string, p Processor) {
-	switch name {
-	case "car":
-		a.car = p
-	case "mod":
-		if a.mod == nil {
-			a.mod = NewSource(p)
-		} else {
-			a.mod.SetInput("", p)
-		}
-	default:
-		panic("bad input")
-	}
+func NewSum() *Sum {
+	s := &Sum{}
+	newSink(&s.sink, "car", &s.car, "mod", &s.mod)
+	return s
 }
 
 type Sum struct {
+	sink
 	car Processor
-	mod *Source
+	mod *source
 }
 
 func (a *Sum) Process(s []Sample) {
@@ -75,25 +69,18 @@ func (a *Sum) Process(s []Sample) {
 	}
 }
 
-func (a *Sum) SetInput(name string, p Processor) {
-	switch name {
-	case "car":
-		a.car = p
-	case "mod":
-		if a.mod == nil {
-			a.mod = NewSource(p)
-		} else {
-			a.mod.SetInput("", p)
-		}
-	default:
-		panic("bad input")
-	}
+func NewEnv() *Env {
+	e := &Env{}
+	newSink(&e.sink, "att", &e.att, "dec", &e.dec)
+	return e
 }
 
 type Env struct {
-	att, dec *Source
-	down     bool
-	v        Sample
+	sink
+	att, dec *source
+
+	down bool
+	v    Sample
 }
 
 func (e *Env) Process(s []Sample) {
@@ -121,25 +108,6 @@ func (e *Env) Process(s []Sample) {
 	e.v = v
 }
 
-func (e *Env) SetInput(name string, p Processor) {
-	switch name {
-	case "att":
-		if e.att == nil {
-			e.att = NewSource(p)
-		} else {
-			e.att.SetInput("", p)
-		}
-	case "dec":
-		if e.dec == nil {
-			e.dec = NewSource(p)
-		} else {
-			e.dec.SetInput("", p)
-		}
-	default:
-		panic("bad input")
-	}
-}
-
 type Value Sample
 
 func (v Value) Process(s []Sample) {
@@ -148,23 +116,53 @@ func (v Value) Process(s []Sample) {
 	}
 }
 
-func NewSource(p Processor) *Source {
-	return &Source{p: p}
+type sink struct {
+	inputs map[string]interface{}
 }
 
-type Source struct {
+func newSink(s *sink, args ...interface{}) {
+	s.inputs = make(map[string]interface{})
+	if len(args)%2 != 0 {
+		panic("odd number of args")
+	}
+	for i := 0; i < len(args); i++ {
+		name, ok := args[i].(string)
+		if !ok {
+			panic("invalid args; expected string")
+		}
+		i++
+		s.inputs[name] = args[i]
+	}
+}
+
+func (s *sink) SetInput(name string, p Processor) {
+	if s.inputs == nil {
+		panic("no inputs registered")
+	}
+	i, ok := s.inputs[name]
+	if !ok {
+		panic("bad input name: " + name)
+	}
+	switch v := i.(type) {
+	case *Processor:
+		*v = p
+	case **source:
+		if *v == nil {
+			*v = &source{p: p, b: make([]Sample, nSamples)}
+		} else {
+			(*v).p = p
+		}
+	default:
+		panic("bad input type")
+	}
+}
+
+type source struct {
 	p Processor
 	b []Sample
 }
 
-func (s *Source) Process() []Sample {
-	if s.b == nil {
-		s.b = make([]Sample, nSamples)
-	}
+func (s *source) Process() []Sample {
 	s.p.Process(s.b)
 	return s.b
-}
-
-func (s *Source) SetInput(_ string, p Processor) {
-	s.p = p
 }

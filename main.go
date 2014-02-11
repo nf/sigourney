@@ -13,36 +13,36 @@ func main() {
 
 	e := NewEngine()
 
-	oscMod := &SimpleOsc{}
+	oscMod := NewOsc()
 	oscMod.SetInput("pitch", Value(-0.1))
 
-	oscModAmp := &Amp{}
+	oscModAmp := NewAmp()
 	oscModAmp.SetInput("car", oscMod)
 	oscModAmp.SetInput("mod", Value(0.1))
 
-	osc := &SimpleOsc{}
+	osc := NewOsc()
 	osc.SetInput("pitch", oscModAmp)
 
-	envMod := &SimpleOsc{}
+	envMod := NewOsc()
 	envMod.SetInput("pitch", Value(-1))
 
-	envModAmp := &Amp{}
+	envModAmp := NewAmp()
 	envModAmp.SetInput("car", envMod)
 	envModAmp.SetInput("mod", Value(0.02))
 
-	envModSum := &Sum{}
+	envModSum := NewSum()
 	envModSum.SetInput("car", envModAmp)
 	envModSum.SetInput("mod", Value(0.021))
 
-	env := &Env{}
+	env := NewEnv()
 	env.SetInput("att", Value(0.0001))
 	env.SetInput("dec", envModSum)
 
-	amp := &Amp{}
+	amp := NewAmp()
 	amp.SetInput("car", osc)
 	amp.SetInput("mod", env)
 
-	ampAmp := &Amp{}
+	ampAmp := NewAmp()
 	ampAmp.SetInput("car", amp)
 	ampAmp.SetInput("mod", Value(0.5))
 
