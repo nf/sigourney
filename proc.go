@@ -3,21 +3,35 @@ package main
 import "math"
 
 type SimpleOsc struct {
-	f   Sample // 0.1/oct, 0 == 440Hz
-	pos int
+	pitch *Source // 0.1/oct, 0 == 440Hz
+	pos   float64
 }
 
 func (o *SimpleOsc) Process(s []Sample) {
-	step := 440 * math.Exp2(float64(o.f)*10) * sampleSize
-	p := float64(o.pos) * step
+	pitch := o.pitch.Process()
+	p := o.pos
 	for i := range s {
-		s[i] = Sample(math.Sin(p))
-		p += step
+		s[i] = Sample(math.Sin(p * 2 * math.Pi))
+		hz := 440 * math.Exp2(float64(pitch[i])*10)
+		p += hz / waveHz
+		if p > 100 {
+			p -= 100
+		}
 	}
+	o.pos = p
 }
 
-func (o *SimpleOsc) Tick() {
-	o.pos += nSamples
+func (o *SimpleOsc) SetInput(name string, p Processor) {
+	switch name {
+	case "pitch":
+		if o.pitch == nil {
+			o.pitch = NewSource(p)
+		} else {
+			o.pitch.SetInput("", p)
+		}
+	default:
+		panic("bad input")
+	}
 }
 
 type Amp struct {

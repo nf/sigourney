@@ -13,8 +13,15 @@ func main() {
 
 	e := NewEngine()
 
+	osc2 := &SimpleOsc{}
+	osc2.SetInput("pitch", Value(-0.1))
+
+	amp4 := &Amp{}
+	amp4.SetInput("car", osc2)
+	amp4.SetInput("mod", Value(0.1))
+
 	osc := &SimpleOsc{}
-	e.Track(osc)
+	osc.SetInput("pitch", amp4)
 
 	env := &Env{}
 	env.SetInput("att", Value(1))
@@ -56,20 +63,9 @@ func NewEngine() *Engine {
 }
 
 type Engine struct {
-	buf     []Sample
-	tickers []Ticker
-	root    Processor
-	done    chan error
-}
-
-func (e *Engine) Track(t ...Ticker) {
-	e.tickers = append(e.tickers, t...)
-}
-
-func (e *Engine) Tick() {
-	for _, t := range e.tickers {
-		t.Tick()
-	}
+	buf  []Sample
+	root Processor
+	done chan error
 }
 
 func (e *Engine) ProcessAudio(_, out []int16) {
@@ -77,7 +73,6 @@ func (e *Engine) ProcessAudio(_, out []int16) {
 	for i := range e.buf {
 		out[i] = int16(e.buf[i] * waveAmp)
 	}
-	e.Tick()
 }
 
 func (e *Engine) SetInput(_ string, p Processor) {
