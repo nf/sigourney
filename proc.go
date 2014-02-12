@@ -67,21 +67,21 @@ func (a *Amp) Process(s []Sample) {
 
 func NewSum() *Sum {
 	s := &Sum{}
-	s.inputs("car", &s.car, "mod", &s.mod)
+	s.inputs("a", &s.a, "b", &s.b)
 	return s
 }
 
 type Sum struct {
 	sink
-	car Processor
-	mod source
+	a Processor
+	b source
 }
 
-func (a *Sum) Process(s []Sample) {
-	a.car.Process(s)
-	m := a.mod.Process()
-	for i := range s {
-		s[i] += m[i]
+func (s *Sum) Process(buf []Sample) {
+	s.a.Process(buf)
+	b := s.b.Process()
+	for i := range buf {
+		buf[i] += b[i]
 	}
 }
 

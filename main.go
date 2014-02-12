@@ -47,8 +47,8 @@ func main() {
 	envModAmp.Input("mod", Value(0.02))
 
 	envModSum := NewSum()
-	envModSum.Input("car", envModAmp)
-	envModSum.Input("mod", Value(0.021))
+	envModSum.Input("a", envModAmp)
+	envModSum.Input("b", Value(0.021))
 
 	env := NewEnv()
 	env.Input("att", Value(0.0001))
