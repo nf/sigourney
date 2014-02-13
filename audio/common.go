@@ -52,6 +52,14 @@ func (s *sink) inputs(args ...interface{}) {
 		}
 		i++
 		s.m[name] = args[i]
+
+		switch v := args[i].(type) {
+		case *Processor:
+			*v = Value(0)
+		case *source:
+			(*v).p = Value(0)
+			(*v).b = make([]Sample, nSamples)
+		}
 	}
 }
 
@@ -67,9 +75,6 @@ func (s *sink) Input(name string, p Processor) {
 	case *Processor:
 		*v = p
 	case *source:
-		if (*v).b == nil {
-			(*v).b = make([]Sample, nSamples)
-		}
 		(*v).p = p
 	default:
 		panic("bad input type")

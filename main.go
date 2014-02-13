@@ -17,20 +17,46 @@ limitations under the License.
 package main
 
 import (
+	"flag"
 	"log"
 	"os"
+	"time"
+
+	"github.com/nf/gosynth/audio"
+	"github.com/nf/gosynth/ui"
 
 	"code.google.com/p/portaudio-go/portaudio"
-	"github.com/nf/gosynth/audio"
+)
+
+var (
+	doDemo = flag.Bool("demo", false, "play demo sound")
 )
 
 func main() {
+	flag.Parse()
+
 	portaudio.Initialize()
 	defer portaudio.Terminate()
 
-	if err := demo(); err != nil {
-		log.Println(err)
+	if *doDemo {
+		if err := demo(); err != nil {
+			log.Println(err)
+		}
+		return
 	}
+
+	u := ui.New()
+	for _, m := range []*ui.Message{
+		{Action: "new", Name: "engine1", Kind: "engine"},
+		{Action: "new", Name: "osc1", Kind: "osc"},
+		{Action: "connect", From: "osc1", To: "engine1", Input: "root"},
+	} {
+		u.Handle(m)
+	}
+
+	time.Sleep(2 * time.Second)
+
+	u.Close()
 }
 
 func demo() error {
