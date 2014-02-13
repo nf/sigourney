@@ -1,19 +1,15 @@
-<script>
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Sigourney</title>
 
-var msgs = [
-         {Action: "new", Name: "engine1", Kind: "engine"},
-	 {Action: "new", Name: "osc1", Kind: "osc"},
-	 {Action: "connect", From: "osc1", To: "engine1", Input: "root"}
-];
+		<script src="lib/jquery-1.9.0.js"></script>
+		<script src="lib/jquery-ui-1.9.2-min.js"></script>
+		<script src="lib/jquery.ui.touch-punch.min.js"></script>
+		<script src="lib/jquery.jsPlumb-1.5.5-min.js"></script>
 
-var ws = new WebSocket("ws://localhost:8080/socket");
-ws.onopen = function() {
-	for (var i = 0; i < msgs.length; i++) {
-		ws.send(JSON.stringify(msgs[i]));
-	}
-};
-ws.onclose = function() {
-	console.log("socket closed");
-}
-
-</script>
+		<script src="js/script.js"></script>
+	</head>
+	<body>
+	</body>
+</html>
