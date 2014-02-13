@@ -16,7 +16,11 @@ limitations under the License.
 
 package main
 
-import "code.google.com/p/portaudio-go/portaudio"
+import (
+	"sync"
+
+	"code.google.com/p/portaudio-go/portaudio"
+)
 
 func NewEngine() *Engine {
 	e := &Engine{done: make(chan error)}
@@ -25,6 +29,8 @@ func NewEngine() *Engine {
 }
 
 type Engine struct {
+	sync.Mutex // Held while processing.
+
 	sink
 	root source
 
@@ -32,7 +38,9 @@ type Engine struct {
 }
 
 func (e *Engine) processAudio(_, out []int16) {
+	e.Lock()
 	buf := e.root.Process()
+	e.Unlock()
 	for i := range buf {
 		out[i] = int16(buf[i] * waveAmp)
 	}
