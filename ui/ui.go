@@ -19,7 +19,7 @@ package ui
 import (
 	"errors"
 
-	"github.com/nf/gosynth/audio"
+	"github.com/nf/sigourney/audio"
 )
 
 type Message struct {

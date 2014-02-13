@@ -20,8 +20,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/nf/gosynth/audio"
-	"github.com/nf/gosynth/ui"
+	"github.com/nf/sigourney/audio"
+	"github.com/nf/sigourney/ui"
 )
 
 func demo() error {

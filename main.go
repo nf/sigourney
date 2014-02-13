@@ -22,7 +22,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/nf/gosynth/ui"
+	"github.com/nf/sigourney/ui"
 
 	"code.google.com/p/portaudio-go/portaudio"
 	"github.com/gorilla/websocket"
