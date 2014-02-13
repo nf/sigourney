@@ -16,6 +16,8 @@ limitations under the License.
 
 package audio
 
+import "sort"
+
 const (
 	nChannels = 1
 	nSamples  = 256 * nChannels
@@ -34,6 +36,7 @@ type Processor interface {
 
 type Sink interface {
 	Input(name string, g Processor)
+	Inputs() []string
 }
 
 type sink struct {
@@ -79,6 +82,15 @@ func (s *sink) Input(name string, p Processor) {
 	default:
 		panic("bad input type")
 	}
+}
+
+func (s *sink) Inputs() []string {
+	var a []string
+	for n := range s.m {
+		a = append(a, n)
+	}
+	sort.Strings(a)
+	return a
 }
 
 type source struct {

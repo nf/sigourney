@@ -46,12 +46,8 @@ func main() {
 		return
 	}
 
-	u := ui.New()
-	defer u.Close()
-	s := &Server{ui: u}
-
 	http.Handle("/", http.FileServer(http.Dir("static")))
-	http.Handle("/socket", s)
+	http.HandleFunc("/socket", socketHandler)
 	go func() {
 		if err := http.ListenAndServe(*listenAddr, nil); err != nil {
 			log.Println(err)
@@ -62,23 +58,32 @@ func main() {
 	os.Stdin.Read([]byte{0})
 }
 
-type Server struct {
-	ui *ui.UI
-}
-
-func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func socketHandler(w http.ResponseWriter, r *http.Request) {
 	c, err := websocket.Upgrade(w, r, nil, 1024, 1024)
 	if err != nil {
 		log.Println(err)
 		return
 	}
+
+	u := ui.New()
+	defer u.Close()
+
+	go func() {
+		for m := range u.M {
+			if err := c.WriteJSON(m); err != nil {
+				log.Println(err)
+				return
+			}
+		}
+	}()
+
 	for {
 		m := new(ui.Message)
 		if err := c.ReadJSON(m); err != nil {
 			log.Println(err)
 			return
 		}
-		if err := s.ui.Handle(m); err != nil {
+		if err := u.Handle(m); err != nil {
 			log.Println(err)
 		}
 	}

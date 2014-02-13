@@ -14,16 +14,62 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-var ws = new WebSocket('ws://localhost:8080/socket');
-ws.onopen = function() {
-	demo();
-	jsPlumb.bind('ready', init);
-};
-ws.onclose = function() {
-	console.log('socket closed');
-};
+var ws;
+
+jsPlumb.bind('ready', function() {
+	ws = new WebSocket('ws://localhost:8080/socket');
+	ws.onopen = onOpen;
+	ws.onmessage = onMessage;
+	ws.onclose = function() {
+		console.log('socket closed');
+	};
+});
+
 function send(msg) {
 	ws.send(JSON.stringify(msg));
+}
+
+function onOpen() {
+	demo();
+}
+
+function onMessage(msg) {
+	var m = JSON.parse(msg.data);
+
+	switch (m.Action) {
+		case 'hello':
+			var k;
+			var o = m.ObjectInputs;
+			for (k in o) {
+				addKind(k, o[k]);
+			}
+		break;
+	}
+}
+
+function addKind(kind, inputs) {
+	$('<li></li>').text(kind).data('inputs', inputs)
+		.appendTo('#objects')
+		.draggable({
+			revert: true, revertDuration: 0,
+			helper: 'clone',
+			stop: function(e, ui) {
+				newObject($(this).text().trim(), ui.position);
+			}
+		});
+}
+
+var kCount = 0;
+
+function newObject(kind, offset) {
+	var name = kind + kCount;
+	$('<div class="object"></div>')
+		.text(kind)
+		.attr('name', name)
+		.appendTo('#page')
+		.css('top', offset.top).css('left', offset.left)
+		.draggable();
+	send({Action: 'new', Name: name, Kind: kind});
 }
 
 function demo() {
@@ -38,27 +84,4 @@ function demo() {
 	setTimeout(function() {
 		send({Action: 'disconnect', From: 'osc1', To: 'engine1', Input: 'root'});
 	}, 1000);
-}
-
-function init() {
-	$('#objects li').draggable({
-		revert: true, revertDuration: 0,
-		helper: "clone",
-		stop: function(e, ui) {
-			newObject($(this).text().trim(), ui.position);
-		}
-	});
-}
-
-var kCount = 0;
-
-function newObject(kind, offset) {
-	var name = kind + kCount;
-	$('<div class="object"></div>')
-		.text(kind)
-		.attr('name', name)
-		.appendTo('#page')
-		.css('top', offset.top).css('left', offset.left)
-		.draggable();
-	send({Action: 'new', Name: name, Kind: kind});
 }

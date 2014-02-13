@@ -18,6 +18,7 @@ package ui
 
 import (
 	"errors"
+	"log"
 
 	"github.com/nf/sigourney/audio"
 )
@@ -34,15 +35,24 @@ type Message struct {
 	From  string `json:",omitEmpty"`
 	To    string `json:",omitempty"`
 	Input string `json:",omitempty"`
+
+	// "hello"
+	ObjectInputs map[string][]string `json:",omitempty"`
 }
 
 type UI struct {
+	M <-chan *Message
+	m chan *Message
+
 	objects map[string]*Object
 	engines map[string]*audio.Engine
 }
 
 func New() *UI {
+	m := make(chan *Message, 1)
+	m <- &Message{Action: "hello", ObjectInputs: objectInputs()}
 	return &UI{
+		M: m, m: m,
 		objects: make(map[string]*Object),
 		engines: make(map[string]*audio.Engine),
 	}
@@ -60,13 +70,14 @@ func (u *UI) Close() (err error) {
 func (u *UI) Handle(m *Message) error {
 	switch a := m.Action; a {
 	case "new":
-		o, err := NewObject(m.Name, m.Kind, m.Value)
-		if err != nil {
-			return err
-		}
+		o := NewObject(m.Name, m.Kind, m.Value)
 		u.objects[m.Name] = o
 		if m.Kind == "engine" {
-			u.engines[m.Name] = o.proc.(*audio.Engine)
+			e := o.proc.(*audio.Engine)
+			if err := e.Start(); err != nil {
+				return err
+			}
+			u.engines[m.Name] = e
 		}
 	case "connect", "disconnect":
 		to, ok := u.objects[m.To]
@@ -83,8 +94,8 @@ func (u *UI) Handle(m *Message) error {
 		u.lockEngines()
 		to.SetInput(m.Input, from)
 		u.unlockEngines()
-	case "destroy":
-		panic("not implemented")
+	default:
+		log.Println("unrecognized Action:", a)
 	}
 	return nil
 }
@@ -102,13 +113,13 @@ func (u *UI) unlockEngines() {
 }
 
 type Object struct {
-	Name  string
-	Input map[string]string
+	Name, Kind string
+	Input      map[string]string
 
 	proc interface{}
 }
 
-func NewObject(name, kind string, value float64) (*Object, error) {
+func NewObject(name, kind string, value float64) *Object {
 	var p interface{}
 	switch kind {
 	case "osc":
@@ -119,21 +130,18 @@ func NewObject(name, kind string, value float64) (*Object, error) {
 		p = audio.NewSum()
 	case "env":
 		p = audio.NewEnv()
+	case "engine":
+		p = audio.NewEngine()
 	case "value":
 		p = audio.Value(value)
-	case "engine":
-		e := audio.NewEngine()
-		if err := e.Start(); err != nil {
-			return nil, err
-		}
-		p = e
+	default:
+		panic("bad kind: " + kind)
 	}
 	return &Object{
-		Name:  name,
+		Name: name, Kind: kind,
 		Input: make(map[string]string),
-
-		proc: p,
-	}, nil
+		proc:  p,
+	}
 }
 
 func (o *Object) SetInput(name string, p2 *Object) {
@@ -146,3 +154,18 @@ func (o *Object) SetInput(name string, p2 *Object) {
 		s.Input(name, audio.Value(0))
 	}
 }
+
+func objectInputs() map[string][]string {
+	m := make(map[string][]string)
+	for _, k := range kinds {
+		o := NewObject("unnamed", k, 0)
+		var in []string
+		if s, ok := o.proc.(audio.Sink); ok {
+			in = s.Inputs()
+		}
+		m[k] = in
+	}
+	return m
+}
+
+var kinds = []string{"osc", "amp", "sum", "env", "engine", "value"}
