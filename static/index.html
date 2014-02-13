@@ -1,0 +1,19 @@
+<script>
+
+var msgs = [
+         {Action: "new", Name: "engine1", Kind: "engine"},
+	 {Action: "new", Name: "osc1", Kind: "osc"},
+	 {Action: "connect", From: "osc1", To: "engine1", Input: "root"}
+];
+
+var ws = new WebSocket("ws://localhost:8080/socket");
+ws.onopen = function() {
+	for (var i = 0; i < msgs.length; i++) {
+		ws.send(JSON.stringify(msgs[i]));
+	}
+};
+ws.onclose = function() {
+	console.log("socket closed");
+}
+
+</script>

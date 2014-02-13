@@ -19,6 +19,7 @@ package main
 import (
 	"flag"
 	"log"
+	"net/http"
 	"os"
 	"time"
 
@@ -26,10 +27,12 @@ import (
 	"github.com/nf/gosynth/ui"
 
 	"code.google.com/p/portaudio-go/portaudio"
+	"github.com/gorilla/websocket"
 )
 
 var (
-	doDemo = flag.Bool("demo", false, "play demo sound")
+	listenAddr = flag.String("listen", "localhost:8080", "listen address")
+	doDemo     = flag.Bool("demo", false, "play demo sound")
 )
 
 func main() {
@@ -46,6 +49,45 @@ func main() {
 	}
 
 	u := ui.New()
+	defer u.Close()
+	s := &Server{ui: u}
+
+	http.Handle("/", http.FileServer(http.Dir("static")))
+	http.Handle("/socket", s)
+	go func() {
+		if err := http.ListenAndServe(*listenAddr, nil); err != nil {
+			log.Println(err)
+		}
+	}()
+
+	os.Stdout.Write([]byte("Press enter to stop...\n"))
+	os.Stdin.Read([]byte{0})
+}
+
+type Server struct {
+	ui *ui.UI
+}
+
+func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	c, err := websocket.Upgrade(w, r, nil, 1024, 1024)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	for {
+		m := new(ui.Message)
+		if err := c.ReadJSON(m); err != nil {
+			log.Println(err)
+			return
+		}
+		if err := s.ui.Handle(m); err != nil {
+			log.Println(err)
+		}
+	}
+}
+
+func demo() error {
+	u := ui.New()
 	for _, m := range []*ui.Message{
 		{Action: "new", Name: "engine1", Kind: "engine"},
 		{Action: "new", Name: "osc1", Kind: "osc"},
@@ -53,13 +95,16 @@ func main() {
 	} {
 		u.Handle(m)
 	}
-
 	time.Sleep(2 * time.Second)
-
+	for _, m := range []*ui.Message{
+		{Action: "new", Name: "val1", Kind: "value", Value: 0.1},
+		{Action: "connect", From: "val1", To: "osc1", Input: "pitch"},
+	} {
+		u.Handle(m)
+	}
+	time.Sleep(2 * time.Second)
 	u.Close()
-}
 
-func demo() error {
 	e := audio.NewEngine()
 
 	oscMod := audio.NewOsc()
