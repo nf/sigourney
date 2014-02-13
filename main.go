@@ -21,58 +21,62 @@ import (
 	"os"
 
 	"code.google.com/p/portaudio-go/portaudio"
+	"github.com/nf/gosynth/audio"
 )
 
 func main() {
 	portaudio.Initialize()
 	defer portaudio.Terminate()
 
-	e := NewEngine()
+	if err := demo(); err != nil {
+		log.Println(err)
+	}
+}
 
-	oscMod := NewOsc()
-	oscMod.Input("pitch", Value(-0.1))
+func demo() error {
+	e := audio.NewEngine()
 
-	oscModAmp := NewAmp()
+	oscMod := audio.NewOsc()
+	oscMod.Input("pitch", audio.Value(-0.1))
+
+	oscModAmp := audio.NewAmp()
 	oscModAmp.Input("car", oscMod)
-	oscModAmp.Input("mod", Value(0.1))
+	oscModAmp.Input("mod", audio.Value(0.1))
 
-	osc := NewOsc()
+	osc := audio.NewOsc()
 	osc.Input("pitch", oscModAmp)
 
-	envMod := NewOsc()
-	envMod.Input("pitch", Value(-1))
+	envMod := audio.NewOsc()
+	envMod.Input("pitch", audio.Value(-1))
 
-	envModAmp := NewAmp()
+	envModAmp := audio.NewAmp()
 	envModAmp.Input("car", envMod)
-	envModAmp.Input("mod", Value(0.02))
+	envModAmp.Input("mod", audio.Value(0.02))
 
-	envModSum := NewSum()
+	envModSum := audio.NewSum()
 	envModSum.Input("a", envModAmp)
-	envModSum.Input("b", Value(0.021))
+	envModSum.Input("b", audio.Value(0.021))
 
-	env := NewEnv()
-	env.Input("att", Value(0.0001))
+	env := audio.NewEnv()
+	env.Input("att", audio.Value(0.0001))
 	env.Input("dec", envModSum)
 
-	amp := NewAmp()
+	amp := audio.NewAmp()
 	amp.Input("car", osc)
 	amp.Input("mod", env)
 
-	ampAmp := NewAmp()
+	ampAmp := audio.NewAmp()
 	ampAmp.Input("car", amp)
-	ampAmp.Input("mod", Value(0.5))
+	ampAmp.Input("mod", audio.Value(0.5))
 
 	e.Input("root", ampAmp)
 
 	if err := e.Start(); err != nil {
-		log.Println(err)
-		return
+		return err
 	}
 
 	os.Stdout.Write([]byte("Press enter to stop...\n"))
 	os.Stdin.Read([]byte{0})
 
-	if err := e.Stop(); err != nil {
-		log.Println(err)
-	}
+	return e.Stop()
 }
