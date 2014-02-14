@@ -114,7 +114,11 @@ function newObject(kind, inputs, offset) {
 		}
 	});
 
-	send({Action: 'new', Name: name, Kind: kind});
+	var value = 0;
+	if (kind == "value") {
+		value = window.prompt("Value? (-1 to +1)")*1;
+	}
+	send({Action: 'new', Name: name, Kind: kind, Value: value});
 }
 
 function demo() {
