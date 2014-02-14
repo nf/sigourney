@@ -32,13 +32,13 @@ function send(msg) {
 var plumb;
 
 function onOpen() {
-	demo();
 	plumb = jsPlumb.getInstance({
 		Container: 'page',
 		DragOptions : { cursor: 'pointer', zIndex:2000 }
 	});
 	plumb.bind('connection', function(info) {
-		console.log('connection', info);
+		var input = info.targetEndpoint.getParameter('input');
+		send({Action: 'connect', From: info.source.id, To: info.target.id, Input: input});
 	});
 }
 
@@ -71,10 +71,13 @@ function addKind(kind, inputs) {
 var kCount = 0;
 
 function newObject(kind, inputs, offset) {
+	kCount++;
+
 	var name = kind + kCount;
 	var div = $('<div class="object"></div>')
 		.text(kind)
-		.attr('name', name)
+		.attr('id', name)
+		.data('kind', kind)
 		.appendTo('#page')
 		.css('top', offset.top).css('left', offset.left)
 	plumb.draggable(div);
@@ -84,6 +87,8 @@ function newObject(kind, inputs, offset) {
 		if (inputs) {
 			for (var i = 0; i < inputs.length; i++) {
 				plumb.addEndpoint(div, {
+					uuid: name + '-' + inputs[i],
+					parameters: {input: inputs[i]},
 					anchor: "ContinuousTop",
 					endpoint: "Dot",
 					isSource: false,
@@ -93,6 +98,7 @@ function newObject(kind, inputs, offset) {
 		}
 		if (kind != "engine") {
 			plumb.addEndpoint(div, {
+				uuid: name + '-out',
 				anchor: "Bottom",
 				endpoint: "Dot",
 				isSource: true,
