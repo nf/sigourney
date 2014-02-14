@@ -36,9 +36,16 @@ function onOpen() {
 		Container: 'page',
 		DragOptions : { cursor: 'pointer', zIndex:2000 }
 	});
-	plumb.bind('connection', function(info) {
-		var input = info.targetEndpoint.getParameter('input');
-		send({Action: 'connect', From: info.source.id, To: info.target.id, Input: input});
+	plumb.bind('connection', function(conn) {
+		var input = conn.targetEndpoint.getParameter('input');
+		send({Action: 'connect', From: conn.source.id, To: conn.target.id, Input: input});
+	});
+	plumb.bind('connectionDetached', function(conn) {
+		var input = conn.targetEndpoint.getParameter('input');
+		send({Action: 'disconnect', From: conn.source.id, To: conn.target.id, Input: input});
+	});
+	plumb.bind('click', function(conn, e) {
+		if (e.shiftKey) plumb.detach(conn);
 	});
 }
 
