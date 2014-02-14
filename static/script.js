@@ -29,8 +29,17 @@ function send(msg) {
 	ws.send(JSON.stringify(msg));
 }
 
+var plumb;
+
 function onOpen() {
 	demo();
+	plumb = jsPlumb.getInstance({
+		Container: 'page',
+		DragOptions : { cursor: 'pointer', zIndex:2000 }
+	});
+	plumb.bind('connection', function(info) {
+		console.log('connection', info);
+	});
 }
 
 function onMessage(msg) {
@@ -54,21 +63,44 @@ function addKind(kind, inputs) {
 			revert: true, revertDuration: 0,
 			helper: 'clone',
 			stop: function(e, ui) {
-				newObject($(this).text().trim(), ui.position);
+				newObject(kind, inputs, ui.position);
 			}
 		});
 }
 
 var kCount = 0;
 
-function newObject(kind, offset) {
+function newObject(kind, inputs, offset) {
 	var name = kind + kCount;
-	$('<div class="object"></div>')
+	var div = $('<div class="object"></div>')
 		.text(kind)
 		.attr('name', name)
 		.appendTo('#page')
 		.css('top', offset.top).css('left', offset.left)
-		.draggable();
+	plumb.draggable(div);
+
+	// add input and output endpoints
+	plumb.doWhileSuspended(function() {
+		if (inputs) {
+			for (var i = 0; i < inputs.length; i++) {
+				plumb.addEndpoint(div, {
+					anchor: "ContinuousTop",
+					endpoint: "Dot",
+					isSource: false,
+					isTarget: true
+				});
+			}
+		}
+		if (kind != "engine") {
+			plumb.addEndpoint(div, {
+				anchor: "Bottom",
+				endpoint: "Dot",
+				isSource: true,
+				isTarget: false
+			});
+		}
+	});
+
 	send({Action: 'new', Name: name, Kind: kind});
 }
 
