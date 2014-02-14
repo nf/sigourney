@@ -61,7 +61,7 @@ func New() *UI {
 func (u *UI) Close() (err error) {
 	for _, e := range u.engines {
 		if err2 := e.Stop(); err2 != nil && err == nil {
-			return err
+			err = err2
 		}
 	}
 	return
