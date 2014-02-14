@@ -81,6 +81,7 @@ function newObject(kind, inputs, offset) {
 	kCount++;
 
 	var name = kind + kCount;
+	var value = 0;
 	var div = $('<div class="object"></div>')
 		.text(kind)
 		.attr('id', name)
@@ -114,10 +115,15 @@ function newObject(kind, inputs, offset) {
 		}
 	});
 
-	var value = 0;
 	if (kind == "value") {
 		value = window.prompt("Value? (-1 to +1)")*1;
+		div.click(function(e) {
+			if (!e.shiftKey) return;
+			var v = window.prompt("Value? (-1 to +1)")*1;
+			send({Action: 'set', Name: name, Value: v});
+		});
 	}
+
 	send({Action: 'new', Name: name, Kind: kind, Value: value});
 }
 

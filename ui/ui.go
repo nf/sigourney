@@ -26,10 +26,12 @@ import (
 type Message struct {
 	Action string
 
-	// "new"
+	// "new", "set"
 	Name  string  `json:",omitempty"`
-	Kind  string  `json:",omitempty"`
 	Value float64 `json:",omitempty"` // for Kind: "value"
+
+	// "new"
+	Kind string `json:",omitempty"`
 
 	// "connect", "disconnect"
 	From  string `json:",omitEmpty"`
@@ -85,15 +87,36 @@ func (u *UI) Handle(m *Message) error {
 			return errors.New("bad To: " + m.To)
 		}
 		var from *Object
-		if a == "connect" {
-			from, ok = u.objects[m.From]
-			if !ok {
-				return errors.New("bad From: " + m.From)
-			}
+		from, ok = u.objects[m.From]
+		if !ok {
+			return errors.New("bad From: " + m.From)
 		}
 		u.lockEngines()
-		to.SetInput(m.Input, from)
+		if a == "disconnect" {
+			to.SetInput(m.Input, nil)
+			from.toName = ""
+			from.toInput = ""
+		} else {
+			to.SetInput(m.Input, from)
+			from.toName = to.Name
+			from.toInput = m.Input
+		}
 		u.unlockEngines()
+	case "set":
+		o, ok := u.objects[m.Name]
+		if !ok {
+			return errors.New("bad Name: " + m.Name)
+		}
+		o.proc = audio.Value(m.Value)
+		if o.toName != "" {
+			dest, ok := u.objects[o.toName]
+			if !ok {
+				return errors.New("bad toName: " + o.toName)
+			}
+			u.lockEngines()
+			dest.SetInput(o.toInput, o)
+			u.unlockEngines()
+		}
 	default:
 		log.Println("unrecognized Action:", a)
 	}
@@ -116,7 +139,8 @@ type Object struct {
 	Name, Kind string
 	Input      map[string]string
 
-	proc interface{}
+	toName, toInput string
+	proc            interface{}
 }
 
 func NewObject(name, kind string, value float64) *Object {
@@ -144,11 +168,11 @@ func NewObject(name, kind string, value float64) *Object {
 	}
 }
 
-func (o *Object) SetInput(name string, p2 *Object) {
+func (o *Object) SetInput(name string, o2 *Object) {
 	s := o.proc.(audio.Sink)
-	if p2 != nil {
-		o.Input[name] = p2.Name
-		s.Input(name, p2.proc.(audio.Processor))
+	if o2 != nil {
+		o.Input[name] = o2.Name
+		s.Input(name, o2.proc.(audio.Processor))
 	} else {
 		delete(o.Input, name)
 		s.Input(name, audio.Value(0))
