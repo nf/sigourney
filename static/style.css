@@ -2,12 +2,14 @@ body {
 	background: #444;
 	color: #FFF;
 	font-family: sans-serif;
+	user-select: none;
 }
 
 #page {
 	z-index: 0; position: absolute;
 	margin: 0; padding: 0;
 	top: 0; left: 0; right: 0; bottom: 0;
+	user-select: none;
 }
 
 #objects {
