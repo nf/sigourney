@@ -2,7 +2,6 @@ body {
 	background: #444;
 	color: #FFF;
 	font-family: sans-serif;
-	user-select: none;
 }
 
 #page {
@@ -24,6 +23,7 @@ body {
 	margin-bottom: 2px;
 	cursor: pointer;
 	background: #333;
+	user-select: none;
 }
 
 .object {
@@ -32,4 +32,5 @@ body {
 	position: fixed;
 	background: #333;
 	cursor: default;
+	user-select: none;
 }
