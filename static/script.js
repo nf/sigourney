@@ -32,10 +32,7 @@ function send(msg) {
 var plumb;
 
 function onOpen() {
-	plumb = jsPlumb.getInstance({
-		Container: 'page',
-		DragOptions : { cursor: 'pointer', zIndex:2000 }
-	});
+	plumb = jsPlumb.getInstance({Container: 'page'});
 	plumb.bind('connection', function(conn) {
 		var input = conn.targetEndpoint.getParameter('input');
 		send({Action: 'connect', From: conn.source.id, To: conn.target.id, Input: input});
@@ -77,6 +74,20 @@ function addKind(kind, inputs) {
 
 var kCount = 0;
 
+var endpointCommon = {
+	endpoint: "Dot",
+	paintStyle: {
+		strokeStlye: "#FFFFFF",
+		radius: 4,
+		fillStyle: "#FFFFFF"
+	},
+	connector: ["Flowchart"],
+	connectorStyle: {
+		lineWidth: 2,
+		strokeStyle: "#FFFFFF",
+	}
+};
+
 function newObject(kind, inputs, offset) {
 	kCount++;
 
@@ -98,20 +109,24 @@ function newObject(kind, inputs, offset) {
 					uuid: name + '-' + inputs[i],
 					parameters: {input: inputs[i]},
 					anchor: "ContinuousTop",
-					endpoint: "Dot",
 					isSource: false,
-					isTarget: true
-				});
+					isTarget: true,
+					overlays: [
+						[ 'Label', {
+							label: inputs[i],
+							cssClass: 'label'
+						} ]
+					]
+				}, endpointCommon);
 			}
 		}
 		if (kind != "engine") {
 			plumb.addEndpoint(div, {
 				uuid: name + '-out',
 				anchor: "Bottom",
-				endpoint: "Dot",
 				isSource: true,
 				isTarget: false
-			});
+			}, endpointCommon);
 		}
 	});
 

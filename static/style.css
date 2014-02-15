@@ -27,10 +27,17 @@ body {
 }
 
 .object {
+	z-index: 50;
 	padding: 10px 20px;
 	border: 1px solid black;
 	position: fixed;
 	background: #333;
 	cursor: default;
 	user-select: none;
+}
+
+.label {
+	font-size: 10px;
+	margin-left: -10px;
+	margin-top: -10px;
 }
