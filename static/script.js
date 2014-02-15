@@ -112,6 +112,11 @@ function newObject(kind, inputs, offset) {
 		});
 	}
 
+	div.dblclick(function(e) {
+		plumb.remove(this);
+		send({Action: 'destroy', Name: name});
+	});
+
 	// add input and output endpoints
 	plumb.doWhileSuspended(function() {
 		if (inputs) {
