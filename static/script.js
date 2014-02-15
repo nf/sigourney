@@ -78,8 +78,8 @@ var endpointCommon = {
 	endpoint: "Dot",
 	paintStyle: {
 		strokeStlye: "#FFFFFF",
-		radius: 4,
-		fillStyle: "#FFFFFF"
+		fillStyle: "#FFFFFF",
+		radius: 6
 	},
 	connector: ["Flowchart"],
 	connectorStyle: {
@@ -100,6 +100,17 @@ function newObject(kind, inputs, offset) {
 		.appendTo('#page')
 		.css('top', offset.top).css('left', offset.left)
 	plumb.draggable(div);
+
+	if (kind == "value") {
+		value = window.prompt("Value? (-1 to +1)")*1;
+		div.text(value).click(function(e) {
+			if (!e.shiftKey) return;
+			var v = window.prompt("Value? (-1 to +1)")*1;
+			send({Action: 'set', Name: name, Value: v});
+			$(this).text(v);
+			plumb.repaint(this);
+		});
+	}
 
 	// add input and output endpoints
 	plumb.doWhileSuspended(function() {
@@ -129,15 +140,6 @@ function newObject(kind, inputs, offset) {
 			}, endpointCommon);
 		}
 	});
-
-	if (kind == "value") {
-		value = window.prompt("Value? (-1 to +1)")*1;
-		div.click(function(e) {
-			if (!e.shiftKey) return;
-			var v = window.prompt("Value? (-1 to +1)")*1;
-			send({Action: 'set', Name: name, Value: v});
-		});
-	}
 
 	send({Action: 'new', Name: name, Kind: kind, Value: value});
 }
