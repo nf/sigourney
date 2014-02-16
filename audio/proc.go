@@ -40,7 +40,7 @@ func (o *Osc) Process(s []Sample) {
 	p := o.pos
 	for i := range s {
 		s[i] = Sample(fast.Sin(p * 2 * math.Pi))
-		hz := 440 * math.Exp2(float64(pitch[i])*10)
+		hz := 440 * fast.Exp2(float64(pitch[i])*10)
 		p += hz / waveHz
 		if p > 100 {
 			p -= 100

@@ -22,7 +22,7 @@ import (
 )
 
 func TestSin(t *testing.T) {
-	const accuracy = 0.0000005
+	const accuracy = 0.00001
 	for _, f := range []float64{
 		math.Pi, 10000*math.Pi, 2*math.Pi, 1000*2*math.Pi,
 		0, 1, 0.5, -1, -0.5, -1000, 1000,
