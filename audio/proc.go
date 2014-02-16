@@ -16,7 +16,11 @@ limitations under the License.
 
 package audio
 
-import "math"
+import (
+	"math"
+
+	"github.com/nf/sigourney/fast"
+)
 
 func NewOsc() *Osc {
 	o := &Osc{}
@@ -35,7 +39,7 @@ func (o *Osc) Process(s []Sample) {
 	pitch := o.pitch.Process()
 	p := o.pos
 	for i := range s {
-		s[i] = Sample(math.Sin(p * 2 * math.Pi))
+		s[i] = Sample(fast.Sin(p * 2 * math.Pi))
 		hz := 440 * math.Exp2(float64(pitch[i])*10)
 		p += hz / waveHz
 		if p > 100 {
