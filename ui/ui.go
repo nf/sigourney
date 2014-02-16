@@ -26,12 +26,14 @@ import (
 type Message struct {
 	Action string
 
-	// "new", "set"
-	Name  string  `json:",omitempty"`
-	Value float64 `json:",omitempty"` // for Kind: "value"
+	// "new", "set", "destroy"
+	Name string `json:",omitempty"`
 
 	// "new"
 	Kind string `json:",omitempty"`
+
+	// "new", "set"
+	Value float64 `json:",omitempty"` // for Kind: "value"
 
 	// "connect", "disconnect"
 	From  string `json:",omitEmpty"`
@@ -81,41 +83,35 @@ func (u *UI) Handle(m *Message) error {
 			}
 			u.engines[m.Name] = e
 		}
-	case "connect", "disconnect":
-		to, ok := u.objects[m.To]
-		if !ok {
-			return errors.New("bad To: " + m.To)
-		}
-		var from *Object
-		from, ok = u.objects[m.From]
-		if !ok {
-			return errors.New("bad From: " + m.From)
-		}
-		u.lockEngines()
-		if a == "disconnect" {
-			to.SetInput(m.Input, nil)
-			from.toName = ""
-			from.toInput = ""
-		} else {
-			to.SetInput(m.Input, from)
-			from.toName = to.Name
-			from.toInput = m.Input
-		}
-		u.unlockEngines()
+	case "connect":
+		u.connect(m.From, m.To, m.Input)
+	case "disconnect":
+		u.disconnect(m.From, m.To, m.Input)
 	case "set":
 		o, ok := u.objects[m.Name]
 		if !ok {
-			return errors.New("bad Name: " + m.Name)
+			return errors.New("unknown object: " + m.Name)
 		}
 		o.proc = audio.Value(m.Value)
 		if o.toName != "" {
 			dest, ok := u.objects[o.toName]
 			if !ok {
-				return errors.New("bad toName: " + o.toName)
+				return errors.New("object has unknown toName: " + o.toName)
 			}
 			u.lockEngines()
 			dest.SetInput(o.toInput, o)
 			u.unlockEngines()
+		}
+	case "destroy":
+		o, ok := u.objects[m.Name]
+		if !ok {
+			return errors.New("bad Name: " + m.Name)
+		}
+		if o.toName != "" {
+			u.disconnect(m.Name, o.toName, o.toInput)
+		}
+		for input, from := range o.Input {
+			u.disconnect(from, m.Name, input)
 		}
 	default:
 		log.Println("unrecognized Action:", a)
@@ -133,6 +129,40 @@ func (u *UI) unlockEngines() {
 	for _, e := range u.engines {
 		e.Unlock()
 	}
+}
+
+func (u *UI) disconnect(from, to, input string) error {
+	f, ok := u.objects[from]
+	if !ok {
+		return errors.New("unknown From: " + from)
+	}
+	t, ok := u.objects[to]
+	if !ok {
+		return errors.New("unknown To: " + to)
+	}
+	u.lockEngines()
+	t.SetInput(input, nil)
+	u.unlockEngines()
+	f.toName = ""
+	f.toInput = ""
+	return nil
+}
+
+func (u *UI) connect(from, to, input string) error {
+	f, ok := u.objects[from]
+	if !ok {
+		return errors.New("unknown From: " + from)
+	}
+	t, ok := u.objects[to]
+	if !ok {
+		return errors.New("unknown To: " + to)
+	}
+	u.lockEngines()
+	t.SetInput(input, f)
+	u.unlockEngines()
+	f.toName = to
+	f.toInput = input
+	return nil
 }
 
 type Object struct {
