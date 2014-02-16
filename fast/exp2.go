@@ -19,28 +19,26 @@ package fast
 import "math"
 
 func Exp2(f float64) float64 {
-	i := int((f + exp2TableOffset) * exp2TableFactor)
-	if i < 0 || i >= exp2TableLen {
+	i := int((f + exp2Offset) * exp2Factor)
+	if i < 0 || i >= exp2Len {
 		return math.Exp2(f)
 	}
-	return exp2Table[i]
+	return exp2[i]
 }
 
 const (
-	exp2TableLen            = 1 << 24 // 128MB table
-	exp2Lo, exp2Hi  float64 = -11, 11
-	exp2TableOffset         = (exp2Hi - exp2Lo) / 2
-	exp2TableFactor         = exp2TableLen / (exp2Hi - exp2Lo)
+	exp2Len        = 1 << 24 // 128MB table
+	exp2Lo, exp2Hi = -11, 11 // the range of inputs covered by the table
+	exp2Offset     = (exp2Hi - exp2Lo) / 2
+	exp2Factor     = exp2Len / (exp2Hi - exp2Lo)
 )
 
-var (
-	exp2Table []float64
-)
+var exp2 []float64
 
 func init() {
-	exp2Table = make([]float64, exp2TableLen)
-	for i := range exp2Table {
-		f := float64(i)/exp2TableFactor - exp2TableOffset
-		exp2Table[i] = math.Exp2(f)
+	exp2 = make([]float64, exp2Len)
+	for i := range exp2 {
+		f := float64(i)/exp2Factor - exp2Offset
+		exp2[i] = math.Exp2(f)
 	}
 }

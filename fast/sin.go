@@ -20,22 +20,22 @@ import "math"
 
 func Sin(f float64) float64 {
 	if f < 0 {
-		return sinTable[int(f*sinTableFactor*-1)%sinTableLen] * -1
+		return sin[int(f*sinFactor*-1)%sinLen] * -1
 	}
-	return sinTable[int(f*sinTableFactor)%sinTableLen]
+	return sin[int(f*sinFactor)%sinLen]
 }
 
-const sinTableLen = 1 << 21 // 16MB table
-
-var (
-	sinTable       []float64
-	sinTableFactor = sinTableLen / (2 * math.Pi)
+const (
+	sinLen    = 1 << 21 // 16MB table
+	sinFactor = sinLen / (2 * math.Pi)
 )
 
+var sin []float64
+
 func init() {
-	sinTable = make([]float64, sinTableLen)
-	step := 1 / sinTableFactor
-	for i := range sinTable {
-		sinTable[i] = math.Sin(float64(i) * step)
+	sin = make([]float64, sinLen)
+	step := 1 / sinFactor
+	for i := range sin {
+		sin[i] = math.Sin(float64(i) * step)
 	}
 }
