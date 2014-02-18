@@ -49,21 +49,21 @@ func (o *Osc) Process(s []Sample) {
 	o.pos = p
 }
 
-func NewAmp() *Amp {
-	a := &Amp{}
-	a.inputs("car", &a.car, "mod", &a.mod)
+func NewMul() *Mul {
+	a := &Mul{}
+	a.inputs("a", &a.a, "b", &a.b)
 	return a
 }
 
-type Amp struct {
+type Mul struct {
 	sink
-	car Processor
-	mod source
+	a Processor
+	b source
 }
 
-func (a *Amp) Process(s []Sample) {
-	a.car.Process(s)
-	m := a.mod.Process()
+func (a *Mul) Process(s []Sample) {
+	a.a.Process(s)
+	m := a.b.Process()
 	for i := range s {
 		s[i] *= m[i]
 	}

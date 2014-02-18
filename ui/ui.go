@@ -174,8 +174,8 @@ func NewObject(name, kind string, value float64) *Object {
 	switch kind {
 	case "osc":
 		p = audio.NewOsc()
-	case "amp":
-		p = audio.NewAmp()
+	case "mul":
+		p = audio.NewMul()
 	case "sum":
 		p = audio.NewSum()
 	case "env":
@@ -215,9 +215,9 @@ func objectInputs() map[string][]string {
 }
 
 var kinds = []string{
-	"amp",
 	"engine",
 	"env",
+	"mul",
 	"osc",
 	"sum",
 	"value",

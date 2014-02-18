@@ -30,26 +30,29 @@ func demo() error {
 		return err
 	}
 	for _, m := range []*ui.Message{
-		{Action: "new", Name: "engine1", Kind: "engine"},
 		{Action: "new", Name: "osc1", Kind: "osc"},
 		{Action: "new", Name: "osc2", Kind: "osc"},
 		{Action: "new", Name: "sum1", Kind: "sum"},
-		{Action: "new", Name: "amp1", Kind: "amp"},
-		{Action: "new", Name: "amp2", Kind: "amp"},
+		{Action: "new", Name: "mul1", Kind: "mul"},
+		{Action: "new", Name: "mul2", Kind: "mul"},
 		{Action: "new", Name: "val1", Kind: "value", Value: 0.1},
-		{Action: "connect", From: "osc1", To: "engine1", Input: "root"},
-		{Action: "connect", From: "amp1", To: "osc1", Input: "pitch"},
-		{Action: "connect", From: "osc2", To: "amp1", Input: "car"},
-		{Action: "connect", From: "val1", To: "amp1", Input: "mod"},
+		{Action: "connect", From: "osc1", To: "engine", Input: "in"},
+		{Action: "connect", From: "mul1", To: "osc1", Input: "pitch"},
+		{Action: "connect", From: "osc2", To: "mul1", Input: "a"},
+		{Action: "connect", From: "val1", To: "mul1", Input: "b"},
 		{Action: "connect", From: "val1", To: "osc2", Input: "pitch"},
 	} {
-		u.Handle(m)
+		if err := u.Handle(m); err != nil {
+			return err
+		}
 	}
 	time.Sleep(2 * time.Second)
 	for _, m := range []*ui.Message{
 		{Action: "set", Name: "val1", Value: 0.15},
 	} {
-		u.Handle(m)
+		if err := u.Handle(m); err != nil {
+			return err
+		}
 	}
 	time.Sleep(2 * time.Second)
 	u.Close()
@@ -59,37 +62,37 @@ func demo() error {
 	oscMod := audio.NewOsc()
 	oscMod.Input("pitch", audio.Value(-0.1))
 
-	oscModAmp := audio.NewAmp()
-	oscModAmp.Input("car", oscMod)
-	oscModAmp.Input("mod", audio.Value(0.1))
+	oscModMul := audio.NewMul()
+	oscModMul.Input("a", oscMod)
+	oscModMul.Input("b", audio.Value(0.1))
 
 	osc := audio.NewOsc()
-	osc.Input("pitch", oscModAmp)
+	osc.Input("pitch", oscModMul)
 
 	envMod := audio.NewOsc()
 	envMod.Input("pitch", audio.Value(-1))
 
-	envModAmp := audio.NewAmp()
-	envModAmp.Input("car", envMod)
-	envModAmp.Input("mod", audio.Value(0.02))
+	envModMul := audio.NewMul()
+	envModMul.Input("a", envMod)
+	envModMul.Input("b", audio.Value(0.02))
 
 	envModSum := audio.NewSum()
-	envModSum.Input("a", envModAmp)
+	envModSum.Input("a", envModMul)
 	envModSum.Input("b", audio.Value(0.021))
 
 	env := audio.NewEnv()
 	env.Input("att", audio.Value(0.0001))
 	env.Input("dec", envModSum)
 
-	amp := audio.NewAmp()
-	amp.Input("car", osc)
-	amp.Input("mod", env)
+	mul := audio.NewMul()
+	mul.Input("a", osc)
+	mul.Input("b", env)
 
-	ampAmp := audio.NewAmp()
-	ampAmp.Input("car", amp)
-	ampAmp.Input("mod", audio.Value(0.5))
+	mulMul := audio.NewMul()
+	mulMul.Input("a", mul)
+	mulMul.Input("b", audio.Value(0.5))
 
-	e.Input("root", ampAmp)
+	e.Input("in", mulMul)
 
 	if err := e.Start(); err != nil {
 		return err

@@ -24,7 +24,7 @@ import (
 
 func NewEngine() *Engine {
 	e := &Engine{done: make(chan error)}
-	e.inputs("root", &e.root)
+	e.inputs("in", &e.in)
 	return e
 }
 
@@ -32,7 +32,7 @@ type Engine struct {
 	sync.Mutex // Held while processing.
 
 	sink
-	root source
+	in source
 
 	done    chan error
 	tickers []Ticker
@@ -55,7 +55,7 @@ func (e *Engine) RemoveTicker(t Ticker) {
 
 func (e *Engine) processAudio(_, out []int16) {
 	e.Lock()
-	buf := e.root.Process()
+	buf := e.in.Process()
 	for _, t := range e.tickers {
 		t.Tick()
 	}
