@@ -61,7 +61,7 @@ func (e *Engine) processAudio(_, out []int16) {
 	}
 	e.Unlock()
 	for i := range buf {
-		out[i] = int16(buf[i] * waveAmp)
+		out[i] = int16(buf[i] * waveAmp * 0.9)
 	}
 }
 
