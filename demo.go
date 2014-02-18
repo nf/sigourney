@@ -25,7 +25,10 @@ import (
 )
 
 func demo() error {
-	u := ui.New()
+	u, err := ui.New()
+	if err != nil {
+		return err
+	}
 	for _, m := range []*ui.Message{
 		{Action: "new", Name: "engine1", Kind: "engine"},
 		{Action: "new", Name: "osc1", Kind: "osc"},

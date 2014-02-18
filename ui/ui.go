@@ -49,26 +49,23 @@ type UI struct {
 	m chan *Message
 
 	objects map[string]*Object
-	engines map[string]*audio.Engine
+	engine  *audio.Engine
 }
 
-func New() *UI {
+func New() (*UI, error) {
 	m := make(chan *Message, 1)
 	m <- &Message{Action: "hello", ObjectInputs: objectInputs()}
-	return &UI{
-		M: m, m: m,
-		objects: make(map[string]*Object),
-		engines: make(map[string]*audio.Engine),
+	objs := make(map[string]*Object)
+	objs["engine"] = NewObject("engine", "engine", 0)
+	e := objs["engine"].proc.(*audio.Engine)
+	if err := e.Start(); err != nil {
+		return nil, err
 	}
+	return &UI{M: m, m: m, objects: objs, engine: e}, nil
 }
 
-func (u *UI) Close() (err error) {
-	for _, e := range u.engines {
-		if err2 := e.Stop(); err2 != nil && err == nil {
-			err = err2
-		}
-	}
-	return
+func (u *UI) Close() error {
+	return u.engine.Stop()
 }
 
 func (u *UI) Handle(m *Message) error {
@@ -76,13 +73,6 @@ func (u *UI) Handle(m *Message) error {
 	case "new":
 		o := NewObject(m.Name, m.Kind, m.Value)
 		u.objects[m.Name] = o
-		if m.Kind == "engine" {
-			e := o.proc.(*audio.Engine)
-			if err := e.Start(); err != nil {
-				return err
-			}
-			u.engines[m.Name] = e
-		}
 	case "connect":
 		u.connect(m.From, m.To, m.Input)
 	case "disconnect":
@@ -94,9 +84,9 @@ func (u *UI) Handle(m *Message) error {
 		}
 		v := audio.Value(m.Value)
 		o.proc = v
-		u.lockEngines()
+		u.engine.Lock()
 		o.dup.SetSource(v)
-		u.unlockEngines()
+		u.engine.Unlock()
 	case "destroy":
 		o, ok := u.objects[m.Name]
 		if !ok {
@@ -114,18 +104,6 @@ func (u *UI) Handle(m *Message) error {
 	return nil
 }
 
-func (u *UI) lockEngines() {
-	for _, e := range u.engines {
-		e.Lock()
-	}
-}
-
-func (u *UI) unlockEngines() {
-	for _, e := range u.engines {
-		e.Unlock()
-	}
-}
-
 func (u *UI) disconnect(from, to, input string) error {
 	f, ok := u.objects[from]
 	if !ok {
@@ -136,10 +114,10 @@ func (u *UI) disconnect(from, to, input string) error {
 		return errors.New("unknown To: " + to)
 	}
 
-	u.lockEngines()
+	u.engine.Lock()
 	f.output[dest{to, input}].Close()
 	t.proc.(audio.Sink).Input(input, audio.Value(0))
-	u.unlockEngines()
+	u.engine.Unlock()
 
 	delete(f.output, dest{to, input})
 	delete(t.Input, input)
@@ -157,10 +135,10 @@ func (u *UI) connect(from, to, input string) error {
 		return errors.New("unknown To: " + to)
 	}
 
-	u.lockEngines()
+	u.engine.Lock()
 	o := f.dup.Output()
 	t.proc.(audio.Sink).Input(input, o)
-	u.unlockEngines()
+	u.engine.Unlock()
 
 	f.output[dest{to, input}] = o
 	t.Input[input] = to
@@ -226,4 +204,11 @@ func objectInputs() map[string][]string {
 	return m
 }
 
-var kinds = []string{"osc", "amp", "sum", "env", "engine", "value"}
+var kinds = []string{
+	"amp",
+	"engine",
+	"env",
+	"osc",
+	"sum",
+	"value",
+}
