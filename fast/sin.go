@@ -19,14 +19,22 @@ package fast
 import "math"
 
 func Sin(f float64) float64 {
-	if f < 0 {
-		return sin[int(f*sinFactor*-1)%sinLen] * -1
+	neg := f < 0
+	if neg {
+		f *= -1
 	}
-	return sin[int(f*sinFactor)%sinLen]
+	f = f * sinFactor
+	d := f - math.Floor(f)
+	i := int(f)
+	f = sin[i%sinLen]*(1-d) + sin[(i+1)%sinLen]*d
+	if neg {
+		return f * -1
+	}
+	return f
 }
 
 const (
-	sinLen    = 1 << 21 // 16MB table
+	sinLen    = 512
 	sinFactor = sinLen / (2 * math.Pi)
 )
 
