@@ -172,16 +172,18 @@ type dest struct {
 func NewObject(name, kind string, value float64) *Object {
 	var p interface{}
 	switch kind {
-	case "osc":
-		p = audio.NewOsc()
-	case "mul":
-		p = audio.NewMul()
-	case "sum":
-		p = audio.NewSum()
-	case "env":
-		p = audio.NewEnv()
+	case "clip":
+		p = audio.NewClip()
 	case "engine":
 		p = audio.NewEngine()
+	case "env":
+		p = audio.NewEnv()
+	case "mul":
+		p = audio.NewMul()
+	case "osc":
+		p = audio.NewOsc()
+	case "sum":
+		p = audio.NewSum()
 	case "value":
 		p = audio.Value(value)
 	default:
@@ -215,6 +217,7 @@ func objectInputs() map[string][]string {
 }
 
 var kinds = []string{
+	"clip",
 	"engine",
 	"env",
 	"mul",

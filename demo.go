@@ -80,7 +80,11 @@ func demo() error {
 	envModSum.Input("a", envModMul)
 	envModSum.Input("b", audio.Value(0.021))
 
+	osc2 := audio.NewOsc()
+	osc2.Input("pitch", audio.Value(-0.6))
+
 	env := audio.NewEnv()
+	env.Input("trig", osc2)
 	env.Input("att", audio.Value(0.0001))
 	env.Input("dec", envModSum)
 

@@ -91,41 +91,75 @@ func (s *Sum) Process(buf []Sample) {
 
 func NewEnv() *Env {
 	e := &Env{}
-	e.inputs("att", &e.att, "dec", &e.dec)
+	e.inputs("trig", &e.trig, "att", &e.att, "dec", &e.dec)
 	return e
 }
 
 type Env struct {
 	sink
+	trig     Processor
 	att, dec source
 
-	down bool
-	v    Sample
+	v      Sample
+	up     bool
+	wasLow bool
 }
 
+const triggerThreshold = 0.5
+
 func (e *Env) Process(s []Sample) {
+	e.trig.Process(s)
 	att, dec := e.att.Process(), e.dec.Process()
 	v := e.v
 	for i := range s {
-		if e.down {
-			if d := dec[i]; d > 0 {
-				v -= 1 / (d * waveHz * 10)
+		high := s[i] > triggerThreshold
+		trigger := e.wasLow && high
+		if !e.up {
+			if trigger {
+				e.up = true
+			} else if v > 0 {
+				if d := dec[i]; d > 0 {
+					v -= 1 / (d * waveHz * 10)
+				}
 			}
-		} else {
+		}
+		if e.up {
 			if a := att[i]; a > 0 {
 				v += 1 / (a * waveHz * 10)
 			}
 		}
-		if v <= 0 {
-			v = 0
-			e.down = false
-		} else if v >= 1 {
+		if v > 1 {
 			v = 1
-			e.down = true
+			e.up = false
+		} else if v < 0 {
+			v = 0
 		}
 		s[i] = v
+		e.wasLow = !high
 	}
 	e.v = v
+}
+
+func NewClip() *Clip {
+	c := &Clip{}
+	c.inputs("in", &c.in)
+	return c
+}
+
+type Clip struct {
+	sink
+	in Processor
+}
+
+func (c *Clip) Process(s []Sample) {
+	c.in.Process(s)
+	for i, v := range s {
+		if v > 1 {
+			s[i] = 1
+		} else if v < -1 {
+			s[i] = -1
+		}
+	}
 }
 
 type Value Sample
