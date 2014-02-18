@@ -171,12 +171,15 @@ type Output struct {
 
 func (o *Output) Process(p []Sample) {
 	if len(o.d.outs) == 1 {
-		o.d.src.Process(p)
+		if !o.d.done {
+			o.d.done = true
+			o.d.src.Process(p)
+		}
 		return
 	}
 	if !o.d.done {
-		o.d.src.Process(o.d.buf)
 		o.d.done = true
+		o.d.src.Process(o.d.buf)
 	}
 	copy(p, o.d.buf)
 }
