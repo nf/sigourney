@@ -34,6 +34,10 @@ type Processor interface {
 	Process([]Sample)
 }
 
+type Ticker interface {
+	Tick()
+}
+
 type Sink interface {
 	Input(name string, g Processor)
 	Inputs() []string

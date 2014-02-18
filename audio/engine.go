@@ -34,12 +34,31 @@ type Engine struct {
 	sink
 	root source
 
-	done chan error
+	done    chan error
+	tickers []Ticker
+}
+
+func (e *Engine) AddTicker(t Ticker) {
+	e.tickers = append(e.tickers, t)
+}
+
+func (e *Engine) RemoveTicker(t Ticker) {
+	ts := e.tickers
+	for i, t2 := range ts {
+		if t == t2 {
+			copy(ts[i:], ts[i+1:])
+			e.tickers = ts[:len(ts)-1]
+			break
+		}
+	}
 }
 
 func (e *Engine) processAudio(_, out []int16) {
 	e.Lock()
 	buf := e.root.Process()
+	for _, t := range e.tickers {
+		t.Tick()
+	}
 	e.Unlock()
 	for i := range buf {
 		out[i] = int16(buf[i] * waveAmp)

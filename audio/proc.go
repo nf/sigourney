@@ -142,10 +142,14 @@ func NewDup(src Processor) *Dup {
 }
 
 type Dup struct {
-	src    Processor
-	outs   []*Output
-	buf    []Sample
-	rounds int
+	src  Processor
+	outs []*Output
+	buf  []Sample
+	done bool
+}
+
+func (d *Dup) Tick() {
+	d.done = false
 }
 
 func (d *Dup) SetSource(p Processor) {
@@ -170,12 +174,11 @@ func (o *Output) Process(p []Sample) {
 		o.d.src.Process(p)
 		return
 	}
-	if o.d.rounds == 0 {
+	if !o.d.done {
 		o.d.src.Process(o.d.buf)
+		o.d.done = true
 	}
 	copy(p, o.d.buf)
-	o.d.rounds++
-	o.d.rounds %= len(o.d.outs)
 }
 
 func (o *Output) Close() {

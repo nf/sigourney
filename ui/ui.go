@@ -72,6 +72,11 @@ func (u *UI) Handle(m *Message) error {
 	switch a := m.Action; a {
 	case "new":
 		o := NewObject(m.Name, m.Kind, m.Value)
+		if o.dup != nil {
+			u.engine.Lock()
+			u.engine.AddTicker(o.dup)
+			u.engine.Unlock()
+		}
 		u.objects[m.Name] = o
 	case "connect":
 		u.connect(m.From, m.To, m.Input)
@@ -91,6 +96,11 @@ func (u *UI) Handle(m *Message) error {
 		o, ok := u.objects[m.Name]
 		if !ok {
 			return errors.New("bad Name: " + m.Name)
+		}
+		if o.dup != nil {
+			u.engine.Lock()
+			u.engine.RemoveTicker(o.dup)
+			u.engine.Unlock()
 		}
 		for d := range o.output {
 			u.disconnect(m.Name, d.name, d.input)
