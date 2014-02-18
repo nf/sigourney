@@ -18,20 +18,19 @@ package fast
 
 import "math"
 
-// Fast Sine approximation with linear interpolation.
+// Fast Sine approximation with table lookup and linear interpolation.
 func Sin(x float64) float64 {
-	if x > 0 {
-		return sinLi(x)
-	} else {
-		return -1 * sinLi(-1*x)
-	}
-}
-
-func sinLi(x float64) float64 {
 	f := x * sinFactor
+	if x < 0 {
+		f *= -1
+	}
 	t := int(f)
 	i := t & (sinLen - 1)
-	return sin[i] + grd[i]*(f-float64(t))
+	res := sin[i] + grd[i]*(f-float64(t))
+	if x < 0 {
+		res *= -1
+	}
+	return res
 }
 
 const (
