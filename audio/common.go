@@ -25,13 +25,17 @@ const (
 
 const (
 	waveHz  = 44100
-	waveAmp = 32768
+	waveAmp = 1 << 15
 )
 
 type Sample float64
 
 type Processor interface {
 	Process([]Sample)
+}
+
+type Ticker interface {
+	Tick()
 }
 
 type Sink interface {

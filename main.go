@@ -65,7 +65,11 @@ func socketHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	u := ui.New()
+	u, err := ui.New()
+	if err != nil {
+		log.Println(err)
+		return
+	}
 	defer u.Close()
 
 	go func() {

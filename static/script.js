@@ -54,10 +54,20 @@ function onMessage(msg) {
 			var k;
 			var o = m.ObjectInputs;
 			for (k in o) {
-				addKind(k, o[k]);
+				if (k == "engine") {
+
+					newObject("engine", o[k], engineOffset());
+				} else {
+					addKind(k, o[k]);
+				}
 			}
 		break;
 	}
+}
+
+function engineOffset() {
+	var w = $('#page').width(), h = $('#page').height();
+	return {top: 3*h/4, left: w/2-25};
 }
 
 function addKind(kind, inputs) {
@@ -92,6 +102,8 @@ function newObject(kind, inputs, offset) {
 	kCount++;
 
 	var name = kind + kCount;
+	if (kind == "engine")
+		name = "engine";
 	var value = 0;
 	var div = $('<div class="object"></div>')
 		.text(kind)
@@ -112,10 +124,12 @@ function newObject(kind, inputs, offset) {
 		});
 	}
 
-	div.dblclick(function(e) {
-		plumb.remove(this);
-		send({Action: 'destroy', Name: name});
-	});
+	if (kind != "engine") {
+		div.dblclick(function(e) {
+			plumb.remove(this);
+			send({Action: 'destroy', Name: name});
+		});
+	}
 
 	// add input and output endpoints
 	plumb.doWhileSuspended(function() {
@@ -141,12 +155,14 @@ function newObject(kind, inputs, offset) {
 				uuid: name + '-out',
 				anchor: "Bottom",
 				isSource: true,
-				isTarget: false
+				isTarget: false,
+				maxConnections: -1
 			}, endpointCommon);
 		}
 	});
 
-	send({Action: 'new', Name: name, Kind: kind, Value: value});
+	if (kind != "engine")
+		send({Action: 'new', Name: name, Kind: kind, Value: value});
 }
 
 function demo() {

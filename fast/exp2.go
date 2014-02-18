@@ -19,15 +19,17 @@ package fast
 import "math"
 
 func Exp2(f float64) float64 {
-	i := int((f + exp2Offset) * exp2Factor)
-	if i < 0 || i >= exp2Len {
+	f2 := (f + exp2Offset) * exp2Factor
+	i := int(f2)
+	if i < 0 || i >= exp2Len-1 {
 		return math.Exp2(f)
 	}
-	return exp2[i]
+	d := f2 - math.Trunc(f2)
+	return exp2[i]*(1-d) + exp2[i+1]*d
 }
 
 const (
-	exp2Len        = 1 << 24 // 128MB table
+	exp2Len        = 8192
 	exp2Lo, exp2Hi = -11, 11 // the range of inputs covered by the table
 	exp2Offset     = (exp2Hi - exp2Lo) / 2
 	exp2Factor     = exp2Len / (exp2Hi - exp2Lo)

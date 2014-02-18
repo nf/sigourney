@@ -49,21 +49,21 @@ func (o *Osc) Process(s []Sample) {
 	o.pos = p
 }
 
-func NewAmp() *Amp {
-	a := &Amp{}
-	a.inputs("car", &a.car, "mod", &a.mod)
+func NewMul() *Mul {
+	a := &Mul{}
+	a.inputs("a", &a.a, "b", &a.b)
 	return a
 }
 
-type Amp struct {
+type Mul struct {
 	sink
-	car Processor
-	mod source
+	a Processor
+	b source
 }
 
-func (a *Amp) Process(s []Sample) {
-	a.car.Process(s)
-	m := a.mod.Process()
+func (a *Mul) Process(s []Sample) {
+	a.a.Process(s)
+	m := a.b.Process()
 	for i := range s {
 		s[i] *= m[i]
 	}
@@ -91,41 +91,75 @@ func (s *Sum) Process(buf []Sample) {
 
 func NewEnv() *Env {
 	e := &Env{}
-	e.inputs("att", &e.att, "dec", &e.dec)
+	e.inputs("trig", &e.trig, "att", &e.att, "dec", &e.dec)
 	return e
 }
 
 type Env struct {
 	sink
+	trig     Processor
 	att, dec source
 
-	down bool
-	v    Sample
+	v      Sample
+	up     bool
+	wasLow bool
 }
 
+const triggerThreshold = 0.5
+
 func (e *Env) Process(s []Sample) {
+	e.trig.Process(s)
 	att, dec := e.att.Process(), e.dec.Process()
 	v := e.v
 	for i := range s {
-		if e.down {
-			if d := dec[i]; d > 0 {
-				v -= 1 / (d * waveHz * 10)
+		high := s[i] > triggerThreshold
+		trigger := e.wasLow && high
+		if !e.up {
+			if trigger {
+				e.up = true
+			} else if v > 0 {
+				if d := dec[i]; d > 0 {
+					v -= 1 / (d * waveHz * 10)
+				}
 			}
-		} else {
+		}
+		if e.up {
 			if a := att[i]; a > 0 {
 				v += 1 / (a * waveHz * 10)
 			}
 		}
-		if v <= 0 {
-			v = 0
-			e.down = false
-		} else if v >= 1 {
+		if v > 1 {
 			v = 1
-			e.down = true
+			e.up = false
+		} else if v < 0 {
+			v = 0
 		}
 		s[i] = v
+		e.wasLow = !high
 	}
 	e.v = v
+}
+
+func NewClip() *Clip {
+	c := &Clip{}
+	c.inputs("in", &c.in)
+	return c
+}
+
+type Clip struct {
+	sink
+	in Processor
+}
+
+func (c *Clip) Process(s []Sample) {
+	c.in.Process(s)
+	for i, v := range s {
+		if v > 1 {
+			s[i] = 1
+		} else if v < -1 {
+			s[i] = -1
+		}
+	}
 }
 
 type Value Sample
@@ -133,5 +167,64 @@ type Value Sample
 func (v Value) Process(s []Sample) {
 	for i := range s {
 		s[i] = Sample(v)
+	}
+}
+
+func NewDup(src Processor) *Dup {
+	d := &Dup{src: src}
+	return d
+}
+
+type Dup struct {
+	src  Processor
+	outs []*Output
+	buf  []Sample
+	done bool
+}
+
+func (d *Dup) Tick() {
+	d.done = false
+}
+
+func (d *Dup) SetSource(p Processor) {
+	d.src = p
+}
+
+func (d *Dup) Output() *Output {
+	o := &Output{d: d}
+	d.outs = append(d.outs, o)
+	if len(d.outs) > 1 && d.buf == nil {
+		d.buf = make([]Sample, nSamples)
+	}
+	return o
+}
+
+type Output struct {
+	d *Dup
+}
+
+func (o *Output) Process(p []Sample) {
+	if len(o.d.outs) == 1 {
+		if !o.d.done {
+			o.d.done = true
+			o.d.src.Process(p)
+		}
+		return
+	}
+	if !o.d.done {
+		o.d.done = true
+		o.d.src.Process(o.d.buf)
+	}
+	copy(p, o.d.buf)
+}
+
+func (o *Output) Close() {
+	outs := o.d.outs
+	for i, o2 := range outs {
+		if o == o2 {
+			copy(outs[i:], outs[i+1:])
+			o.d.outs = outs[:len(outs)-1]
+			break
+		}
 	}
 }

@@ -28,13 +28,13 @@ func Sin(x float64) float64 {
 	i := t & (sinLen - 1)
 	res := sin[i] + grd[i]*(f-float64(t))
 	if x < 0 {
-		res *= -1
+		return res * -1
 	}
 	return res
 }
 
 const (
-	sinLen    = 1 << 10 // 1K entry lookup table.
+	sinLen    = 512
 	sinFactor = sinLen / (2 * math.Pi)
 )
 
