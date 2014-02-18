@@ -20,11 +20,11 @@ import "math"
 
 func Exp2(f float64) float64 {
 	f2 := (f + exp2Offset) * exp2Factor
-	d := f2 - math.Floor(f2)
 	i := int(f2)
 	if i < 0 || i >= exp2Len-1 {
 		return math.Exp2(f)
 	}
+	d := f2 - math.Trunc(f2)
 	return exp2[i]*(1-d) + exp2[i+1]*d
 }
 

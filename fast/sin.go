@@ -24,7 +24,7 @@ func Sin(f float64) float64 {
 		f *= -1
 	}
 	f = f * sinFactor
-	d := f - math.Floor(f)
+	d := f - math.Trunc(f)
 	i := int(f)
 	f = sin[i%sinLen]*(1-d) + sin[(i+1)%sinLen]*d
 	if neg {
