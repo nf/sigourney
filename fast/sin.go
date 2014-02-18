@@ -48,7 +48,7 @@ func init() {
 	for i := 0; i < sinLen; i++ {
 		sin[i] = math.Sin(float64(i) * step)
 	}
-	for i := 0; i < sinLen-1; i++ {
-		grd[i] = sin[i+1] - sin[i]
+	for i := 0; i < sinLen; i++ {
+		grd[i] = sin[(i+1)%sinLen] - sin[i]
 	}
 }
