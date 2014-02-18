@@ -131,3 +131,56 @@ func (v Value) Process(s []Sample) {
 		s[i] = Sample(v)
 	}
 }
+
+func NewDup(src Processor) *Dup {
+	d := &Dup{src: src}
+	return d
+}
+
+type Dup struct {
+	src    Processor
+	outs   []*Output
+	buf    []Sample
+	rounds int
+}
+
+func (d *Dup) SetSource(p Processor) {
+	d.src = p
+}
+
+func (d *Dup) Output() *Output {
+	o := &Output{d: d}
+	d.outs = append(d.outs, o)
+	if len(d.outs) > 1 && d.buf == nil {
+		d.buf = make([]Sample, nSamples)
+	}
+	return o
+}
+
+type Output struct {
+	d *Dup
+}
+
+func (o *Output) Process(p []Sample) {
+	if len(o.d.outs) == 1 {
+		o.d.src.Process(p)
+		return
+	}
+	if o.d.rounds == 0 {
+		o.d.src.Process(o.d.buf)
+	}
+	copy(p, o.d.buf)
+	o.d.rounds++
+	o.d.rounds %= len(o.d.outs)
+}
+
+func (o *Output) Close() {
+	outs := o.d.outs
+	for i, o2 := range outs {
+		if o == o2 {
+			copy(outs[i:], outs[i+1:])
+			o.d.outs = outs[:len(outs)-1]
+			break
+		}
+	}
+}

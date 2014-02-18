@@ -92,23 +92,18 @@ func (u *UI) Handle(m *Message) error {
 		if !ok {
 			return errors.New("unknown object: " + m.Name)
 		}
-		o.proc = audio.Value(m.Value)
-		if o.toName != "" {
-			dest, ok := u.objects[o.toName]
-			if !ok {
-				return errors.New("object has unknown toName: " + o.toName)
-			}
-			u.lockEngines()
-			dest.SetInput(o.toInput, o)
-			u.unlockEngines()
-		}
+		v := audio.Value(m.Value)
+		o.proc = v
+		u.lockEngines()
+		o.dup.SetSource(v)
+		u.unlockEngines()
 	case "destroy":
 		o, ok := u.objects[m.Name]
 		if !ok {
 			return errors.New("bad Name: " + m.Name)
 		}
-		if o.toName != "" {
-			u.disconnect(m.Name, o.toName, o.toInput)
+		for d := range o.output {
+			u.disconnect(m.Name, d.name, d.input)
 		}
 		for input, from := range o.Input {
 			u.disconnect(from, m.Name, input)
@@ -140,11 +135,15 @@ func (u *UI) disconnect(from, to, input string) error {
 	if !ok {
 		return errors.New("unknown To: " + to)
 	}
+
 	u.lockEngines()
-	t.SetInput(input, nil)
+	f.output[dest{to, input}].Close()
+	t.proc.(audio.Sink).Input(input, audio.Value(0))
 	u.unlockEngines()
-	f.toName = ""
-	f.toInput = ""
+
+	delete(f.output, dest{to, input})
+	delete(t.Input, input)
+
 	return nil
 }
 
@@ -157,11 +156,15 @@ func (u *UI) connect(from, to, input string) error {
 	if !ok {
 		return errors.New("unknown To: " + to)
 	}
+
 	u.lockEngines()
-	t.SetInput(input, f)
+	o := f.dup.Output()
+	t.proc.(audio.Sink).Input(input, o)
 	u.unlockEngines()
-	f.toName = to
-	f.toInput = input
+
+	f.output[dest{to, input}] = o
+	t.Input[input] = to
+
 	return nil
 }
 
@@ -169,8 +172,13 @@ type Object struct {
 	Name, Kind string
 	Input      map[string]string
 
-	toName, toInput string
-	proc            interface{}
+	proc   interface{}
+	dup    *audio.Dup
+	output map[dest]*audio.Output
+}
+
+type dest struct {
+	name, input string
 }
 
 func NewObject(name, kind string, value float64) *Object {
@@ -191,21 +199,17 @@ func NewObject(name, kind string, value float64) *Object {
 	default:
 		panic("bad kind: " + kind)
 	}
+	var dup *audio.Dup
+	if proc, ok := p.(audio.Processor); ok {
+		dup = audio.NewDup(proc)
+	}
 	return &Object{
 		Name: name, Kind: kind,
 		Input: make(map[string]string),
-		proc:  p,
-	}
-}
 
-func (o *Object) SetInput(name string, o2 *Object) {
-	s := o.proc.(audio.Sink)
-	if o2 != nil {
-		o.Input[name] = o2.Name
-		s.Input(name, o2.proc.(audio.Processor))
-	} else {
-		delete(o.Input, name)
-		s.Input(name, audio.Value(0))
+		proc:   p,
+		dup:    dup,
+		output: make(map[dest]*audio.Output),
 	}
 }
 

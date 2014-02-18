@@ -141,7 +141,8 @@ function newObject(kind, inputs, offset) {
 				uuid: name + '-out',
 				anchor: "Bottom",
 				isSource: true,
-				isTarget: false
+				isTarget: false,
+				maxConnections: -1
 			}, endpointCommon);
 		}
 	});

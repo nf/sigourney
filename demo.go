@@ -29,14 +29,22 @@ func demo() error {
 	for _, m := range []*ui.Message{
 		{Action: "new", Name: "engine1", Kind: "engine"},
 		{Action: "new", Name: "osc1", Kind: "osc"},
+		{Action: "new", Name: "osc2", Kind: "osc"},
+		{Action: "new", Name: "sum1", Kind: "sum"},
+		{Action: "new", Name: "amp1", Kind: "amp"},
+		{Action: "new", Name: "amp2", Kind: "amp"},
+		{Action: "new", Name: "val1", Kind: "value", Value: 0.1},
 		{Action: "connect", From: "osc1", To: "engine1", Input: "root"},
+		{Action: "connect", From: "amp1", To: "osc1", Input: "pitch"},
+		{Action: "connect", From: "osc2", To: "amp1", Input: "car"},
+		{Action: "connect", From: "val1", To: "amp1", Input: "mod"},
+		{Action: "connect", From: "val1", To: "osc2", Input: "pitch"},
 	} {
 		u.Handle(m)
 	}
 	time.Sleep(2 * time.Second)
 	for _, m := range []*ui.Message{
-		{Action: "new", Name: "val1", Kind: "value", Value: 0.1},
-		{Action: "connect", From: "val1", To: "osc1", Input: "pitch"},
+		{Action: "set", Name: "val1", Value: 0.15},
 	} {
 		u.Handle(m)
 	}
