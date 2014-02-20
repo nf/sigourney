@@ -22,20 +22,20 @@ import (
 	"github.com/nf/sigourney/fast"
 )
 
-func NewOsc() *Osc {
-	o := &Osc{}
+func NewSin() *Sin {
+	o := &Sin{}
 	o.inputs("pitch", &o.pitch)
 	return o
 }
 
-type Osc struct {
+type Sin struct {
 	sink
 	pitch source // 0.1/oct, 0 == 440Hz
 
 	pos float64
 }
 
-func (o *Osc) Process(s []Sample) {
+func (o *Sin) Process(s []Sample) {
 	pitch := o.pitch.Process()
 	p := o.pos
 	for i := range s {

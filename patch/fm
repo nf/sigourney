@@ -4,7 +4,7 @@
     "Kind": "engine",
     "Value": 0,
     "Input": {
-      "in": "osc3"
+      "in": "sin3"
     },
     "Display": {
       "offset": {
@@ -18,7 +18,7 @@
     "Kind": "mul",
     "Value": 0,
     "Input": {
-      "a": "osc2",
+      "a": "sin2",
       "b": "value5"
     },
     "Display": {
@@ -28,9 +28,9 @@
       }
     }
   },
-  "osc2": {
-    "Name": "osc2",
-    "Kind": "osc",
+  "sin2": {
+    "Name": "sin2",
+    "Kind": "sin",
     "Value": 0,
     "Input": {},
     "Display": {
@@ -40,9 +40,9 @@
       }
     }
   },
-  "osc3": {
-    "Name": "osc3",
-    "Kind": "osc",
+  "sin3": {
+    "Name": "sin3",
+    "Kind": "sin",
     "Value": 0,
     "Input": {
       "pitch": "mul4"

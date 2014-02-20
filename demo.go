@@ -30,17 +30,17 @@ func demo() error {
 		return err
 	}
 	for _, m := range []*ui.Message{
-		{Action: "new", Name: "osc1", Kind: "osc"},
-		{Action: "new", Name: "osc2", Kind: "osc"},
+		{Action: "new", Name: "sin1", Kind: "sin"},
+		{Action: "new", Name: "sin2", Kind: "sin"},
 		{Action: "new", Name: "sum1", Kind: "sum"},
 		{Action: "new", Name: "mul1", Kind: "mul"},
 		{Action: "new", Name: "mul2", Kind: "mul"},
 		{Action: "new", Name: "val1", Kind: "value", Value: 0.1},
-		{Action: "connect", From: "osc1", To: "engine", Input: "in"},
-		{Action: "connect", From: "mul1", To: "osc1", Input: "pitch"},
-		{Action: "connect", From: "osc2", To: "mul1", Input: "a"},
+		{Action: "connect", From: "sin1", To: "engine", Input: "in"},
+		{Action: "connect", From: "mul1", To: "sin1", Input: "pitch"},
+		{Action: "connect", From: "sin2", To: "mul1", Input: "a"},
 		{Action: "connect", From: "val1", To: "mul1", Input: "b"},
-		{Action: "connect", From: "val1", To: "osc2", Input: "pitch"},
+		{Action: "connect", From: "val1", To: "sin2", Input: "pitch"},
 	} {
 		if err := u.Handle(m); err != nil {
 			return err
@@ -59,17 +59,17 @@ func demo() error {
 
 	e := audio.NewEngine()
 
-	oscMod := audio.NewOsc()
-	oscMod.Input("pitch", audio.Value(-0.1))
+	sinMod := audio.NewSin()
+	sinMod.Input("pitch", audio.Value(-0.1))
 
-	oscModMul := audio.NewMul()
-	oscModMul.Input("a", oscMod)
-	oscModMul.Input("b", audio.Value(0.1))
+	sinModMul := audio.NewMul()
+	sinModMul.Input("a", sinMod)
+	sinModMul.Input("b", audio.Value(0.1))
 
-	osc := audio.NewOsc()
-	osc.Input("pitch", oscModMul)
+	sin := audio.NewSin()
+	sin.Input("pitch", sinModMul)
 
-	envMod := audio.NewOsc()
+	envMod := audio.NewSin()
 	envMod.Input("pitch", audio.Value(-1))
 
 	envModMul := audio.NewMul()
@@ -80,16 +80,16 @@ func demo() error {
 	envModSum.Input("a", envModMul)
 	envModSum.Input("b", audio.Value(0.021))
 
-	osc2 := audio.NewOsc()
-	osc2.Input("pitch", audio.Value(-0.6))
+	sin2 := audio.NewSin()
+	sin2.Input("pitch", audio.Value(-0.6))
 
 	env := audio.NewEnv()
-	env.Input("trig", osc2)
+	env.Input("trig", sin2)
 	env.Input("att", audio.Value(0.0001))
 	env.Input("dec", envModSum)
 
 	mul := audio.NewMul()
-	mul.Input("a", osc)
+	mul.Input("a", sin)
 	mul.Input("b", env)
 
 	mulMul := audio.NewMul()

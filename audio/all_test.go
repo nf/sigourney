@@ -18,10 +18,10 @@ package audio
 
 import "testing"
 
-func BenchmarkOsc(b *testing.B) {
+func BenchmarkSin(b *testing.B) {
 	b.StopTimer()
 	buf := make([]Sample, nSamples)
-	o := NewOsc()
+	o := NewSin()
 	o.Input("pitch", Value(0))
 	b.StartTimer()
 	for i := 0; i < b.N; i++ {

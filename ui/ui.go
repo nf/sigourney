@@ -287,8 +287,8 @@ func NewObject(name, kind string, value float64) *Object {
 		p = audio.NewEnv()
 	case "mul":
 		p = audio.NewMul()
-	case "osc":
-		p = audio.NewOsc()
+	case "sin":
+		p = audio.NewSin()
 	case "sum":
 		p = audio.NewSum()
 	case "value":
@@ -330,7 +330,7 @@ var kinds = []string{
 	"engine",
 	"env",
 	"mul",
-	"osc",
+	"sin",
 	"sum",
 	"value",
 }
