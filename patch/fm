@@ -1,0 +1,69 @@
+{
+  "engine": {
+    "Name": "engine",
+    "Kind": "engine",
+    "Value": 0,
+    "Input": {
+      "in": "osc3"
+    },
+    "Display": {
+      "offset": {
+        "left": 640,
+        "top": 252.75
+      }
+    }
+  },
+  "mul4": {
+    "Name": "mul4",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "osc2",
+      "b": "value5"
+    },
+    "Display": {
+      "offset": {
+        "left": 219,
+        "top": 224
+      }
+    }
+  },
+  "osc2": {
+    "Name": "osc2",
+    "Kind": "osc",
+    "Value": 0,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 235,
+        "top": 58
+      }
+    }
+  },
+  "osc3": {
+    "Name": "osc3",
+    "Kind": "osc",
+    "Value": 0,
+    "Input": {
+      "pitch": "mul4"
+    },
+    "Display": {
+      "offset": {
+        "left": 428,
+        "top": 103
+      }
+    }
+  },
+  "value5": {
+    "Name": "value5",
+    "Kind": "value",
+    "Value": 0.1,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 162,
+        "top": 130
+      }
+    }
+  }
+}

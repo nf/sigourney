@@ -44,6 +44,19 @@ function onOpen() {
 	plumb.bind('click', function(conn, e) {
 		if (e.shiftKey) plumb.detach(conn);
 	});
+
+	var fn = $('<input type="text"/>');
+	var save = $('<input type="button" value="save"/>');
+	var load = $('<input type="button" value="load"/>');
+	$('#control').append(fn, load, save);
+
+	load.click(function() {
+		$('.object').each(function() { plumb.remove(this); });
+		send({Action: 'load', Name: fn.val()});
+	});
+	save.click(function() {
+		send({Action: 'save', Name: fn.val()});
+	});
 }
 
 function onMessage(msg) {
@@ -51,17 +64,28 @@ function onMessage(msg) {
 
 	switch (m.Action) {
 		case 'hello':
-			var k;
-			var o = m.ObjectInputs;
-			for (k in o) {
-				if (k == "engine") {
+			handleHello(m.ObjectInputs);
+			break;
+		case 'new':
+			newObjectName(m.Name, m.Kind, m.Value, m.Display);
+			break;
+		case 'connect':
+			plumb.connect({uuids: [m.From + '-out', m.To + '-' + m.Input]});
+			break;
+	}
+}
 
-					newObject("engine", o[k], engineOffset());
-				} else {
-					addKind(k, o[k]);
-				}
-			}
-		break;
+var objectInputs = {};
+
+function handleHello(inputs) {
+	var k;
+	for (k in inputs) {
+		objectInputs[k] = inputs[k];
+		if (k == "engine") {
+			newObject(k, {offset: engineOffset()});
+		} else {
+			addKind(k, inputs[k]);
+		}
 	}
 }
 
@@ -77,12 +101,10 @@ function addKind(kind, inputs) {
 			revert: true, revertDuration: 0,
 			helper: 'clone',
 			stop: function(e, ui) {
-				newObject(kind, inputs, ui.position);
+				newObject(kind, {offset: ui.position});
 			}
 		});
 }
-
-var kCount = 0;
 
 var endpointCommon = {
 	endpoint: "Dot",
@@ -98,23 +120,33 @@ var endpointCommon = {
 	}
 };
 
-function newObject(kind, inputs, offset) {
-	kCount++;
+var kCount = 0;
 
+function newObject(kind, display) {
+	kCount++;
 	var name = kind + kCount;
 	if (kind == "engine")
 		name = "engine";
-	var value = 0;
+	newObjectName(name, kind, null, display)
+}
+
+function newObjectName(name, kind, value, display) {
 	var div = $('<div class="object"></div>')
 		.text(kind)
 		.attr('id', name)
 		.data('kind', kind)
 		.appendTo('#page')
-		.css('top', offset.top).css('left', offset.left)
-	plumb.draggable(div);
+		.css('top', display.offset.top)
+		.css('left', display.offset.left)
+	var setDisplay = function() {
+		send({Action: 'setDisplay', Name: name, Display: {offset: $(div).offset()}});
+	}
+	plumb.draggable(div, { stop: setDisplay });
 
 	if (kind == "value") {
-		value = window.prompt("Value? (-1 to +1)")*1;
+		if (value === null) {
+			value = window.prompt("Value? (-1 to +1)")*1;
+		}
 		div.text(value).click(function(e) {
 			if (!e.shiftKey) return;
 			var v = window.prompt("Value? (-1 to +1)")*1;
@@ -133,6 +165,7 @@ function newObject(kind, inputs, offset) {
 
 	// add input and output endpoints
 	plumb.doWhileSuspended(function() {
+		var inputs = objectInputs[kind];
 		if (inputs) {
 			for (var i = 0; i < inputs.length; i++) {
 				plumb.addEndpoint(div, {
@@ -163,6 +196,7 @@ function newObject(kind, inputs, offset) {
 
 	if (kind != "engine")
 		send({Action: 'new', Name: name, Kind: kind, Value: value});
+	setDisplay();
 }
 
 function demo() {
