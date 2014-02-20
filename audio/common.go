@@ -66,6 +66,9 @@ func (s *sink) inputs(args ...interface{}) {
 		case *source:
 			(*v).p = Value(0)
 			(*v).b = make([]Sample, nSamples)
+		case *trigger:
+			(*v).p = Value(0)
+			(*v).b = make([]Sample, nSamples)
 		}
 	}
 }
@@ -82,6 +85,8 @@ func (s *sink) Input(name string, p Processor) {
 	case *Processor:
 		*v = p
 	case *source:
+		(*v).p = p
+	case *trigger:
 		(*v).p = p
 	default:
 		panic("bad input type")
@@ -105,4 +110,19 @@ type source struct {
 func (s *source) Process() []Sample {
 	s.p.Process(s.b)
 	return s.b
+}
+
+const triggerThreshold = 0.5
+
+type trigger struct {
+	source
+	last bool
+}
+
+func (t *trigger) isTrigger(s Sample) bool {
+	high := s > triggerThreshold
+	trig := t.last && high
+	t.last = high
+	return trig
+
 }

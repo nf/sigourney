@@ -97,23 +97,21 @@ func NewEnv() *Env {
 
 type Env struct {
 	sink
-	trig     Processor
-	att, dec source
+	trig trigger
+	att  Processor
+	dec  source
 
 	v      Sample
 	up     bool
 	wasLow bool
 }
 
-const triggerThreshold = 0.5
-
 func (e *Env) Process(s []Sample) {
-	e.trig.Process(s)
-	att, dec := e.att.Process(), e.dec.Process()
+	e.att.Process(s)
+	att, dec, t := s, e.dec.Process(), e.trig.Process()
 	v := e.v
 	for i := range s {
-		high := s[i] > triggerThreshold
-		trigger := e.wasLow && high
+		trigger := e.trig.isTrigger(t[i])
 		if !e.up {
 			if trigger {
 				e.up = true
@@ -135,7 +133,6 @@ func (e *Env) Process(s []Sample) {
 			v = 0
 		}
 		s[i] = v
-		e.wasLow = !high
 	}
 	e.v = v
 }
