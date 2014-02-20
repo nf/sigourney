@@ -64,7 +64,7 @@ function onMessage(msg) {
 
 	switch (m.Action) {
 		case 'hello':
-			handleHello(m.ObjectInputs);
+			handleHello(m.KindInputs);
 			break;
 		case 'new':
 			newObjectName(m.Name, m.Kind, m.Value, m.Display);
@@ -75,12 +75,12 @@ function onMessage(msg) {
 	}
 }
 
-var objectInputs = {};
+var kindInputs = {};
 
 function handleHello(inputs) {
 	var k;
 	for (k in inputs) {
-		objectInputs[k] = inputs[k];
+		kindInputs[k] = inputs[k];
 		if (k == "engine") {
 			newObject(k, {offset: engineOffset()});
 		} else {
@@ -165,7 +165,7 @@ function newObjectName(name, kind, value, display) {
 
 	// add input and output endpoints
 	plumb.doWhileSuspended(function() {
-		var inputs = objectInputs[kind];
+		var inputs = kindInputs[kind];
 		if (inputs) {
 			for (var i = 0; i < inputs.length; i++) {
 				plumb.addEndpoint(div, {

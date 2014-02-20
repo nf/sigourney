@@ -46,7 +46,7 @@ type Message struct {
 	Input string `json:",omitempty"`
 
 	// "hello"
-	ObjectInputs map[string][]string `json:",omitempty"`
+	KindInputs map[string][]string `json:",omitempty"`
 
 	// "setDisplay"
 	Display map[string]interface{} `json:",omitempty"`
@@ -68,7 +68,7 @@ func New() (*UI, error) {
 	if err := u.engine.Start(); err != nil {
 		return nil, err
 	}
-	m <- &Message{Action: "hello", ObjectInputs: objectInputs()}
+	m <- &Message{Action: "hello", KindInputs: kindInputs()}
 	return u, nil
 }
 
@@ -312,7 +312,7 @@ func NewObject(name, kind string, value float64) *Object {
 	}
 }
 
-func objectInputs() map[string][]string {
+func kindInputs() map[string][]string {
 	m := make(map[string][]string)
 	for _, k := range kinds {
 		o := NewObject("unnamed", k, 0)
