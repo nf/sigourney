@@ -121,7 +121,7 @@ type trigger struct {
 
 func (t *trigger) isTrigger(s Sample) bool {
 	high := s > triggerThreshold
-	trig := t.last && high
+	trig := !t.last && high
 	t.last = high
 	return trig
 
