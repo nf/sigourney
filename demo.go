@@ -25,6 +25,16 @@ import (
 )
 
 func demo() error {
+	e := audio.NewEngine()
+	e.Input("in", audio.NewSin())
+	if err := e.Start(); err != nil {
+		return err
+	}
+	time.Sleep(time.Second)
+	if err := e.Stop(); err != nil {
+		return err
+	}
+
 	u, err := ui.New()
 	if err != nil {
 		return err
@@ -46,7 +56,7 @@ func demo() error {
 			return err
 		}
 	}
-	time.Sleep(2 * time.Second)
+	time.Sleep(time.Second)
 	for _, m := range []*ui.Message{
 		{Action: "set", Name: "val1", Value: 0.15},
 	} {
@@ -54,10 +64,12 @@ func demo() error {
 			return err
 		}
 	}
-	time.Sleep(2 * time.Second)
-	u.Close()
+	time.Sleep(time.Second)
+	if err := u.Close(); err != nil {
+		return err
+	}
 
-	e := audio.NewEngine()
+	e = audio.NewEngine()
 
 	sinMod := audio.NewSin()
 	sinMod.Input("pitch", audio.Value(-0.1))
