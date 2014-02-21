@@ -147,8 +147,7 @@ function newObjectName(name, kind, value, display) {
 		if (value === null) {
 			value = window.prompt("Value? (-1 to +1)")*1;
 		}
-		div.text(value).click(function(e) {
-			if (!e.shiftKey) return;
+		div.text(value).dblclick(function(e) {
 			var v = window.prompt("Value? (-1 to +1)")*1;
 			send({Action: 'set', Name: name, Value: v});
 			$(this).text(v);
@@ -157,7 +156,8 @@ function newObjectName(name, kind, value, display) {
 	}
 
 	if (kind != "engine") {
-		div.dblclick(function(e) {
+		div.click(function(e) {
+			if (!e.shiftKey) return;
 			plumb.remove(this);
 			send({Action: 'destroy', Name: name});
 		});
