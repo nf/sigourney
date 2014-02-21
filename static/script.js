@@ -17,11 +17,12 @@ limitations under the License.
 var ws;
 
 jsPlumb.bind('ready', function() {
+	$('#status').text('Connecting to back end...');
 	ws = new WebSocket('ws://localhost:8080/socket');
 	ws.onopen = onOpen;
 	ws.onmessage = onMessage;
 	ws.onclose = function() {
-		console.log('socket closed');
+		$('#status').text('Lost connection to back end!');
 	};
 });
 
@@ -32,6 +33,7 @@ function send(msg) {
 var plumb;
 
 function onOpen() {
+	$('#status').empty();
 	plumb = jsPlumb.getInstance({Container: 'page'});
 	plumb.bind('connection', function(conn) {
 		var input = conn.targetEndpoint.getParameter('input');
@@ -91,7 +93,7 @@ function handleHello(inputs) {
 
 function engineOffset() {
 	var w = $('#page').width(), h = $('#page').height();
-	return {top: 3*h/4, left: w/2-25};
+	return {top: 3*h/4, left: w/2-(49+20+20+1+1)/2};
 }
 
 function addKind(kind, inputs) {
