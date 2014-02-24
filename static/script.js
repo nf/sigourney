@@ -156,9 +156,7 @@ function newObjectName(name, kind, value, display) {
 	plumb.draggable(div, { stop: setDisplay });
 
 	if (kind == "value") {
-		if (value === null) {
-			value = window.prompt("Value? (-1 to +1)")*1;
-		}
+		if (value === null) value = 0;
 		div.text(value).dblclick(function(e) {
 			var v = window.prompt("Value? (-1 to +1)")*1;
 			send({Action: 'set', Name: name, Value: v});
