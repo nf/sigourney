@@ -44,11 +44,15 @@ func (o *Square) Process(s []Sample) {
 	o.pitch.Process(s)
 	t := o.syn.Process()
 	p := o.pos
+	hz, lastS := sampleToHz(s[0]), s[0]
 	for i := range s {
 		if o.syn.isTrigger(t[i]) {
 			p = 0
 		}
-		p += sampleToHz(s[i])
+		if s[i] != lastS {
+			hz = sampleToHz(s[i])
+		}
+		p += hz
 		if p > waveHz {
 			p -= waveHz
 		}
@@ -79,11 +83,14 @@ func (o *Sin) Process(s []Sample) {
 	o.pitch.Process(s)
 	t := o.syn.Process()
 	p := o.pos
+	hz, lastS := sampleToHz(s[0]), s[0]
 	for i := range s {
 		if o.syn.isTrigger(t[i]) {
 			p = 0
 		}
-		hz := sampleToHz(s[i])
+		if s[i] != lastS {
+			hz = sampleToHz(s[i])
+		}
 		s[i] = Sample(fast.Sin(p * 2 * math.Pi))
 		p += hz / waveHz
 		if p > 100 {

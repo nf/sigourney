@@ -28,3 +28,15 @@ func BenchmarkSin(b *testing.B) {
 		o.Process(buf)
 	}
 }
+
+func BenchmarkFMSin(b *testing.B) {
+	b.StopTimer()
+	buf := make([]Sample, nSamples)
+	o, o2 := NewSin(), NewSin()
+	o.Input("pitch", o2)
+	o2.Input("pitch", Value(0))
+	b.StartTimer()
+	for i := 0; i < b.N; i++ {
+		o.Process(buf)
+	}
+}
