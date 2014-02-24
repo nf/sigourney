@@ -1,0 +1,261 @@
+{
+  "engine": {
+    "Name": "engine",
+    "Kind": "engine",
+    "Value": 0,
+    "Input": {
+      "in": "sin9"
+    },
+    "Display": {
+      "offset": {
+        "left": 637.5,
+        "top": 382.5
+      }
+    }
+  },
+  "mul13": {
+    "Name": "mul13",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "sin2",
+      "b": "value15"
+    },
+    "Display": {
+      "offset": {
+        "left": 378,
+        "top": 305
+      }
+    }
+  },
+  "mul20": {
+    "Name": "mul20",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "sin19",
+      "b": "mul29"
+    },
+    "Display": {
+      "offset": {
+        "left": 313,
+        "top": 154
+      }
+    }
+  },
+  "mul25": {
+    "Name": "mul25",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "value24",
+      "b": "mul20"
+    },
+    "Display": {
+      "offset": {
+        "left": 401,
+        "top": 87
+      }
+    }
+  },
+  "mul29": {
+    "Name": "mul29",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "value21",
+      "b": "sin26"
+    },
+    "Display": {
+      "offset": {
+        "left": 165,
+        "top": 197
+      }
+    }
+  },
+  "sin19": {
+    "Name": "sin19",
+    "Kind": "sin",
+    "Value": 0,
+    "Input": {
+      "pitch": "value23"
+    },
+    "Display": {
+      "offset": {
+        "left": 312,
+        "top": 56
+      }
+    }
+  },
+  "sin2": {
+    "Name": "sin2",
+    "Kind": "sin",
+    "Value": 0,
+    "Input": {
+      "pitch": "sum18"
+    },
+    "Display": {
+      "offset": {
+        "left": 428,
+        "top": 220
+      }
+    }
+  },
+  "sin26": {
+    "Name": "sin26",
+    "Kind": "sin",
+    "Value": 0,
+    "Input": {
+      "pitch": "value28"
+    },
+    "Display": {
+      "offset": {
+        "left": 121,
+        "top": 116
+      }
+    }
+  },
+  "sin9": {
+    "Name": "sin9",
+    "Kind": "sin",
+    "Value": 0,
+    "Input": {
+      "pitch": "mul13",
+      "syn": "square4"
+    },
+    "Display": {
+      "offset": {
+        "left": 441,
+        "top": 384
+      }
+    }
+  },
+  "square4": {
+    "Name": "square4",
+    "Kind": "square",
+    "Value": 0,
+    "Input": {
+      "pitch": "sum17"
+    },
+    "Display": {
+      "offset": {
+        "left": 484,
+        "top": 297
+      }
+    }
+  },
+  "sum17": {
+    "Name": "sum17",
+    "Kind": "sum",
+    "Value": 0,
+    "Input": {
+      "a": "value12",
+      "b": "mul20"
+    },
+    "Display": {
+      "offset": {
+        "left": 502,
+        "top": 217
+      }
+    }
+  },
+  "sum18": {
+    "Name": "sum18",
+    "Kind": "sum",
+    "Value": 0,
+    "Input": {
+      "a": "value16",
+      "b": "mul25"
+    },
+    "Display": {
+      "offset": {
+        "left": 412,
+        "top": 153
+      }
+    }
+  },
+  "value12": {
+    "Name": "value12",
+    "Kind": "value",
+    "Value": -0.24,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 536,
+        "top": 139
+      }
+    }
+  },
+  "value15": {
+    "Name": "value15",
+    "Kind": "value",
+    "Value": 0.1,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 333,
+        "top": 238
+      }
+    }
+  },
+  "value16": {
+    "Name": "value16",
+    "Kind": "value",
+    "Value": -0.42,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 476,
+        "top": 81
+      }
+    }
+  },
+  "value21": {
+    "Name": "value21",
+    "Kind": "value",
+    "Value": 0.2,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 195,
+        "top": 123
+      }
+    }
+  },
+  "value23": {
+    "Name": "value23",
+    "Kind": "value",
+    "Value": -1.2,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 214,
+        "top": 24
+      }
+    }
+  },
+  "value24": {
+    "Name": "value24",
+    "Kind": "value",
+    "Value": -1,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 445,
+        "top": 7
+      }
+    }
+  },
+  "value28": {
+    "Name": "value28",
+    "Kind": "value",
+    "Value": -1.22,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 119,
+        "top": 32
+      }
+    }
+  }
+}
