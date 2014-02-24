@@ -69,6 +69,7 @@ function onMessage(msg) {
 			handleHello(m.KindInputs);
 			break;
 		case 'new':
+			bumpNCount(m.Name);
 			newObjectName(m.Name, m.Kind, m.Value, m.Display);
 			break;
 		case 'connect':
@@ -122,11 +123,20 @@ var endpointCommon = {
 	}
 };
 
-var kCount = 0;
+var nCount = 0;
+
+function bumpNCount(name) {
+	var r = /[0-9]+$/.exec(name);
+	if (r === null) return; // unknown name
+	var n = r[0]*1;
+	if (nCount <= n) {
+		nCount = n + 1;
+	}
+}
 
 function newObject(kind, display) {
-	kCount++;
-	var name = kind + kCount;
+	nCount++;
+	var name = kind + nCount;
 	if (kind == "engine")
 		name = "engine";
 	newObjectName(name, kind, null, display)
