@@ -19,13 +19,13 @@
     "Value": 0,
     "Input": {
       "att": "value48",
-      "dec": "value49",
+      "dec": "rand62",
       "trig": "square50"
     },
     "Display": {
       "offset": {
-        "left": 269,
-        "top": 442
+        "left": 275,
+        "top": 436
       }
     }
   },
@@ -35,13 +35,13 @@
     "Value": 0,
     "Input": {
       "att": "value48",
-      "dec": "value49",
+      "dec": "rand60",
       "trig": "square55"
     },
     "Display": {
       "offset": {
-        "left": 365,
-        "top": 410
+        "left": 359,
+        "top": 419
       }
     }
   },
@@ -195,6 +195,38 @@
       }
     }
   },
+  "rand60": {
+    "Name": "rand60",
+    "Kind": "rand",
+    "Value": 0,
+    "Input": {
+      "max": "value61",
+      "min": "value49",
+      "trig": "square55"
+    },
+    "Display": {
+      "offset": {
+        "left": 676,
+        "top": 473
+      }
+    }
+  },
+  "rand62": {
+    "Name": "rand62",
+    "Kind": "rand",
+    "Value": 0,
+    "Input": {
+      "max": "value61",
+      "min": "value49",
+      "trig": "square50"
+    },
+    "Display": {
+      "offset": {
+        "left": 78,
+        "top": 530
+      }
+    }
+  },
   "sin19": {
     "Name": "sin19",
     "Kind": "sin",
@@ -331,8 +363,8 @@
     },
     "Display": {
       "offset": {
-        "left": 120,
-        "top": 443
+        "left": 124,
+        "top": 441
       }
     }
   },
@@ -421,8 +453,8 @@
     },
     "Display": {
       "offset": {
-        "left": 10,
-        "top": 350
+        "left": 13,
+        "top": 353
       }
     }
   },
@@ -577,8 +609,8 @@
     "Input": {},
     "Display": {
       "offset": {
-        "left": 187,
-        "top": 326
+        "left": 188,
+        "top": 323
       }
     }
   },
@@ -589,8 +621,8 @@
     "Input": {},
     "Display": {
       "offset": {
-        "left": 18,
-        "top": 213
+        "left": 17,
+        "top": 228
       }
     }
   },
@@ -603,6 +635,18 @@
       "offset": {
         "left": 140,
         "top": 265
+      }
+    }
+  },
+  "value61": {
+    "Name": "value61",
+    "Kind": "value",
+    "Value": 0.05,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 748,
+        "top": 383
       }
     }
   }

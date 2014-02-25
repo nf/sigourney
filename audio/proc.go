@@ -18,6 +18,7 @@ package audio
 
 import (
 	"math"
+	"math/rand"
 
 	"github.com/nf/sigourney/fast"
 )
@@ -216,6 +217,34 @@ func (v Value) Process(s []Sample) {
 	for i := range s {
 		s[i] = Sample(v)
 	}
+}
+
+func NewRand() *Rand {
+	r := &Rand{}
+	r.inputs("min", &r.min, "max", &r.max, "trig", &r.trig)
+	return r
+}
+
+type Rand struct {
+	sink
+	min  Processor
+	max  source
+	trig trigger
+
+	last Sample
+}
+
+func (r *Rand) Process(s []Sample) {
+	r.min.Process(s)
+	max, t := r.max.Process(), r.trig.Process()
+	v := r.last
+	for i := range s {
+		if r.trig.isTrigger(t[i]) {
+			v = s[i] + Sample(rand.Float64())*(max[i]-s[i])
+		}
+		s[i] = v
+	}
+	r.last = v
 }
 
 func NewDup(src Processor) *Dup {
