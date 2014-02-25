@@ -100,8 +100,8 @@
     },
     "Display": {
       "offset": {
-        "left": 165,
-        "top": 197
+        "left": 161,
+        "top": 191
       }
     }
   },
@@ -260,7 +260,7 @@
     },
     "Display": {
       "offset": {
-        "left": 716,
+        "left": 719,
         "top": 174
       }
     }
@@ -406,8 +406,8 @@
     },
     "Display": {
       "offset": {
-        "left": 87,
-        "top": 355
+        "left": 97,
+        "top": 343
       }
     }
   },
@@ -416,7 +416,7 @@
     "Kind": "sum",
     "Value": 0,
     "Input": {
-      "a": "mul44",
+      "a": "mul20",
       "b": "value52"
     },
     "Display": {
@@ -585,7 +585,7 @@
   "value52": {
     "Name": "value52",
     "Kind": "value",
-    "Value": -0.8,
+    "Value": -0.7,
     "Input": {},
     "Display": {
       "offset": {
