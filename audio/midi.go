@@ -35,6 +35,10 @@ func initMidi() {
 		log.Println(err)
 		return
 	}
+	if s == nil {
+		log.Println("could not initialize MIDI input device")
+		return
+	}
 	go midiLoop(s)
 }
 
