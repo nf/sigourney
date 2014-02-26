@@ -1,0 +1,125 @@
+{
+  "delay7": {
+    "Name": "delay7",
+    "Kind": "delay",
+    "Value": 0,
+    "Input": {
+      "in": "sin3",
+      "len": "value8"
+    },
+    "Display": {
+      "offset": {
+        "left": 407,
+        "top": 334
+      }
+    }
+  },
+  "engine": {
+    "Name": "engine",
+    "Kind": "engine",
+    "Value": 0,
+    "Input": {
+      "in": "sin3"
+    },
+    "Display": {
+      "offset": {
+        "left": 640,
+        "top": 252.75
+      }
+    }
+  },
+  "mul4": {
+    "Name": "mul4",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "sin2",
+      "b": "value5"
+    },
+    "Display": {
+      "offset": {
+        "left": 219,
+        "top": 224
+      }
+    }
+  },
+  "mul9": {
+    "Name": "mul9",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "value10",
+      "b": "delay7"
+    },
+    "Display": {
+      "offset": {
+        "left": 469,
+        "top": 410
+      }
+    }
+  },
+  "sin2": {
+    "Name": "sin2",
+    "Kind": "sin",
+    "Value": 0,
+    "Input": {
+      "pitch": "mul9"
+    },
+    "Display": {
+      "offset": {
+        "left": 246,
+        "top": 91
+      }
+    }
+  },
+  "sin3": {
+    "Name": "sin3",
+    "Kind": "sin",
+    "Value": 0,
+    "Input": {
+      "pitch": "mul4"
+    },
+    "Display": {
+      "offset": {
+        "left": 428,
+        "top": 103
+      }
+    }
+  },
+  "value10": {
+    "Name": "value10",
+    "Kind": "value",
+    "Value": 0.04,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 520,
+        "top": 334
+      }
+    }
+  },
+  "value5": {
+    "Name": "value5",
+    "Kind": "value",
+    "Value": 0.1,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 162,
+        "top": 130
+      }
+    }
+  },
+  "value8": {
+    "Name": "value8",
+    "Kind": "value",
+    "Value": 0.5,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 469,
+        "top": 251
+      }
+    }
+  }
+}
