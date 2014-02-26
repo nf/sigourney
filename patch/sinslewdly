@@ -1,0 +1,233 @@
+{
+  "delay24": {
+    "Name": "delay24",
+    "Kind": "delay",
+    "Value": 0,
+    "Input": {
+      "in": "sum26",
+      "len": "value25"
+    },
+    "Display": {
+      "offset": {
+        "left": 115,
+        "top": 342
+      }
+    }
+  },
+  "engine": {
+    "Name": "engine",
+    "Kind": "engine",
+    "Value": 0,
+    "Input": {
+      "in": "sum26"
+    },
+    "Display": {
+      "offset": {
+        "left": 404,
+        "top": 480.5
+      }
+    }
+  },
+  "env10": {
+    "Name": "env10",
+    "Kind": "env",
+    "Value": 0,
+    "Input": {
+      "att": "value11",
+      "dec": "value11",
+      "gate": "note2"
+    },
+    "Display": {
+      "offset": {
+        "left": 373,
+        "top": 150
+      }
+    }
+  },
+  "env5": {
+    "Name": "env5",
+    "Kind": "env",
+    "Value": 0,
+    "Input": {
+      "att": "value7",
+      "dec": "value8",
+      "gate": "gate3"
+    },
+    "Display": {
+      "offset": {
+        "left": 124,
+        "top": 172
+      }
+    }
+  },
+  "gate3": {
+    "Name": "gate3",
+    "Kind": "gate",
+    "Value": 0,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 198,
+        "top": 36
+      }
+    }
+  },
+  "mul27": {
+    "Name": "mul27",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "value28",
+      "b": "mul6"
+    },
+    "Display": {
+      "offset": {
+        "left": 296,
+        "top": 319
+      }
+    }
+  },
+  "mul29": {
+    "Name": "mul29",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "delay24",
+      "b": "value30"
+    },
+    "Display": {
+      "offset": {
+        "left": 111,
+        "top": 421
+      }
+    }
+  },
+  "mul6": {
+    "Name": "mul6",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "sin4",
+      "b": "env5"
+    },
+    "Display": {
+      "offset": {
+        "left": 186,
+        "top": 256
+      }
+    }
+  },
+  "note2": {
+    "Name": "note2",
+    "Kind": "note",
+    "Value": 0,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 301,
+        "top": 29
+      }
+    }
+  },
+  "sin4": {
+    "Name": "sin4",
+    "Kind": "sin",
+    "Value": 0,
+    "Input": {
+      "pitch": "env10"
+    },
+    "Display": {
+      "offset": {
+        "left": 243,
+        "top": 170
+      }
+    }
+  },
+  "sum26": {
+    "Name": "sum26",
+    "Kind": "sum",
+    "Value": 0,
+    "Input": {
+      "a": "mul27",
+      "b": "mul29"
+    },
+    "Display": {
+      "offset": {
+        "left": 261,
+        "top": 392
+      }
+    }
+  },
+  "value11": {
+    "Name": "value11",
+    "Kind": "value",
+    "Value": 0.1,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 432,
+        "top": 48
+      }
+    }
+  },
+  "value25": {
+    "Name": "value25",
+    "Kind": "value",
+    "Value": 0.5,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 90,
+        "top": 264
+      }
+    }
+  },
+  "value28": {
+    "Name": "value28",
+    "Kind": "value",
+    "Value": 0.4,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 289,
+        "top": 239
+      }
+    }
+  },
+  "value30": {
+    "Name": "value30",
+    "Kind": "value",
+    "Value": 0.5,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 42,
+        "top": 346
+      }
+    }
+  },
+  "value7": {
+    "Name": "value7",
+    "Kind": "value",
+    "Value": 0.001,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 85,
+        "top": 79
+      }
+    }
+  },
+  "value8": {
+    "Name": "value8",
+    "Kind": "value",
+    "Value": 0.03,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 112,
+        "top": 22
+      }
+    }
+  }
+}
