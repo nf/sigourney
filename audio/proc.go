@@ -163,26 +163,29 @@ func (e *Env) Process(s []Sample) {
 	att, dec, t := e.att.Process(), e.dec.Process(), e.trig.Process()
 	v := e.v
 	for i := range s {
-		trigger := e.trig.isTrigger(t[i])
-		if !e.up {
-			if trigger || v < s[i] {
-				e.up = true
-			} else if v > s[i] {
-				if d := dec[i]; d > 0 {
-					v -= 1 / (d * waveHz * 10)
+		if e.trig.isTrigger(t[i]) {
+			e.up = true
+		}
+		if !e.up && v > s[i] {
+			if d := dec[i]; d > 0 {
+				v -= 1 / (d * waveHz * 10)
+				if v < s[i] {
+					v = s[i]
 				}
 			}
 		}
-		if e.up {
+		if e.up || v < s[i] {
 			if a := att[i]; a > 0 {
 				v += 1 / (a * waveHz * 10)
+				if e.up {
+					if v > 1 {
+						v = 1
+						e.up = false
+					}
+				} else if v > s[i] {
+					v = s[i]
+				}
 			}
-		}
-		if v > 1 {
-			v = 1
-			e.up = false
-		} else if v < 0 {
-			v = 0
 		}
 		s[i] = v
 	}
