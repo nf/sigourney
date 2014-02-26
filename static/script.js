@@ -48,17 +48,17 @@ function onOpen() {
 	});
 
 	var fn = $('<input type="text"/>');
-	var save = $('<input type="button" value="save"/>');
 	var load = $('<input type="button" value="load"/>');
+	var save = $('<input type="button" value="save"/>');
 	$('#control').append(fn, load, save);
 
-	load.click(function() {
+	var loadFn  = function() {
 		$('.object').each(function() { plumb.remove(this); });
 		send({Action: 'load', Name: fn.val()});
-	});
-	save.click(function() {
-		send({Action: 'save', Name: fn.val()});
-	});
+	};
+	fn.keypress(function(e) { if (e.charCode == 13) loadFn(); });
+	load.click(loadFn);
+	save.click(function() { send({Action: 'save', Name: fn.val()}); });
 }
 
 function onMessage(msg) {
