@@ -1,0 +1,234 @@
+{
+  "engine": {
+    "Name": "engine",
+    "Kind": "engine",
+    "Value": 0,
+    "Input": {
+      "in": "mul6"
+    },
+    "Display": {
+      "offset": {
+        "left": 144,
+        "top": 436.5
+      }
+    }
+  },
+  "env5": {
+    "Name": "env5",
+    "Kind": "env",
+    "Value": 0,
+    "Input": {
+      "att": "value7",
+      "dec": "value8",
+      "gate": "gate3"
+    },
+    "Display": {
+      "offset": {
+        "left": 124,
+        "top": 172
+      }
+    }
+  },
+  "gate3": {
+    "Name": "gate3",
+    "Kind": "gate",
+    "Value": 0,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 198,
+        "top": 36
+      }
+    }
+  },
+  "mul13": {
+    "Name": "mul13",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "sin12",
+      "b": "mul21"
+    },
+    "Display": {
+      "offset": {
+        "left": 326,
+        "top": 246
+      }
+    }
+  },
+  "mul21": {
+    "Name": "mul21",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "sin20",
+      "b": "value19"
+    },
+    "Display": {
+      "offset": {
+        "left": 391,
+        "top": 190
+      }
+    }
+  },
+  "mul6": {
+    "Name": "mul6",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "sin4",
+      "b": "env5"
+    },
+    "Display": {
+      "offset": {
+        "left": 155,
+        "top": 346
+      }
+    }
+  },
+  "note2": {
+    "Name": "note2",
+    "Kind": "note",
+    "Value": 0,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 248,
+        "top": 82
+      }
+    }
+  },
+  "sin12": {
+    "Name": "sin12",
+    "Kind": "sin",
+    "Value": 0,
+    "Input": {
+      "pitch": "sum10"
+    },
+    "Display": {
+      "offset": {
+        "left": 317,
+        "top": 175
+      }
+    }
+  },
+  "sin20": {
+    "Name": "sin20",
+    "Kind": "sin",
+    "Value": 0,
+    "Input": {
+      "pitch": "value22",
+      "syn": "gate3"
+    },
+    "Display": {
+      "offset": {
+        "left": 427,
+        "top": 116
+      }
+    }
+  },
+  "sin4": {
+    "Name": "sin4",
+    "Kind": "sin",
+    "Value": 0,
+    "Input": {
+      "pitch": "sum18"
+    },
+    "Display": {
+      "offset": {
+        "left": 272,
+        "top": 369
+      }
+    }
+  },
+  "sum10": {
+    "Name": "sum10",
+    "Kind": "sum",
+    "Value": 0,
+    "Input": {
+      "a": "value16",
+      "b": "note2"
+    },
+    "Display": {
+      "offset": {
+        "left": 349,
+        "top": 115
+      }
+    }
+  },
+  "sum18": {
+    "Name": "sum18",
+    "Kind": "sum",
+    "Value": 0,
+    "Input": {
+      "a": "note2",
+      "b": "mul13"
+    },
+    "Display": {
+      "offset": {
+        "left": 278,
+        "top": 307
+      }
+    }
+  },
+  "value16": {
+    "Name": "value16",
+    "Kind": "value",
+    "Value": 0.1,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 350,
+        "top": 20
+      }
+    }
+  },
+  "value19": {
+    "Name": "value19",
+    "Kind": "value",
+    "Value": 0.05,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 492,
+        "top": 130
+      }
+    }
+  },
+  "value22": {
+    "Name": "value22",
+    "Kind": "value",
+    "Value": -1.1,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 483,
+        "top": 38
+      }
+    }
+  },
+  "value7": {
+    "Name": "value7",
+    "Kind": "value",
+    "Value": 0.03,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 85,
+        "top": 79
+      }
+    }
+  },
+  "value8": {
+    "Name": "value8",
+    "Kind": "value",
+    "Value": 0.03,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 112,
+        "top": 22
+      }
+    }
+  }
+}
