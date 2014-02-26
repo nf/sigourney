@@ -26,7 +26,7 @@ func Sin(x float64) float64 {
 	}
 	t := int(f)
 	i := t & (sinLen - 1)
-	res := sin[i] + grd[i]*(f-float64(t))
+	res := sinTable[i] + sinGrad[i]*(f-float64(t))
 	if x < 0 {
 		return res * -1
 	}
@@ -38,17 +38,16 @@ const (
 	sinFactor = sinLen / (2 * math.Pi)
 )
 
-var sin []float64
-var grd []float64
+var sinTable, sinGrad []float64
 
 func init() {
-	sin = make([]float64, sinLen)
-	grd = make([]float64, sinLen)
+	sinTable = make([]float64, sinLen)
+	sinGrad = make([]float64, sinLen)
 	step := 1 / sinFactor
 	for i := 0; i < sinLen; i++ {
-		sin[i] = math.Sin(float64(i) * step)
+		sinTable[i] = math.Sin(float64(i) * step)
 	}
 	for i := 0; i < sinLen; i++ {
-		grd[i] = sin[(i+1)%sinLen] - sin[i]
+		sinGrad[i] = sinTable[(i+1)%sinLen] - sinTable[i]
 	}
 }
