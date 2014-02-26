@@ -133,11 +133,11 @@ type Sum struct {
 	b source
 }
 
-func (s *Sum) Process(buf []Sample) {
-	s.a.Process(buf)
+func (s *Sum) Process(a []Sample) {
+	s.a.Process(a)
 	b := s.b.Process()
-	for i := range buf {
-		buf[i] += b[i]
+	for i := range a {
+		a[i] += b[i]
 	}
 }
 
@@ -247,6 +247,44 @@ func (r *Rand) Process(s []Sample) {
 	r.last = v
 }
 
+func NewDelay() *Delay {
+	d := &Delay{buf: make([]Sample, waveHz)}
+	d.inputs("in", &d.in, "len", &d.len)
+	return d
+}
+
+type Delay struct {
+	sink
+	in  Processor
+	len source
+
+	p   int
+	buf []Sample
+}
+
+func (d *Delay) Process(s []Sample) {
+	d.in.Process(s)
+	l := d.len.Process()
+	p := d.p
+	for i := range s {
+		max := int(l[i] * waveHz)
+		if max <= 0 {
+			s[i] = 0
+			continue
+		}
+		if max > waveHz {
+			max = waveHz
+		}
+		if p >= max {
+			p = 0
+		}
+		s[i], d.buf[p] = d.buf[p], s[i]
+		p++
+
+	}
+	d.p = p
+}
+
 func NewDup(src Processor) *Dup {
 	d := &Dup{src: src}
 	return d
@@ -290,9 +328,11 @@ func (o *Output) Process(p []Sample) {
 	}
 	if !o.d.done {
 		o.d.done = true
-		o.d.src.Process(o.d.buf)
+		o.d.src.Process(p)
+		copy(o.d.buf, p)
+	} else {
+		copy(p, o.d.buf)
 	}
-	copy(p, o.d.buf)
 }
 
 func (o *Output) Close() {

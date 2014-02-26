@@ -1,0 +1,205 @@
+{
+  "delay10": {
+    "Name": "delay10",
+    "Kind": "delay",
+    "Value": 0,
+    "Input": {
+      "in": "sum16",
+      "len": "value12"
+    },
+    "Display": {
+      "offset": {
+        "left": 80,
+        "top": 450
+      }
+    }
+  },
+  "engine": {
+    "Name": "engine",
+    "Kind": "engine",
+    "Value": 0,
+    "Input": {
+      "in": "sum16"
+    },
+    "Display": {
+      "offset": {
+        "left": 330,
+        "top": 460.5
+      }
+    }
+  },
+  "env5": {
+    "Name": "env5",
+    "Kind": "env",
+    "Value": 0,
+    "Input": {
+      "att": "value7",
+      "dec": "value8",
+      "gate": "gate3"
+    },
+    "Display": {
+      "offset": {
+        "left": 124,
+        "top": 172
+      }
+    }
+  },
+  "gate3": {
+    "Name": "gate3",
+    "Kind": "gate",
+    "Value": 0,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 198,
+        "top": 36
+      }
+    }
+  },
+  "mul17": {
+    "Name": "mul17",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "value18",
+      "b": "mul6"
+    },
+    "Display": {
+      "offset": {
+        "left": 213,
+        "top": 304
+      }
+    }
+  },
+  "mul20": {
+    "Name": "mul20",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "value21",
+      "b": "delay10"
+    },
+    "Display": {
+      "offset": {
+        "left": 80,
+        "top": 533
+      }
+    }
+  },
+  "mul6": {
+    "Name": "mul6",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "sin4",
+      "b": "env5"
+    },
+    "Display": {
+      "offset": {
+        "left": 245,
+        "top": 256
+      }
+    }
+  },
+  "note2": {
+    "Name": "note2",
+    "Kind": "note",
+    "Value": 0,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 301,
+        "top": 29
+      }
+    }
+  },
+  "sin4": {
+    "Name": "sin4",
+    "Kind": "sin",
+    "Value": 0,
+    "Input": {
+      "pitch": "note2"
+    },
+    "Display": {
+      "offset": {
+        "left": 243,
+        "top": 170
+      }
+    }
+  },
+  "sum16": {
+    "Name": "sum16",
+    "Kind": "sum",
+    "Value": 0,
+    "Input": {
+      "a": "mul17",
+      "b": "mul20"
+    },
+    "Display": {
+      "offset": {
+        "left": 174,
+        "top": 356
+      }
+    }
+  },
+  "value12": {
+    "Name": "value12",
+    "Kind": "value",
+    "Value": 0.4,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 9,
+        "top": 358
+      }
+    }
+  },
+  "value18": {
+    "Name": "value18",
+    "Kind": "value",
+    "Value": 0.3,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 176,
+        "top": 256
+      }
+    }
+  },
+  "value21": {
+    "Name": "value21",
+    "Kind": "value",
+    "Value": 0.7,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 7,
+        "top": 448
+      }
+    }
+  },
+  "value7": {
+    "Name": "value7",
+    "Kind": "value",
+    "Value": 1e-05,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 85,
+        "top": 79
+      }
+    }
+  },
+  "value8": {
+    "Name": "value8",
+    "Kind": "value",
+    "Value": 0.02,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 112,
+        "top": 22
+      }
+    }
+  }
+}
