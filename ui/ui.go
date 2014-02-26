@@ -281,6 +281,8 @@ func NewObject(name, kind string, value float64) *Object {
 	switch kind {
 	case "clip":
 		p = audio.NewClip()
+	case "delay":
+		p = audio.NewDelay()
 	case "engine":
 		p = audio.NewEngine()
 	case "env":
@@ -335,6 +337,7 @@ func kindInputs() map[string][]string {
 
 var kinds = []string{
 	"clip",
+	"delay",
 	"engine",
 	"env",
 	"gate",
