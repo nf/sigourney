@@ -143,15 +143,15 @@ func (s *Sum) Process(buf []Sample) {
 
 func NewEnv() *Env {
 	e := &Env{}
-	e.inputs("trig", &e.trig, "att", &e.att, "dec", &e.dec)
+	e.inputs("gate", &e.gate, "trig", &e.trig, "att", &e.att, "dec", &e.dec)
 	return e
 }
 
 type Env struct {
 	sink
-	trig trigger
-	att  Processor
-	dec  source
+	gate     Processor
+	trig     trigger
+	att, dec source
 
 	v      Sample
 	up     bool
@@ -159,15 +159,15 @@ type Env struct {
 }
 
 func (e *Env) Process(s []Sample) {
-	e.att.Process(s)
-	att, dec, t := s, e.dec.Process(), e.trig.Process()
+	e.gate.Process(s)
+	att, dec, t := e.att.Process(), e.dec.Process(), e.trig.Process()
 	v := e.v
 	for i := range s {
 		trigger := e.trig.isTrigger(t[i])
 		if !e.up {
-			if trigger {
+			if trigger || v < s[i] {
 				e.up = true
-			} else if v > 0 {
+			} else if v > s[i] {
 				if d := dec[i]; d > 0 {
 					v -= 1 / (d * waveHz * 10)
 				}

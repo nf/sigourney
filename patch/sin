@@ -20,7 +20,7 @@
     "Input": {
       "att": "value7",
       "dec": "value8",
-      "trig": "gate3"
+      "gate": "gate3"
     },
     "Display": {
       "offset": {
@@ -36,7 +36,7 @@
     "Input": {},
     "Display": {
       "offset": {
-        "left": 302,
+        "left": 329,
         "top": 150
       }
     }
@@ -85,12 +85,12 @@
   "value7": {
     "Name": "value7",
     "Kind": "value",
-    "Value": 0.0001,
+    "Value": 0.03,
     "Input": {},
     "Display": {
       "offset": {
-        "left": 279,
-        "top": 200
+        "left": 146,
+        "top": 257
       }
     }
   },
@@ -101,8 +101,8 @@
     "Input": {},
     "Display": {
       "offset": {
-        "left": 318,
-        "top": 257
+        "left": 199,
+        "top": 183
       }
     }
   }
