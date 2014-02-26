@@ -50,6 +50,9 @@ type Message struct {
 
 	// "setDisplay"
 	Display map[string]interface{} `json:",omitempty"`
+
+	// "message"
+	Message string
 }
 
 type UI struct {
@@ -76,7 +79,15 @@ func (u *UI) Close() error {
 	return u.engine.Stop()
 }
 
-func (u *UI) Handle(m *Message) error {
+func (u *UI) Handle(m *Message) (err error) {
+	defer func() {
+		if err != nil {
+			u.m <- &Message{
+				Action:  "message",
+				Message: err.Error(),
+			}
+		}
+	}()
 	switch a := m.Action; a {
 	case "new":
 		u.newObject(m.Name, m.Kind, m.Value)

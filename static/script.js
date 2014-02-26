@@ -22,7 +22,7 @@ jsPlumb.bind('ready', function() {
 	ws.onopen = onOpen;
 	ws.onmessage = onMessage;
 	ws.onclose = function() {
-		$('#status').text('Lost connection to back end!');
+		$('#status').append('<div>Lost connection to back end!</div>');
 	};
 });
 
@@ -40,6 +40,7 @@ function onOpen() {
 		send({Action: 'connect', From: conn.source.id, To: conn.target.id, Input: input});
 	});
 	plumb.bind('connectionDetached', function(conn) {
+		if (!conn.targetEndpoint.isTarget) return;
 		var input = conn.targetEndpoint.getParameter('input');
 		send({Action: 'disconnect', From: conn.source.id, To: conn.target.id, Input: input});
 	});
@@ -74,6 +75,11 @@ function onMessage(msg) {
 			break;
 		case 'connect':
 			plumb.connect({uuids: [m.From + '-out', m.To + '-' + m.Input]});
+			break;
+		case 'message':
+			var div = $('<div></div>').text(m.Message);
+			$('#status').append(div);
+			setTimeout(function() { div.remove(); }, 5000);
 			break;
 	}
 }
@@ -207,18 +213,4 @@ function newObjectName(name, kind, value, display) {
 	if (kind != "engine")
 		send({Action: 'new', Name: name, Kind: kind, Value: value});
 	setDisplay();
-}
-
-function demo() {
-	var msgs = [
-		 {Action: 'new', Name: 'engine1', Kind: 'engine'},
-		 {Action: 'new', Name: 'osc1', Kind: 'osc'},
-		 {Action: 'connect', From: 'osc1', To: 'engine1', Input: 'root'}
-	];
-	for (var i = 0; i < msgs.length; i++) {
-		send(msgs[i]);
-	}
-	setTimeout(function() {
-		send({Action: 'disconnect', From: 'osc1', To: 'engine1', Input: 'root'});
-	}, 1000);
 }
