@@ -43,7 +43,6 @@ var midiNote, midiGate int64 // atomic
 func midiLoop(s *portmidi.Stream) {
 	var n int64
 	for e := range s.Listen() {
-		log.Printf("event: %#v\n", e)
 		switch e.Status {
 		case 144: // note on
 			n = e.Data1
