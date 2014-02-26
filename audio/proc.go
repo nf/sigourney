@@ -319,17 +319,12 @@ type Output struct {
 }
 
 func (o *Output) Process(p []Sample) {
-	if len(o.d.outs) == 1 {
-		if !o.d.done {
-			o.d.done = true
-			o.d.src.Process(p)
-		}
-		return
-	}
 	if !o.d.done {
 		o.d.done = true
 		o.d.src.Process(p)
-		copy(o.d.buf, p)
+		if len(o.d.outs) > 1 {
+			copy(o.d.buf, p)
+		}
 	} else {
 		copy(p, o.d.buf)
 	}
