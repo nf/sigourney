@@ -126,3 +126,59 @@ func (t *trigger) isTrigger(s Sample) bool {
 	return trig
 
 }
+
+func NewDup(src Processor) *Dup {
+	d := &Dup{src: src}
+	return d
+}
+
+type Dup struct {
+	src  Processor
+	outs []*Output
+	buf  []Sample
+	done bool
+}
+
+func (d *Dup) Tick() {
+	d.done = false
+}
+
+func (d *Dup) SetSource(p Processor) {
+	d.src = p
+}
+
+func (d *Dup) Output() *Output {
+	o := &Output{d: d}
+	d.outs = append(d.outs, o)
+	if len(d.outs) > 1 && d.buf == nil {
+		d.buf = make([]Sample, nSamples)
+	}
+	return o
+}
+
+type Output struct {
+	d *Dup
+}
+
+func (o *Output) Process(p []Sample) {
+	if !o.d.done {
+		o.d.done = true
+		o.d.src.Process(p)
+		if len(o.d.outs) > 1 {
+			copy(o.d.buf, p)
+		}
+	} else {
+		copy(p, o.d.buf)
+	}
+}
+
+func (o *Output) Close() {
+	outs := o.d.outs
+	for i, o2 := range outs {
+		if o == o2 {
+			copy(outs[i:], outs[i+1:])
+			o.d.outs = outs[:len(outs)-1]
+			break
+		}
+	}
+}
