@@ -24,7 +24,7 @@ Third, download (or update) and build Sigourney and its dependencies:
 	$ go get -u github.com/nf/sigourney
 
 
-## Using Sigourney
+## Usage
 
 Run the `sigourney` binary (which should be in `$GOPATH/bin`) from the
 repository root directory:
