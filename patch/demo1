@@ -1,0 +1,28 @@
+{
+  "engine": {
+    "Name": "engine",
+    "Kind": "engine",
+    "Value": 0,
+    "Input": {
+      "in": "sin2"
+    },
+    "Display": {
+      "offset": {
+        "left": 254,
+        "top": 328.5
+      }
+    }
+  },
+  "sin2": {
+    "Name": "sin2",
+    "Kind": "sin",
+    "Value": 0,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 268,
+        "top": 167
+      }
+    }
+  }
+}

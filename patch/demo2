@@ -1,0 +1,83 @@
+{
+  "engine": {
+    "Name": "engine",
+    "Kind": "engine",
+    "Value": 0,
+    "Input": {
+      "in": "sin2"
+    },
+    "Display": {
+      "offset": {
+        "left": 254,
+        "top": 328.5
+      }
+    }
+  },
+  "mul4": {
+    "Name": "mul4",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "sin3",
+      "b": "value5"
+    },
+    "Display": {
+      "offset": {
+        "left": 255,
+        "top": 152
+      }
+    }
+  },
+  "sin2": {
+    "Name": "sin2",
+    "Kind": "sin",
+    "Value": 0,
+    "Input": {
+      "pitch": "mul4"
+    },
+    "Display": {
+      "offset": {
+        "left": 268,
+        "top": 227
+      }
+    }
+  },
+  "sin3": {
+    "Name": "sin3",
+    "Kind": "sin",
+    "Value": 0,
+    "Input": {
+      "pitch": "value6"
+    },
+    "Display": {
+      "offset": {
+        "left": 269,
+        "top": 81
+      }
+    }
+  },
+  "value5": {
+    "Name": "value5",
+    "Kind": "value",
+    "Value": 0.1,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 197,
+        "top": 79
+      }
+    }
+  },
+  "value6": {
+    "Name": "value6",
+    "Kind": "value",
+    "Value": -0.1,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 276,
+        "top": 10
+      }
+    }
+  }
+}

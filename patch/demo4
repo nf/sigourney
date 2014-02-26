@@ -1,0 +1,232 @@
+{
+  "engine": {
+    "Name": "engine",
+    "Kind": "engine",
+    "Value": 0,
+    "Input": {
+      "in": "mul12"
+    },
+    "Display": {
+      "offset": {
+        "left": 164,
+        "top": 424.5
+      }
+    }
+  },
+  "env7": {
+    "Name": "env7",
+    "Kind": "env",
+    "Value": 0,
+    "Input": {
+      "att": "value11",
+      "dec": "value10",
+      "trig": "square8"
+    },
+    "Display": {
+      "offset": {
+        "left": 103,
+        "top": 274
+      }
+    }
+  },
+  "mul12": {
+    "Name": "mul12",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "sin2",
+      "b": "env7"
+    },
+    "Display": {
+      "offset": {
+        "left": 176,
+        "top": 342
+      }
+    }
+  },
+  "mul17": {
+    "Name": "mul17",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "value16",
+      "b": "sin14"
+    },
+    "Display": {
+      "offset": {
+        "left": 338,
+        "top": 139
+      }
+    }
+  },
+  "mul4": {
+    "Name": "mul4",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "sin3",
+      "b": "value5"
+    },
+    "Display": {
+      "offset": {
+        "left": 255,
+        "top": 152
+      }
+    }
+  },
+  "sin14": {
+    "Name": "sin14",
+    "Kind": "sin",
+    "Value": 0,
+    "Input": {
+      "pitch": "value15"
+    },
+    "Display": {
+      "offset": {
+        "left": 348,
+        "top": 68
+      }
+    }
+  },
+  "sin2": {
+    "Name": "sin2",
+    "Kind": "sin",
+    "Value": 0,
+    "Input": {
+      "pitch": "mul4"
+    },
+    "Display": {
+      "offset": {
+        "left": 268,
+        "top": 227
+      }
+    }
+  },
+  "sin3": {
+    "Name": "sin3",
+    "Kind": "sin",
+    "Value": 0,
+    "Input": {
+      "pitch": "value6"
+    },
+    "Display": {
+      "offset": {
+        "left": 269,
+        "top": 81
+      }
+    }
+  },
+  "square8": {
+    "Name": "square8",
+    "Kind": "square",
+    "Value": 0,
+    "Input": {
+      "pitch": "sum13"
+    },
+    "Display": {
+      "offset": {
+        "left": 86,
+        "top": 121
+      }
+    }
+  },
+  "sum13": {
+    "Name": "sum13",
+    "Kind": "sum",
+    "Value": 0,
+    "Input": {
+      "a": "value9",
+      "b": "mul17"
+    },
+    "Display": {
+      "offset": {
+        "left": 109,
+        "top": 55
+      }
+    }
+  },
+  "value10": {
+    "Name": "value10",
+    "Kind": "value",
+    "Value": 0.01,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 175,
+        "top": 187
+      }
+    }
+  },
+  "value11": {
+    "Name": "value11",
+    "Kind": "value",
+    "Value": 0.0001,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 98,
+        "top": 178
+      }
+    }
+  },
+  "value15": {
+    "Name": "value15",
+    "Kind": "value",
+    "Value": -1.1,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 365,
+        "top": 10
+      }
+    }
+  },
+  "value16": {
+    "Name": "value16",
+    "Kind": "value",
+    "Value": 0.2,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 427,
+        "top": 102
+      }
+    }
+  },
+  "value5": {
+    "Name": "value5",
+    "Kind": "value",
+    "Value": 0.1,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 197,
+        "top": 79
+      }
+    }
+  },
+  "value6": {
+    "Name": "value6",
+    "Kind": "value",
+    "Value": -0.1,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 276,
+        "top": 10
+      }
+    }
+  },
+  "value9": {
+    "Name": "value9",
+    "Kind": "value",
+    "Value": -0.7,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 121,
+        "top": -3
+      }
+    }
+  }
+}
