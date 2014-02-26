@@ -328,9 +328,11 @@ func (o *Output) Process(p []Sample) {
 	}
 	if !o.d.done {
 		o.d.done = true
-		o.d.src.Process(o.d.buf)
+		o.d.src.Process(p)
+		copy(o.d.buf, p)
+	} else {
+		copy(p, o.d.buf)
 	}
-	copy(p, o.d.buf)
 }
 
 func (o *Output) Close() {
