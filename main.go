@@ -26,6 +26,7 @@ import (
 
 	"code.google.com/p/portaudio-go/portaudio"
 	"github.com/gorilla/websocket"
+	"github.com/rakyll/portmidi"
 )
 
 var (
@@ -38,6 +39,9 @@ func main() {
 
 	portaudio.Initialize()
 	defer portaudio.Terminate()
+
+	portmidi.Initialize()
+	defer portmidi.Terminate()
 
 	if *doDemo {
 		if err := demo(); err != nil {
