@@ -8,8 +8,8 @@
     },
     "Display": {
       "offset": {
-        "left": 174,
-        "top": 353.5
+        "left": 144,
+        "top": 436.5
       }
     }
   },
@@ -41,18 +41,33 @@
       }
     }
   },
+  "mul13": {
+    "Name": "mul13",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "sum14",
+      "b": "value15"
+    },
+    "Display": {
+      "offset": {
+        "left": 229,
+        "top": 284
+      }
+    }
+  },
   "mul6": {
     "Name": "mul6",
     "Kind": "mul",
     "Value": 0,
     "Input": {
-      "a": "sin4",
+      "a": "mul13",
       "b": "env5"
     },
     "Display": {
       "offset": {
-        "left": 186,
-        "top": 256
+        "left": 155,
+        "top": 346
       }
     }
   },
@@ -63,8 +78,22 @@
     "Input": {},
     "Display": {
       "offset": {
-        "left": 301,
+        "left": 291,
         "top": 29
+      }
+    }
+  },
+  "sin12": {
+    "Name": "sin12",
+    "Kind": "sin",
+    "Value": 0,
+    "Input": {
+      "pitch": "sum10"
+    },
+    "Display": {
+      "offset": {
+        "left": 317,
+        "top": 175
       }
     }
   },
@@ -78,7 +107,61 @@
     "Display": {
       "offset": {
         "left": 243,
-        "top": 170
+        "top": 172
+      }
+    }
+  },
+  "sum10": {
+    "Name": "sum10",
+    "Kind": "sum",
+    "Value": 0,
+    "Input": {
+      "a": "value16",
+      "b": "note2"
+    },
+    "Display": {
+      "offset": {
+        "left": 349,
+        "top": 115
+      }
+    }
+  },
+  "sum14": {
+    "Name": "sum14",
+    "Kind": "sum",
+    "Value": 0,
+    "Input": {
+      "a": "sin12",
+      "b": "sin4"
+    },
+    "Display": {
+      "offset": {
+        "left": 313,
+        "top": 256
+      }
+    }
+  },
+  "value15": {
+    "Name": "value15",
+    "Kind": "value",
+    "Value": 0.4,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 180,
+        "top": 216
+      }
+    }
+  },
+  "value16": {
+    "Name": "value16",
+    "Kind": "value",
+    "Value": 0.041666,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 392,
+        "top": 30
       }
     }
   },
