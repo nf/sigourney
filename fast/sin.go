@@ -18,19 +18,19 @@ package fast
 
 import "math"
 
-func Sin(f float64) float64 {
-	neg := f < 0
-	if neg {
+// Fast Sine approximation with table lookup and linear interpolation.
+func Sin(x float64) float64 {
+	f := x * sinFactor
+	if x < 0 {
 		f *= -1
 	}
-	f = f * sinFactor
-	d := f - math.Trunc(f)
-	i := int(f)
-	f = sin[i%sinLen]*(1-d) + sin[(i+1)%sinLen]*d
-	if neg {
-		return f * -1
+	t := int(f)
+	i := t & (sinLen - 1)
+	res := sin[i] + grd[i]*(f-float64(t))
+	if x < 0 {
+		return res * -1
 	}
-	return f
+	return res
 }
 
 const (
@@ -39,11 +39,16 @@ const (
 )
 
 var sin []float64
+var grd []float64
 
 func init() {
 	sin = make([]float64, sinLen)
+	grd = make([]float64, sinLen)
 	step := 1 / sinFactor
-	for i := range sin {
+	for i := 0; i < sinLen; i++ {
 		sin[i] = math.Sin(float64(i) * step)
+	}
+	for i := 0; i < sinLen; i++ {
+		grd[i] = sin[(i+1)%sinLen] - sin[i]
 	}
 }

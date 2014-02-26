@@ -14,10 +14,10 @@ In the future Sigourney should run on OS X, Linux, and Windows.
 First, [install Go](http://golang.org/doc/install).
 (Make sure you [set GOPATH](http://golang.org/doc/code.html).)
 
-Second, install portaudio.
+Second, install portaudio and portmidi.
 I used [Homebrew](http://brew.sh/) to do this under OS X.
 
-	$ brew install portaudio
+	$ brew install portaudio portmidi
 
 Third, download (or update) and build Sigourney and its dependencies:
 
