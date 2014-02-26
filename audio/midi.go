@@ -45,15 +45,32 @@ func initMidi() {
 var midiNote, midiGate int64 // atomic
 
 func midiLoop(s *portmidi.Stream) {
-	var n int64
+	noteOn := make([]int64, 0, 128)
 	for e := range s.Listen() {
 		switch e.Status {
 		case 144: // note on
-			n = e.Data1
-			atomic.StoreInt64(&midiNote, n)
+			on := false
+			for _, n := range noteOn {
+				if n == e.Data1 {
+					on = true
+				}
+			}
+			if !on {
+				noteOn = append(noteOn, e.Data1)
+			}
+			atomic.StoreInt64(&midiNote, e.Data1)
 			atomic.StoreInt64(&midiGate, 1)
 		case 128: // note off
-			if e.Data1 == n {
+			for i, n := range noteOn {
+				if n == e.Data1 {
+					copy(noteOn[i:], noteOn[i+1:])
+					noteOn = noteOn[:len(noteOn)-1]
+				}
+			}
+			if len(noteOn) > 0 {
+				n := noteOn[len(noteOn)-1]
+				atomic.StoreInt64(&midiNote, n)
+			} else {
 				atomic.StoreInt64(&midiGate, 0)
 			}
 		}
