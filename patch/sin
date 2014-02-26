@@ -1,0 +1,109 @@
+{
+  "engine": {
+    "Name": "engine",
+    "Kind": "engine",
+    "Value": 0,
+    "Input": {
+      "in": "mul6"
+    },
+    "Display": {
+      "offset": {
+        "left": 347,
+        "top": 533.5
+      }
+    }
+  },
+  "env5": {
+    "Name": "env5",
+    "Kind": "env",
+    "Value": 0,
+    "Input": {
+      "att": "value7",
+      "dec": "value8",
+      "trig": "gate3"
+    },
+    "Display": {
+      "offset": {
+        "left": 303,
+        "top": 321
+      }
+    }
+  },
+  "gate3": {
+    "Name": "gate3",
+    "Kind": "gate",
+    "Value": 0,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 302,
+        "top": 150
+      }
+    }
+  },
+  "mul6": {
+    "Name": "mul6",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "sin4",
+      "b": "env5"
+    },
+    "Display": {
+      "offset": {
+        "left": 355,
+        "top": 428
+      }
+    }
+  },
+  "note2": {
+    "Name": "note2",
+    "Kind": "note",
+    "Value": 0,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 408,
+        "top": 245
+      }
+    }
+  },
+  "sin4": {
+    "Name": "sin4",
+    "Kind": "sin",
+    "Value": 0,
+    "Input": {
+      "pitch": "note2"
+    },
+    "Display": {
+      "offset": {
+        "left": 400,
+        "top": 346
+      }
+    }
+  },
+  "value7": {
+    "Name": "value7",
+    "Kind": "value",
+    "Value": 0.0001,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 279,
+        "top": 200
+      }
+    }
+  },
+  "value8": {
+    "Name": "value8",
+    "Kind": "value",
+    "Value": 0.03,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 318,
+        "top": 257
+      }
+    }
+  }
+}
