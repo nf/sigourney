@@ -1,0 +1,261 @@
+{
+  "delay13": {
+    "Name": "delay13",
+    "Kind": "delay",
+    "Value": 0,
+    "Input": {
+      "in": "mul14",
+      "len": "value17"
+    },
+    "Display": {
+      "offset": {
+        "left": 60,
+        "top": 394
+      }
+    }
+  },
+  "engine": {
+    "Name": "engine",
+    "Kind": "engine",
+    "Value": 0,
+    "Input": {
+      "in": "sum15"
+    },
+    "Display": {
+      "offset": {
+        "left": 338.5,
+        "top": 573.5
+      }
+    }
+  },
+  "env10": {
+    "Name": "env10",
+    "Kind": "env",
+    "Value": 0,
+    "Input": {
+      "att": "value21",
+      "dec": "value12",
+      "trig": "square6"
+    },
+    "Display": {
+      "offset": {
+        "left": 145,
+        "top": 95
+      }
+    }
+  },
+  "mul11": {
+    "Name": "mul11",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "sin8",
+      "b": "env10"
+    },
+    "Display": {
+      "offset": {
+        "left": 348,
+        "top": 299
+      }
+    }
+  },
+  "mul14": {
+    "Name": "mul14",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "value16",
+      "b": "sum15"
+    },
+    "Display": {
+      "offset": {
+        "left": 105,
+        "top": 329
+      }
+    }
+  },
+  "mul18": {
+    "Name": "mul18",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "value19",
+      "b": "mul11"
+    },
+    "Display": {
+      "offset": {
+        "left": 354,
+        "top": 372
+      }
+    }
+  },
+  "quant7": {
+    "Name": "quant7",
+    "Kind": "quant",
+    "Value": 0,
+    "Input": {
+      "in": "rand5"
+    },
+    "Display": {
+      "offset": {
+        "left": 381,
+        "top": 156
+      }
+    }
+  },
+  "rand5": {
+    "Name": "rand5",
+    "Kind": "rand",
+    "Value": 0,
+    "Input": {
+      "max": "value4",
+      "min": "value3",
+      "trig": "square6"
+    },
+    "Display": {
+      "offset": {
+        "left": 385,
+        "top": 91
+      }
+    }
+  },
+  "sin8": {
+    "Name": "sin8",
+    "Kind": "sin",
+    "Value": 0,
+    "Input": {
+      "pitch": "quant7"
+    },
+    "Display": {
+      "offset": {
+        "left": 391,
+        "top": 236
+      }
+    }
+  },
+  "square6": {
+    "Name": "square6",
+    "Kind": "square",
+    "Value": 0,
+    "Input": {
+      "pitch": "value2"
+    },
+    "Display": {
+      "offset": {
+        "left": 253,
+        "top": 94
+      }
+    }
+  },
+  "sum15": {
+    "Name": "sum15",
+    "Kind": "sum",
+    "Value": 0,
+    "Input": {
+      "a": "mul18",
+      "b": "delay13"
+    },
+    "Display": {
+      "offset": {
+        "left": 347,
+        "top": 471
+      }
+    }
+  },
+  "value12": {
+    "Name": "value12",
+    "Kind": "value",
+    "Value": 0.01,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 181,
+        "top": 15
+      }
+    }
+  },
+  "value16": {
+    "Name": "value16",
+    "Kind": "value",
+    "Value": 0.9,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 118,
+        "top": 235
+      }
+    }
+  },
+  "value17": {
+    "Name": "value17",
+    "Kind": "value",
+    "Value": 0.02,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 28,
+        "top": 330
+      }
+    }
+  },
+  "value19": {
+    "Name": "value19",
+    "Kind": "value",
+    "Value": 0.3,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 423,
+        "top": 298
+      }
+    }
+  },
+  "value2": {
+    "Name": "value2",
+    "Kind": "value",
+    "Value": -0.65,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 271,
+        "top": 15
+      }
+    }
+  },
+  "value21": {
+    "Name": "value21",
+    "Kind": "value",
+    "Value": 0.001,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 88,
+        "top": 21
+      }
+    }
+  },
+  "value3": {
+    "Name": "value3",
+    "Kind": "value",
+    "Value": -0.2,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 465,
+        "top": 12
+      }
+    }
+  },
+  "value4": {
+    "Name": "value4",
+    "Kind": "value",
+    "Value": 0.2,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 398,
+        "top": 12
+      }
+    }
+  }
+}
