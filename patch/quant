@@ -117,7 +117,7 @@
     },
     "Display": {
       "offset": {
-        "left": 427,
+        "left": 424,
         "top": 447
       }
     }
@@ -282,8 +282,8 @@
     },
     "Display": {
       "offset": {
-        "left": 637,
-        "top": 451
+        "left": 610,
+        "top": 490
       }
     }
   },
@@ -403,8 +403,8 @@
     },
     "Display": {
       "offset": {
-        "left": 11,
-        "top": 400
+        "left": 6,
+        "top": 404
       }
     }
   },
@@ -469,7 +469,7 @@
     "Kind": "sin",
     "Value": 0,
     "Input": {
-      "pitch": "value91"
+      "pitch": "value99"
     },
     "Display": {
       "offset": {
@@ -497,7 +497,8 @@
     "Kind": "sin",
     "Value": 0,
     "Input": {
-      "pitch": "value88"
+      "pitch": "value88",
+      "syn": "skip80"
     },
     "Display": {
       "offset": {
@@ -695,7 +696,7 @@
     },
     "Display": {
       "offset": {
-        "left": 723,
+        "left": 706,
         "top": 448
       }
     }
@@ -725,8 +726,8 @@
     },
     "Display": {
       "offset": {
-        "left": 1058,
-        "top": 558
+        "left": 1052,
+        "top": 561
       }
     }
   },
@@ -741,7 +742,7 @@
     "Display": {
       "offset": {
         "left": 534,
-        "top": 346
+        "top": 353
       }
     }
   },
@@ -752,8 +753,8 @@
     "Input": {},
     "Display": {
       "offset": {
-        "left": 489,
-        "top": 438
+        "left": 498,
+        "top": 442
       }
     }
   },
@@ -892,7 +893,7 @@
   "value44": {
     "Name": "value44",
     "Kind": "value",
-    "Value": -3,
+    "Value": -1.5,
     "Input": {},
     "Display": {
       "offset": {
@@ -1012,7 +1013,7 @@
   "value70": {
     "Name": "value70",
     "Kind": "value",
-    "Value": 0.4,
+    "Value": 0.8,
     "Input": {},
     "Display": {
       "offset": {
@@ -1024,11 +1025,11 @@
   "value79": {
     "Name": "value79",
     "Kind": "value",
-    "Value": -0.1,
+    "Value": -0.2,
     "Input": {},
     "Display": {
       "offset": {
-        "left": 613,
+        "left": 603,
         "top": 292
       }
     }
@@ -1036,12 +1037,12 @@
   "value81": {
     "Name": "value81",
     "Kind": "value",
-    "Value": 1.6,
+    "Value": 0.8,
     "Input": {},
     "Display": {
       "offset": {
-        "left": 938,
-        "top": 341
+        "left": 941,
+        "top": 327
       }
     }
   },
@@ -1072,7 +1073,7 @@
   "value88": {
     "Name": "value88",
     "Kind": "value",
-    "Value": -1.5,
+    "Value": -1,
     "Input": {},
     "Display": {
       "offset": {
@@ -1084,24 +1085,24 @@
   "value91": {
     "Name": "value91",
     "Kind": "value",
-    "Value": -0.35,
+    "Value": -0.4,
     "Input": {},
     "Display": {
       "offset": {
-        "left": 781,
-        "top": 382
+        "left": 705,
+        "top": 380
       }
     }
   },
   "value96": {
     "Name": "value96",
     "Kind": "value",
-    "Value": 0.1,
+    "Value": 0.2,
     "Input": {},
     "Display": {
       "offset": {
-        "left": 539,
-        "top": 293
+        "left": 528,
+        "top": 291
       }
     }
   },
@@ -1114,6 +1115,18 @@
       "offset": {
         "left": 1014,
         "top": 395
+      }
+    }
+  },
+  "value99": {
+    "Name": "value99",
+    "Kind": "value",
+    "Value": -0.41,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 778,
+        "top": 443
       }
     }
   }
