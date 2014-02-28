@@ -310,6 +310,8 @@ func NewObject(name, kind string, value float64) *Object {
 		p = audio.NewRand()
 	case "sin":
 		p = audio.NewSin()
+	case "skip":
+		p = audio.NewSkip()
 	case "square":
 		p = audio.NewSquare()
 	case "sum":
@@ -359,6 +361,7 @@ var kinds = []string{
 	"quant",
 	"rand",
 	"sin",
+	"skip",
 	"square",
 	"sum",
 	"value",

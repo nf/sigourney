@@ -304,3 +304,33 @@ func (q *Quant) Process(s []Sample) {
 		s[i] = Sample(int(s[i]*120)) / 120
 	}
 }
+
+func NewSkip() *Skip {
+	s := &Skip{}
+	s.inputs("num", &s.num, "trig", &s.trig)
+	return s
+}
+
+type Skip struct {
+	sink
+	num  Processor
+	trig trigger
+
+	n int
+}
+
+func (s *Skip) Process(b []Sample) {
+	s.num.Process(b)
+	t := s.trig.Process()
+	for i := range b {
+		if s.trig.isTrigger(t[i]) {
+			m := int(b[i] * 10)
+			if m <= 0 || s.n%m == 0 {
+				b[i], s.n = 1, 1
+				continue
+			}
+			s.n++
+		}
+		b[i] = 0
+	}
+}

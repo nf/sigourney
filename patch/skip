@@ -1,0 +1,124 @@
+{
+  "engine": {
+    "Name": "engine",
+    "Kind": "engine",
+    "Value": 0,
+    "Input": {
+      "in": "mul9"
+    },
+    "Display": {
+      "offset": {
+        "left": 556.5,
+        "top": 502.5
+      }
+    }
+  },
+  "env6": {
+    "Name": "env6",
+    "Kind": "env",
+    "Value": 0,
+    "Input": {
+      "att": "value7",
+      "dec": "value7",
+      "trig": "skip2"
+    },
+    "Display": {
+      "offset": {
+        "left": 265,
+        "top": 373
+      }
+    }
+  },
+  "mul9": {
+    "Name": "mul9",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "sin8",
+      "b": "env6"
+    },
+    "Display": {
+      "offset": {
+        "left": 411,
+        "top": 434
+      }
+    }
+  },
+  "sin8": {
+    "Name": "sin8",
+    "Kind": "sin",
+    "Value": 0,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 501,
+        "top": 352
+      }
+    }
+  },
+  "skip2": {
+    "Name": "skip2",
+    "Kind": "skip",
+    "Value": 0,
+    "Input": {
+      "num": "value5",
+      "trig": "square3"
+    },
+    "Display": {
+      "offset": {
+        "left": 292,
+        "top": 228
+      }
+    }
+  },
+  "square3": {
+    "Name": "square3",
+    "Kind": "square",
+    "Value": 0,
+    "Input": {
+      "pitch": "value4"
+    },
+    "Display": {
+      "offset": {
+        "left": 173,
+        "top": 144
+      }
+    }
+  },
+  "value4": {
+    "Name": "value4",
+    "Kind": "value",
+    "Value": -0.8,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 185,
+        "top": 50
+      }
+    }
+  },
+  "value5": {
+    "Name": "value5",
+    "Kind": "value",
+    "Value": 0.2,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 307,
+        "top": 148
+      }
+    }
+  },
+  "value7": {
+    "Name": "value7",
+    "Kind": "value",
+    "Value": 0.001,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 352,
+        "top": 304
+      }
+    }
+  }
+}
