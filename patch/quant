@@ -44,6 +44,22 @@
       }
     }
   },
+  "env35": {
+    "Name": "env35",
+    "Kind": "env",
+    "Value": 0,
+    "Input": {
+      "att": "value36",
+      "dec": "value36",
+      "gate": "rand28"
+    },
+    "Display": {
+      "offset": {
+        "left": 640,
+        "top": 182
+      }
+    }
+  },
   "mul11": {
     "Name": "mul11",
     "Kind": "mul",
@@ -54,8 +70,8 @@
     },
     "Display": {
       "offset": {
-        "left": 365,
-        "top": 299
+        "left": 369,
+        "top": 340
       }
     }
   },
@@ -84,8 +100,8 @@
     },
     "Display": {
       "offset": {
-        "left": 354,
-        "top": 401
+        "left": 355,
+        "top": 406
       }
     }
   },
@@ -94,13 +110,13 @@
     "Kind": "mul",
     "Value": 0,
     "Input": {
-      "a": "rand28",
+      "a": "env35",
       "b": "sin22"
     },
     "Display": {
       "offset": {
-        "left": 558,
-        "top": 240
+        "left": 538,
+        "top": 243
       }
     }
   },
@@ -143,8 +159,8 @@
     },
     "Display": {
       "offset": {
-        "left": 629,
-        "top": 175
+        "left": 711,
+        "top": 101
       }
     }
   },
@@ -188,8 +204,8 @@
     },
     "Display": {
       "offset": {
-        "left": 553,
-        "top": 174
+        "left": 539,
+        "top": 172
       }
     }
   },
@@ -246,8 +262,8 @@
     },
     "Display": {
       "offset": {
-        "left": 562,
-        "top": 103
+        "left": 543,
+        "top": 107
       }
     }
   },
@@ -269,7 +285,7 @@
   "value12": {
     "Name": "value12",
     "Kind": "value",
-    "Value": 0.005,
+    "Value": 0.01,
     "Input": {},
     "Display": {
       "offset": {
@@ -297,19 +313,19 @@
     "Input": {},
     "Display": {
       "offset": {
-        "left": 28,
-        "top": 330
+        "left": 25,
+        "top": 329
       }
     }
   },
   "value19": {
     "Name": "value19",
     "Kind": "value",
-    "Value": 0.3,
+    "Value": 0.15,
     "Input": {},
     "Display": {
       "offset": {
-        "left": 301,
+        "left": 291,
         "top": 341
       }
     }
@@ -333,20 +349,20 @@
     "Input": {},
     "Display": {
       "offset": {
-        "left": 199,
-        "top": 171
+        "left": 203,
+        "top": 173
       }
     }
   },
   "value24": {
     "Name": "value24",
     "Kind": "value",
-    "Value": 0.1,
+    "Value": 0.3,
     "Input": {},
     "Display": {
       "offset": {
-        "left": 652,
-        "top": 99
+        "left": 735,
+        "top": 18
       }
     }
   },
@@ -357,8 +373,8 @@
     "Input": {},
     "Display": {
       "offset": {
-        "left": 578,
-        "top": 18
+        "left": 559,
+        "top": 17
       }
     }
   },
@@ -369,7 +385,7 @@
     "Input": {},
     "Display": {
       "offset": {
-        "left": 457,
+        "left": 444,
         "top": 13
       }
     }
@@ -386,6 +402,18 @@
       }
     }
   },
+  "value36": {
+    "Name": "value36",
+    "Kind": "value",
+    "Value": 0.01,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 625,
+        "top": 100
+      }
+    }
+  },
   "value4": {
     "Name": "value4",
     "Kind": "value",
@@ -393,7 +421,7 @@
     "Input": {},
     "Display": {
       "offset": {
-        "left": 389,
+        "left": 380,
         "top": 13
       }
     }
