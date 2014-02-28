@@ -286,3 +286,21 @@ func (d *Delay) Process(s []Sample) {
 	}
 	d.p = p
 }
+
+func NewQuant() *Quant {
+	q := &Quant{}
+	q.inputs("in", &q.in)
+	return q
+}
+
+type Quant struct {
+	sink
+	in Processor
+}
+
+func (q *Quant) Process(s []Sample) {
+	q.in.Process(s)
+	for i := range s {
+		s[i] = Sample(int(s[i]*120)) / 120
+	}
+}

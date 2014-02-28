@@ -298,8 +298,14 @@ func NewObject(name, kind string, value float64) *Object {
 		p = audio.NewEngine()
 	case "env":
 		p = audio.NewEnv()
+	case "gate":
+		p = audio.NewMidiGate()
 	case "mul":
 		p = audio.NewMul()
+	case "note":
+		p = audio.NewMidiNote()
+	case "quant":
+		p = audio.NewQuant()
 	case "rand":
 		p = audio.NewRand()
 	case "sin":
@@ -310,10 +316,6 @@ func NewObject(name, kind string, value float64) *Object {
 		p = audio.NewSum()
 	case "value":
 		p = audio.Value(value)
-	case "note":
-		p = audio.NewMidiNote()
-	case "gate":
-		p = audio.NewMidiGate()
 	default:
 		panic("bad kind: " + kind)
 	}
@@ -353,9 +355,10 @@ var kinds = []string{
 	"env",
 	"gate",
 	"mul",
+	"note",
+	"quant",
 	"rand",
 	"sin",
-	"note",
 	"square",
 	"sum",
 	"value",
