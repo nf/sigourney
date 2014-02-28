@@ -9,8 +9,8 @@
     },
     "Display": {
       "offset": {
-        "left": 60,
-        "top": 394
+        "left": 547,
+        "top": 509
       }
     }
   },
@@ -19,12 +19,12 @@
     "Kind": "engine",
     "Value": 0,
     "Input": {
-      "in": "sum15"
+      "in": "sum61"
     },
     "Display": {
       "offset": {
-        "left": 330.5,
-        "top": 577.5
+        "left": 301.5,
+        "top": 605.5
       }
     }
   },
@@ -33,8 +33,8 @@
     "Kind": "env",
     "Value": 0,
     "Input": {
-      "att": "value21",
-      "dec": "value12",
+      "att": "value38",
+      "dec": "sum45",
       "trig": "mul31"
     },
     "Display": {
@@ -60,6 +60,22 @@
       }
     }
   },
+  "env53": {
+    "Name": "env53",
+    "Kind": "env",
+    "Value": 0,
+    "Input": {
+      "att": "value55",
+      "dec": "value54",
+      "trig": "square6"
+    },
+    "Display": {
+      "offset": {
+        "left": 161,
+        "top": 316
+      }
+    }
+  },
   "mul11": {
     "Name": "mul11",
     "Kind": "mul",
@@ -71,7 +87,7 @@
     "Display": {
       "offset": {
         "left": 369,
-        "top": 340
+        "top": 331
       }
     }
   },
@@ -80,13 +96,13 @@
     "Kind": "mul",
     "Value": 0,
     "Input": {
-      "a": "value16",
+      "a": "sum50",
       "b": "sum15"
     },
     "Display": {
       "offset": {
-        "left": 105,
-        "top": 329
+        "left": 542,
+        "top": 439
       }
     }
   },
@@ -100,8 +116,8 @@
     },
     "Display": {
       "offset": {
-        "left": 355,
-        "top": 406
+        "left": 354,
+        "top": 392
       }
     }
   },
@@ -130,8 +146,98 @@
     },
     "Display": {
       "offset": {
-        "left": 127,
-        "top": 143
+        "left": 126,
+        "top": 172
+      }
+    }
+  },
+  "mul42": {
+    "Name": "mul42",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "value43",
+      "b": "sin40"
+    },
+    "Display": {
+      "offset": {
+        "left": 1087,
+        "top": 271
+      }
+    }
+  },
+  "mul47": {
+    "Name": "mul47",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "sin40",
+      "b": "value48"
+    },
+    "Display": {
+      "offset": {
+        "left": 763,
+        "top": 259
+      }
+    }
+  },
+  "mul49": {
+    "Name": "mul49",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "sin40",
+      "b": "value39"
+    },
+    "Display": {
+      "offset": {
+        "left": 905,
+        "top": 259
+      }
+    }
+  },
+  "mul58": {
+    "Name": "mul58",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "mul59",
+      "b": "sin52"
+    },
+    "Display": {
+      "offset": {
+        "left": 112,
+        "top": 540
+      }
+    }
+  },
+  "mul59": {
+    "Name": "mul59",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "mul62",
+      "b": "env53"
+    },
+    "Display": {
+      "offset": {
+        "left": 167,
+        "top": 475
+      }
+    }
+  },
+  "mul62": {
+    "Name": "mul62",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "sum63",
+      "b": "value60"
+    },
+    "Display": {
+      "offset": {
+        "left": 204,
+        "top": 424
       }
     }
   },
@@ -154,13 +260,13 @@
     "Kind": "rand",
     "Value": 0,
     "Input": {
-      "max": "value24",
+      "max": "sum41",
       "trig": "square6"
     },
     "Display": {
       "offset": {
-        "left": 711,
-        "top": 101
+        "left": 904,
+        "top": 99
       }
     }
   },
@@ -209,6 +315,34 @@
       }
     }
   },
+  "sin40": {
+    "Name": "sin40",
+    "Kind": "sin",
+    "Value": 0,
+    "Input": {
+      "pitch": "value44"
+    },
+    "Display": {
+      "offset": {
+        "left": 1046,
+        "top": 100
+      }
+    }
+  },
+  "sin52": {
+    "Name": "sin52",
+    "Kind": "sin",
+    "Value": 0,
+    "Input": {
+      "pitch": "sum56"
+    },
+    "Display": {
+      "offset": {
+        "left": 99,
+        "top": 461
+      }
+    }
+  },
   "sin8": {
     "Name": "sin8",
     "Kind": "sin",
@@ -218,8 +352,8 @@
     },
     "Display": {
       "offset": {
-        "left": 491,
-        "top": 362
+        "left": 456,
+        "top": 355
       }
     }
   },
@@ -248,7 +382,7 @@
     "Display": {
       "offset": {
         "left": 340,
-        "top": 470
+        "top": 483
       }
     }
   },
@@ -277,32 +411,98 @@
     },
     "Display": {
       "offset": {
-        "left": 494,
-        "top": 298
+        "left": 450,
+        "top": 292
       }
     }
   },
-  "value12": {
-    "Name": "value12",
-    "Kind": "value",
-    "Value": 0.01,
-    "Input": {},
+  "sum41": {
+    "Name": "sum41",
+    "Kind": "sum",
+    "Value": 0,
+    "Input": {
+      "a": "mul42",
+      "b": "value24"
+    },
     "Display": {
       "offset": {
-        "left": 288,
-        "top": 173
+        "left": 1058,
+        "top": 337
       }
     }
   },
-  "value16": {
-    "Name": "value16",
-    "Kind": "value",
-    "Value": 0.9,
-    "Input": {},
+  "sum45": {
+    "Name": "sum45",
+    "Kind": "sum",
+    "Value": 0,
+    "Input": {
+      "a": "mul47",
+      "b": "value46"
+    },
     "Display": {
       "offset": {
-        "left": 118,
-        "top": 235
+        "left": 726,
+        "top": 328
+      }
+    }
+  },
+  "sum50": {
+    "Name": "sum50",
+    "Kind": "sum",
+    "Value": 0,
+    "Input": {
+      "a": "mul49",
+      "b": "value51"
+    },
+    "Display": {
+      "offset": {
+        "left": 862,
+        "top": 332
+      }
+    }
+  },
+  "sum56": {
+    "Name": "sum56",
+    "Kind": "sum",
+    "Value": 0,
+    "Input": {
+      "a": "env53",
+      "b": "value57"
+    },
+    "Display": {
+      "offset": {
+        "left": 91,
+        "top": 385
+      }
+    }
+  },
+  "sum61": {
+    "Name": "sum61",
+    "Kind": "sum",
+    "Value": 0,
+    "Input": {
+      "a": "sum15",
+      "b": "mul58"
+    },
+    "Display": {
+      "offset": {
+        "left": 271,
+        "top": 541
+      }
+    }
+  },
+  "sum63": {
+    "Name": "sum63",
+    "Kind": "sum",
+    "Value": 0,
+    "Input": {
+      "a": "sin40",
+      "b": "value64"
+    },
+    "Display": {
+      "offset": {
+        "left": 276,
+        "top": 426
       }
     }
   },
@@ -313,8 +513,8 @@
     "Input": {},
     "Display": {
       "offset": {
-        "left": 25,
-        "top": 329
+        "left": 624,
+        "top": 427
       }
     }
   },
@@ -325,8 +525,8 @@
     "Input": {},
     "Display": {
       "offset": {
-        "left": 291,
-        "top": 341
+        "left": 292,
+        "top": 319
       }
     }
   },
@@ -342,18 +542,6 @@
       }
     }
   },
-  "value21": {
-    "Name": "value21",
-    "Kind": "value",
-    "Value": 0.001,
-    "Input": {},
-    "Display": {
-      "offset": {
-        "left": 203,
-        "top": 173
-      }
-    }
-  },
   "value24": {
     "Name": "value24",
     "Kind": "value",
@@ -361,8 +549,8 @@
     "Input": {},
     "Display": {
       "offset": {
-        "left": 735,
-        "top": 18
+        "left": 1017,
+        "top": 270
       }
     }
   },
@@ -385,7 +573,7 @@
     "Input": {},
     "Display": {
       "offset": {
-        "left": 444,
+        "left": 450,
         "top": 13
       }
     }
@@ -405,12 +593,36 @@
   "value36": {
     "Name": "value36",
     "Kind": "value",
-    "Value": 0.01,
+    "Value": 0.005,
     "Input": {},
     "Display": {
       "offset": {
-        "left": 625,
-        "top": 100
+        "left": 634,
+        "top": 104
+      }
+    }
+  },
+  "value38": {
+    "Name": "value38",
+    "Kind": "value",
+    "Value": 0.001,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 288,
+        "top": 175
+      }
+    }
+  },
+  "value39": {
+    "Name": "value39",
+    "Kind": "value",
+    "Value": 0.15,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 859,
+        "top": 205
       }
     }
   },
@@ -423,6 +635,126 @@
       "offset": {
         "left": 380,
         "top": 13
+      }
+    }
+  },
+  "value43": {
+    "Name": "value43",
+    "Kind": "value",
+    "Value": 0.2,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 1056,
+        "top": 215
+      }
+    }
+  },
+  "value44": {
+    "Name": "value44",
+    "Kind": "value",
+    "Value": -1.5,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 1032,
+        "top": 14
+      }
+    }
+  },
+  "value46": {
+    "Name": "value46",
+    "Kind": "value",
+    "Value": 0.02,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 684,
+        "top": 259
+      }
+    }
+  },
+  "value48": {
+    "Name": "value48",
+    "Kind": "value",
+    "Value": -0.019,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 714,
+        "top": 201
+      }
+    }
+  },
+  "value51": {
+    "Name": "value51",
+    "Kind": "value",
+    "Value": 0.8,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 838,
+        "top": 261
+      }
+    }
+  },
+  "value54": {
+    "Name": "value54",
+    "Kind": "value",
+    "Value": 0.002,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 79,
+        "top": 247
+      }
+    }
+  },
+  "value55": {
+    "Name": "value55",
+    "Kind": "value",
+    "Value": 1e-05,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 164,
+        "top": 247
+      }
+    }
+  },
+  "value57": {
+    "Name": "value57",
+    "Kind": "value",
+    "Value": -0.6,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 81,
+        "top": 314
+      }
+    }
+  },
+  "value60": {
+    "Name": "value60",
+    "Kind": "value",
+    "Value": 0.1,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 205,
+        "top": 361
+      }
+    }
+  },
+  "value64": {
+    "Name": "value64",
+    "Kind": "value",
+    "Value": -1,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 271,
+        "top": 361
       }
     }
   }
