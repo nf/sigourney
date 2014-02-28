@@ -15,6 +15,10 @@ limitations under the License.
 */
 
 var ws;
+var plumb;
+
+var changedSinceSave = false;
+var changeWarning = "There are unsaved changes!\nOK to continue?";
 
 jsPlumb.bind('ready', function() {
 	$('#status').text('Connecting to back end...');
@@ -30,21 +34,22 @@ function send(msg) {
 	ws.send(JSON.stringify(msg));
 }
 
-var plumb;
-
 function onOpen() {
 	$('#status').empty();
 	plumb = jsPlumb.getInstance({Container: 'page'});
 	plumb.bind('connection', function(conn) {
+		changedSinceSave = true;
 		var input = conn.targetEndpoint.getParameter('input');
 		send({Action: 'connect', From: conn.source.id, To: conn.target.id, Input: input});
 	});
 	plumb.bind('connectionDetached', function(conn) {
 		if (!conn.targetEndpoint.isTarget) return;
+		changedSinceSave = true;
 		var input = conn.targetEndpoint.getParameter('input');
 		send({Action: 'disconnect', From: conn.source.id, To: conn.target.id, Input: input});
 	});
 	plumb.bind('click', function(conn, e) {
+		changedSinceSave = true;
 		if (e.shiftKey) plumb.detach(conn);
 	});
 
@@ -54,12 +59,17 @@ function onOpen() {
 	$('#control').append(fn, load, save);
 
 	var loadFn  = function() {
+		if (changedSinceSave && !confirm(changeWarning)) return;
 		$('.object').each(function() { plumb.remove(this); });
 		send({Action: 'load', Name: fn.val()});
+		changedSinceSave = false;
 	};
 	fn.keypress(function(e) { if (e.charCode == 13) loadFn(); });
 	load.click(loadFn);
-	save.click(function() { send({Action: 'save', Name: fn.val()}); });
+	save.click(function() {
+		send({Action: 'save', Name: fn.val()});
+		changedSinceSave = false;
+	});
 }
 
 function onMessage(msg) {
