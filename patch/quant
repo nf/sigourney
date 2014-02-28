@@ -66,7 +66,7 @@
     "Value": 0,
     "Input": {
       "att": "value55",
-      "dec": "value54",
+      "dec": "rand66",
       "trig": "square6"
     },
     "Display": {
@@ -298,6 +298,22 @@
       "offset": {
         "left": 385,
         "top": 91
+      }
+    }
+  },
+  "rand66": {
+    "Name": "rand66",
+    "Kind": "rand",
+    "Value": 0,
+    "Input": {
+      "max": "value67",
+      "min": "value54",
+      "trig": "square6"
+    },
+    "Display": {
+      "offset": {
+        "left": 11,
+        "top": 400
       }
     }
   },
@@ -701,12 +717,12 @@
   "value54": {
     "Name": "value54",
     "Kind": "value",
-    "Value": 0.002,
+    "Value": 0.0005,
     "Input": {},
     "Display": {
       "offset": {
-        "left": 79,
-        "top": 247
+        "left": 73,
+        "top": 233
       }
     }
   },
@@ -755,6 +771,18 @@
       "offset": {
         "left": 271,
         "top": 361
+      }
+    }
+  },
+  "value67": {
+    "Name": "value67",
+    "Kind": "value",
+    "Value": 0.0025,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": -1,
+        "top": 330
       }
     }
   }
