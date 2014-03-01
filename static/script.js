@@ -166,6 +166,14 @@ function newObject(kind, display) {
 	newObjectName(name, kind, null, display)
 }
 
+function sendDisplay(obj) {
+	send({
+		Action: 'setDisplay',
+		Name: $(obj).attr('id'),
+		Display: {offset: $(obj).offset()}
+	});
+}
+
 function newObjectName(name, kind, value, display) {
 	var div = $('<div class="object"></div>')
 		.text(kind)
@@ -174,12 +182,8 @@ function newObjectName(name, kind, value, display) {
 		.appendTo('#page')
 		.css('top', display.offset.top)
 		.css('left', display.offset.left)
-	var setDisplay = function() {
-		send({Action: 'setDisplay', Name: name, Display: {offset: $(div).offset()}});
-	}
 
 	plumb.draggable(div, {
-		stop: setDisplay,
 		start: function(e, ui) {
 			if (!$(this).is('.ui-selected')) return;
 		},
@@ -197,8 +201,13 @@ function newObjectName(name, kind, value, display) {
 			});
 		},
 		stop: function(e, ui) {
+			sendDisplay(this);
 			if (!$(this).is('.ui-selected')) return;
-			$('.ui-selected').each(function() { plumb.repaint(this); });
+			$('.ui-selected').not(this).each(function() {
+				plumb.repaint(this);
+			}).each(function() {
+				sendDisplay(this);
+			});
 		}
 	});
 
@@ -254,5 +263,5 @@ function newObjectName(name, kind, value, display) {
 
 	if (kind != "engine")
 		send({Action: 'new', Name: name, Kind: kind, Value: value});
-	setDisplay();
+	sendDisplay(div);
 }
