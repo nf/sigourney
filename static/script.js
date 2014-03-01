@@ -49,8 +49,8 @@ function onOpen() {
 		send({Action: 'disconnect', From: conn.source.id, To: conn.target.id, Input: input});
 	});
 	plumb.bind('click', function(conn, e) {
-		changedSinceSave = true;
-		if (e.shiftKey) plumb.detach(conn);
+		if (!e.shiftKey) return;
+		plumb.detach(conn);
 	});
 
 	var fn = $('<input type="text"/>');
@@ -184,6 +184,7 @@ function newObjectName(name, kind, value, display) {
 	if (kind != "engine") {
 		div.click(function(e) {
 			if (!e.shiftKey) return;
+			changedSinceSave = true;
 			plumb.remove(this);
 			send({Action: 'destroy', Name: name});
 		});
