@@ -8,8 +8,8 @@
     },
     "Display": {
       "offset": {
-        "left": 570.5,
-        "top": 485.5
+        "left": 385.5,
+        "top": 314.5
       }
     }
   },
@@ -26,8 +26,8 @@
     },
     "Display": {
       "offset": {
-        "left": 571,
-        "top": 319
+        "left": 384,
+        "top": 167
       }
     }
   },
@@ -40,8 +40,8 @@
     },
     "Display": {
       "offset": {
-        "left": 586,
-        "top": 397
+        "left": 400,
+        "top": 241
       }
     }
   },
@@ -54,8 +54,8 @@
     },
     "Display": {
       "offset": {
-        "left": 685,
-        "top": 141
+        "left": 439,
+        "top": 85
       }
     }
   },
@@ -66,8 +66,8 @@
     "Input": {},
     "Display": {
       "offset": {
-        "left": 295,
-        "top": 238
+        "left": 108,
+        "top": 86
       }
     }
   },
@@ -78,8 +78,8 @@
     "Input": {},
     "Display": {
       "offset": {
-        "left": 375,
-        "top": 237
+        "left": 188,
+        "top": 85
       }
     }
   },
@@ -90,8 +90,8 @@
     "Input": {},
     "Display": {
       "offset": {
-        "left": 448,
-        "top": 238
+        "left": 261,
+        "top": 86
       }
     }
   },
@@ -102,8 +102,8 @@
     "Input": {},
     "Display": {
       "offset": {
-        "left": 522,
-        "top": 238
+        "left": 335,
+        "top": 86
       }
     }
   },
@@ -114,8 +114,8 @@
     "Input": {},
     "Display": {
       "offset": {
-        "left": 712,
-        "top": 63
+        "left": 465,
+        "top": 16
       }
     }
   }
