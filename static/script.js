@@ -30,8 +30,9 @@ jsPlumb.bind('ready', function() {
 	};
 });
 
-function send(msg) {
-	ws.send(JSON.stringify(msg));
+function send(m) {
+	console.log(">", m);
+	ws.send(JSON.stringify(m));
 }
 
 function onOpen() {
@@ -58,6 +59,19 @@ function initPlumb() {
 		if (!e.shiftKey) return;
 		plumb.detach(conn);
 	});
+}
+
+function setValue(obj, v) {
+	$(obj).data('value', v).text(v);
+	plumb.repaint($(obj));
+	send({Action: 'set', Name: $(obj).attr('id'), Value: v});
+	changedSinceSave = true;
+}
+
+function destroy(obj) {
+	plumb.remove($(obj));
+	send({Action: 'destroy', Name: $(obj).attr('id')});
+	changedSinceSave = true;
 }
 
 function initUI() {
@@ -101,8 +115,10 @@ function initUI() {
 
 	// Blur inputs on clicks outside controls.
 	$('#page, #objects').mousedown(function(e) {
-		if (!$(e.originalEvent.target).is('#control input'))
+		if (!$(e.originalEvent.target).is('#control input')) {
 			$('#control input').blur();
+			console.log('false');
+		}
 	});
 
 	$('#page').selectable({filter: ".object"})
@@ -110,7 +126,7 @@ function initUI() {
 
 function onMessage(msg) {
 	var m = JSON.parse(msg.data);
-
+	console.log("<", m);
 	switch (m.Action) {
 		case 'hello':
 			handleHello(m.KindInputs);
@@ -157,6 +173,7 @@ function addKind(kind, inputs) {
 			helper: 'clone',
 			stop: function(e, ui) {
 				newObject(kind, {offset: ui.position});
+				changedSinceSave = true;
 			}
 		});
 }
@@ -247,20 +264,15 @@ function newObjectName(name, kind, value, display) {
 
 	if (kind == "value") {
 		if (value === null) value = 0;
-		div.text(value).dblclick(function(e) {
-			var v = window.prompt("Value? (-1 to +1)")*1;
-			send({Action: 'set', Name: name, Value: v});
-			$(this).text(v);
-			plumb.repaint(this);
+		div.data('value', value).text(value).dblclick(function(e) {
+			setValue(this, window.prompt("Value? (-1 to +1)")*1);
 		});
 	}
 
 	if (kind != "engine") {
 		div.click(function(e) {
 			if (!e.shiftKey) return;
-			changedSinceSave = true;
-			plumb.remove(this);
-			send({Action: 'destroy', Name: name});
+			destroy(this);
 		});
 	}
 
@@ -310,9 +322,13 @@ function onDup() {
 		var o = $(this).offset();
 		o.top += 50;
 		o.left += 50;
-		var n = newObject($(this).data('kind'), {offset: o});
+		var k = $(this).data('kind')
+		var n = newObject(k, {offset: o});
 		names[$(this).attr('id')] = n;
-		$('#'+n).addClass('ui-selected');
+		var el = $('#'+n).addClass('ui-selected');
+		if (k == 'value') {
+			setValue(el, $(this).data('value'));
+		}
 	}).each(function() {
 		var id = $(this).attr('id');
 		var conns = plumb.getConnections($(this));
@@ -336,6 +352,5 @@ function onDup() {
 }
 
 function onDelete() {
-	changedSinceSave = true;
-	$('.ui-selected').not('#engine').each(function() { plumb.remove(this); });
+	$('.ui-selected').not('#engine').each(function() { destroy(this); });
 }
