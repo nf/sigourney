@@ -172,28 +172,28 @@ function newObjectName(name, kind, value, display) {
 	var setDisplay = function() {
 		send({Action: 'setDisplay', Name: name, Display: {offset: $(div).offset()}});
 	}
+
 	plumb.draggable(div, {
 		stop: setDisplay,
 		start: function(e, ui) {
 			if (!$(this).is('.ui-selected')) return;
-			$('.ui-selected').addClass('dragging');
 		},
 		drag: function(e, ui) {
 			if (!$(this).is('.ui-selected')) return;
 			var o1 = $(this).offset();
 			var p = ui.position;
-			$('.dragging').not(this).each(function() {
+			$('.ui-selected').not(this).each(function() {
 				var o2 = $(this).offset();
 				$(this).css({
 					top: p.top-o1.top+o2.top,
 					left: p.left-o1.left+o2.left
 				});
+				plumb.repaint(this);
 			});
 		},
 		stop: function(e, ui) {
 			if (!$(this).is('.ui-selected')) return;
-			plumb.repaintEverything();
-			$('.dragging').removeClass('dragging');
+			$('.ui-selected').each(function() { plumb.repaint(this); });
 		}
 	});
 
