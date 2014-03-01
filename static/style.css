@@ -51,6 +51,7 @@ body {
 	background: #333;
 	cursor: default;
 }
+._jsPlumb_endpoint { z-index: 40; }
 .ui-selecting { background: #666; }
 .ui-selected { background: #555; }
 
