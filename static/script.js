@@ -35,26 +35,10 @@ function send(msg) {
 }
 
 function onOpen() {
-	initPlumb();
-	initLoadSave();
-
 	$('#status').empty();
-	$('#page').selectable({filter: ".object"});
 
-	$(document).keypress(function(e) {
-		switch (e.charCode) {
-		case 100: // d
-			onDup();
-			break;
-		case 24: // ^x
-			onDelete();
-			break;
-		default:
-			return;
-		}
-		e.preventDefault();
-	});
-
+	initPlumb();
+	initUI();
 }
 
 function initPlumb() {
@@ -76,7 +60,7 @@ function initPlumb() {
 	});
 }
 
-function initLoadSave() {
+function initUI() {
 	var fn = $('<input type="text"/>');
 	var load = $('<input type="button" value="load"/>');
 	var save = $('<input type="button" value="save"/>');
@@ -87,14 +71,41 @@ function initLoadSave() {
 		$('.object').each(function() { plumb.remove(this); });
 		send({Action: 'load', Name: fn.val()});
 		fn.blur();
+		load.blur();
 		changedSinceSave = false;
 	};
 	fn.keypress(function(e) { if (e.charCode == 13) loadFn(); });
 	load.click(loadFn);
 	save.click(function() {
 		send({Action: 'save', Name: fn.val()});
+		save.blur();
 		changedSinceSave = false;
 	});
+
+	// Handle keypresses while fn field is not focused.
+	$(document).keypress(function(e) {
+		if (fn.is(':focus'))
+			return;
+		switch (e.charCode) {
+		case 100: // d
+			onDup();
+			break;
+		case 24: // ^x
+			onDelete();
+			break;
+		default:
+			return;
+		}
+		e.preventDefault();
+	})
+
+	// Blur inputs on clicks outside controls.
+	$('#page, #objects').mousedown(function(e) {
+		if (!$(e.originalEvent.target).is('#control input'))
+			$('#control input').blur();
+	});
+
+	$('#page').selectable({filter: ".object"})
 }
 
 function onMessage(msg) {
