@@ -16,7 +16,12 @@ limitations under the License.
 
 package audio
 
-import "sort"
+import (
+	"fmt"
+	"sort"
+	"strconv"
+	"strings"
+)
 
 const (
 	nChannels = 1
@@ -69,6 +74,11 @@ func (s *sink) inputs(args ...interface{}) {
 		case *trigger:
 			(*v).p = Value(0)
 			(*v).b = make([]Sample, nSamples)
+		case []source:
+			for i := range v {
+				v[i].p = Value(0)
+				v[i].b = make([]Sample, nSamples)
+			}
 		}
 	}
 }
@@ -77,7 +87,8 @@ func (s *sink) Input(name string, p Processor) {
 	if s.m == nil {
 		panic("no inputs registered")
 	}
-	i, ok := s.m[name]
+	n := strings.Trim(name, "0123456789")
+	i, ok := s.m[n]
 	if !ok {
 		panic("bad input name: " + name)
 	}
@@ -88,6 +99,9 @@ func (s *sink) Input(name string, p Processor) {
 		(*v).p = p
 	case *trigger:
 		(*v).p = p
+	case []source:
+		i, _ := strconv.Atoi(strings.TrimPrefix(name, n))
+		v[i].p = p
 	default:
 		panic("bad input type")
 	}
@@ -95,8 +109,14 @@ func (s *sink) Input(name string, p Processor) {
 
 func (s *sink) Inputs() []string {
 	var a []string
-	for n := range s.m {
-		a = append(a, n)
+	for n, v := range s.m {
+		if src, ok := v.([]source); ok {
+			for i := range src {
+				a = append(a, fmt.Sprint(n, i))
+			}
+		} else {
+			a = append(a, n)
+		}
 	}
 	sort.Strings(a)
 	return a

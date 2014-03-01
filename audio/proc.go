@@ -334,3 +334,36 @@ func (s *Skip) Process(b []Sample) {
 		b[i] = 0
 	}
 }
+
+func NewStep() *Step {
+	s := &Step{}
+	s.inputs("trig", &s.trig, "rst", &s.rst, "v", s.in[:])
+	return s
+}
+
+type Step struct {
+	sink
+	trig, rst trigger
+	in        [nStep]source
+
+	n int
+}
+
+const nStep = 4
+
+func (s *Step) Process(b []Sample) {
+	t, r := s.trig.Process(), s.rst.Process()
+	in := make([][]Sample, 8)
+	for i := range s.in {
+		in[i] = s.in[i].Process()
+	}
+	for i := range b {
+		if s.trig.isTrigger(t[i]) {
+			s.n = (s.n + 1) % nStep
+		}
+		if s.rst.isTrigger(r[i]) {
+			s.n = 0
+		}
+		b[i] = in[s.n][i]
+	}
+}
