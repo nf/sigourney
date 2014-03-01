@@ -36,6 +36,9 @@ function send(msg) {
 
 function onOpen() {
 	$('#status').empty();
+
+	$('#page').selectable({filter: ".object"});
+
 	plumb = jsPlumb.getInstance({Container: 'page'});
 	plumb.bind('connection', function(conn) {
 		changedSinceSave = true;
@@ -169,7 +172,30 @@ function newObjectName(name, kind, value, display) {
 	var setDisplay = function() {
 		send({Action: 'setDisplay', Name: name, Display: {offset: $(div).offset()}});
 	}
-	plumb.draggable(div, { stop: setDisplay });
+	plumb.draggable(div, {
+		stop: setDisplay,
+		start: function(e, ui) {
+			if (!$(this).is('.ui-selected')) return;
+			$('.ui-selected').addClass('dragging');
+		},
+		drag: function(e, ui) {
+			if (!$(this).is('.ui-selected')) return;
+			var o1 = $(this).offset();
+			var p = ui.position;
+			$('.dragging').not(this).each(function() {
+				var o2 = $(this).offset();
+				$(this).css({
+					top: p.top-o1.top+o2.top,
+					left: p.left-o1.left+o2.left
+				});
+			});
+		},
+		stop: function(e, ui) {
+			if (!$(this).is('.ui-selected')) return;
+			plumb.repaintEverything();
+			$('.dragging').removeClass('dragging');
+		}
+	});
 
 	if (kind == "value") {
 		if (value === null) value = 0;

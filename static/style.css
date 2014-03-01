@@ -51,6 +51,8 @@ body {
 	background: #333;
 	cursor: default;
 }
+.ui-selecting { background: #666; }
+.ui-selected { background: #555; }
 
 #control {
 	bottom: 8px; left: 8px;
