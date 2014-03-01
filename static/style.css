@@ -51,7 +51,6 @@ body {
 	background: #333;
 	cursor: default;
 }
-._jsPlumb_endpoint { z-index: 40; }
 .ui-selecting { background: #666; }
 .ui-selected { background: #555; }
 
@@ -64,3 +63,16 @@ body {
 	margin-left: -10px;
 	margin-top: -10px;
 }
+
+._jsPlumb_endpoint { z-index: 40; }
+._jsPlumb_hover { z-index: 60; }
+
+.label {
+	padding: 2px;
+	z-index: 50;
+}
+._jsPlumb_hover.label {
+	background: #333;
+	z-index: 51;
+}
+

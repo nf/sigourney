@@ -131,14 +131,19 @@ function addKind(kind, inputs) {
 var endpointCommon = {
 	endpoint: "Dot",
 	paintStyle: {
-		strokeStlye: "#FFFFFF",
-		fillStyle: "#FFFFFF",
+		fillStyle: "#DDD",
 		radius: 6
+	},
+	hoverPaintStyle: {
+		 fillStyle: "#FFF"
 	},
 	connector: ["Flowchart"],
 	connectorStyle: {
-		lineWidth: 2,
-		strokeStyle: "#FFFFFF",
+		lineWidth: 3,
+		strokeStyle: "#BBB"
+	},
+	connectorHoverStyle: {
+		strokeStyle: "#FFF"
 	}
 };
 
