@@ -303,7 +303,7 @@ function newObjectName(name, kind, value, display) {
 function onDup() {
 	var names = {};
 	var added = {};
-	$('.ui-selected').each(function() {
+	$('.ui-selected').removeClass('ui-selected').not('#engine').each(function() {
 		changedSinceSave = true;
 		names[$(this).attr('id')] = true;
 	}).each(function() {
@@ -314,8 +314,8 @@ function onDup() {
 		names[$(this).attr('id')] = n;
 		$('#'+n).addClass('ui-selected');
 	}).each(function() {
-		var conns = plumb.getConnections($(this));
 		var id = $(this).attr('id');
+		var conns = plumb.getConnections($(this));
 		for (var i = 0; i < conns.length; i++) {
 			var c = conns[i];
 			if (c.sourceId != id)
@@ -332,10 +332,10 @@ function onDup() {
 			}
 			plumb.connect({uuids: [source + '-out', target + '-' + input]});
 		}
-	}).removeClass('ui-selected');
+	});
 }
 
 function onDelete() {
 	changedSinceSave = true;
-	$('.ui-selected').each(function() { plumb.remove(this); });
+	$('.ui-selected').not('#engine').each(function() { plumb.remove(this); });
 }
