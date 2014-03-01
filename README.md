@@ -41,6 +41,17 @@ the canvas. Then you can click to draw a connection from the "sin" module's
 output to the "engine" module's input. At this point you should hear a 440hz
 sine wave. If not, something is wrong.
 
+### Control
+
+* Drag a module to move it.
+* Drag an output to an input to connect them.
+* Shift-click a module to delete it.
+* Shift-click a connection to detach it.
+* Drag the canvas to select multiple modules. With multiple modules selected:
+  * Drag selected modules to move them all.
+  * Press `D` to duplicate them.
+  * Press `Control-X` to delete them.
+
 
 ## Why "Sigourney"?
 
