@@ -32,7 +32,7 @@ body {
 }
 
 #objects li, #control input {
-	width: 50px;
+	width: 75px;
 	padding: 2px 5px;
 	list-style: none;
 	border: 1px solid black;
