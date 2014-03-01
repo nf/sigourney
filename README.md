@@ -44,11 +44,11 @@ sine wave. If not, something is wrong.
 ### Control
 
 * Drag a module to move it.
-* Drag an output to an input to connect them.
+* Drag an output to an input to create a connection.
 * Shift-click a module to delete it.
 * Shift-click a connection to detach it.
 * Drag the canvas to select multiple modules. With multiple modules selected:
-  * Drag selected modules to move them all.
+  * Drag to move them.
   * Press `D` to duplicate them.
   * Press `Control-X` to delete them.
 
