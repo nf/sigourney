@@ -23,7 +23,10 @@ import (
 )
 
 func NewEngine() *Engine {
-	e := &Engine{done: make(chan error)}
+	e := &Engine{
+		errc: make(chan error),
+		buf:  make(chan []Sample, 1),
+	}
 	e.inputs("in", &e.in)
 	return e
 }
@@ -34,8 +37,10 @@ type Engine struct {
 	sink
 	in source
 
-	done    chan error
 	tickers []Ticker
+	done    chan bool
+	errc    chan error
+	buf     chan []Sample
 }
 
 func (e *Engine) AddTicker(t Ticker) {
@@ -53,23 +58,13 @@ func (e *Engine) RemoveTicker(t Ticker) {
 	}
 }
 
-func (e *Engine) processAudio(_, out []int16) {
-	e.Lock()
-	buf := e.in.Process()
-	for _, t := range e.tickers {
-		t.Tick()
-	}
-	e.Unlock()
-	for i := range buf {
-		out[i] = int16(buf[i] * waveAmp * 0.9)
-	}
-}
-
 func (e *Engine) Start() error {
 	stream, err := portaudio.OpenDefaultStream(0, 1, waveHz, nSamples, e.processAudio)
 	if err != nil {
 		return err
 	}
+	e.done = make(chan bool)
+	go e.process()
 	errc := make(chan error)
 	go func() {
 		err = stream.Start()
@@ -82,12 +77,38 @@ func (e *Engine) Start() error {
 		if err == nil {
 			err = stream.Close()
 		}
-		e.done <- err
+		e.errc <- err
 	}()
 	return <-errc
 }
 
 func (e *Engine) Stop() error {
-	e.done <- nil
-	return <-e.done
+	close(e.done)
+	return <-e.errc
+}
+
+func (e *Engine) process() {
+	for {
+		e.Lock()
+		for _, t := range e.tickers {
+			t.Tick()
+		}
+		b := e.in.Process()
+		e.Unlock()
+		select {
+		case <-e.done:
+			return
+		case e.buf <- b:
+		}
+	}
+}
+
+func (e *Engine) processAudio(_, out []int16) {
+	select {
+	case b := <-e.buf:
+		for i := range out {
+			out[i] = int16(b[i] * waveAmp * 0.9)
+		}
+	case <-e.done:
+	}
 }
