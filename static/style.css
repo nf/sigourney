@@ -39,8 +39,10 @@ body {
 	margin-bottom: 2px;
 	margin-right: 2px;
 	cursor: pointer;
-	background: #333;
 	color: white;
+}
+#control input {
+	background: #333;
 }
 
 .object {
@@ -51,8 +53,10 @@ body {
 	background: #333;
 	cursor: default;
 }
-.ui-selecting { background: #666; }
-.ui-selected { background: #555; }
+.ui-selecting, .ui-selected {
+	border: 2px solid white !important; 
+	padding: 9px 19px !important;
+}
 
 #control {
 	bottom: 8px; left: 8px;
@@ -76,3 +80,17 @@ body {
 	z-index: 51;
 }
 
+.kind-clip { background: #533; }
+.kind-delay { background: #553; }
+.kind-engine { background: #535; }
+.kind-env { background: #353; }
+.kind-gate { background: #355; }
+.kind-mul { background: #335; }
+.kind-note { background: #333; }
+.kind-quant { background: #543; }
+.kind-rand { background: #554; }
+.kind-sin { background: #545; }
+.kind-skip { background: #453; }
+.kind-square { background: #354; }
+.kind-sum { background: #434; }
+.kind-value { background: #433; }

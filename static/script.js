@@ -147,6 +147,7 @@ function onMessage(msg) {
 }
 
 var kindInputs = {};
+var colorIndex = 0;
 
 function handleHello(inputs) {
 	var k;
@@ -167,6 +168,7 @@ function engineOffset() {
 
 function addKind(kind, inputs) {
 	$('<li></li>').text(kind).data('inputs', inputs)
+		.addClass('kind-'+kind)
 		.appendTo('#objects')
 		.draggable({
 			revert: true, revertDuration: 0,
@@ -230,9 +232,10 @@ function newObjectName(name, kind, value, display) {
 		.text(kind)
 		.attr('id', name)
 		.data('kind', kind)
-		.appendTo('#page')
 		.css('top', display.offset.top)
 		.css('left', display.offset.left)
+		.addClass('kind-'+kind)
+		.appendTo('#page')
 
 	plumb.draggable(div, {
 		start: function(e, ui) {
