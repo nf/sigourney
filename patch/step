@@ -1,0 +1,122 @@
+{
+  "engine": {
+    "Name": "engine",
+    "Kind": "engine",
+    "Value": 0,
+    "Input": {
+      "in": "sin9"
+    },
+    "Display": {
+      "offset": {
+        "left": 570.5,
+        "top": 485.5
+      }
+    }
+  },
+  "sequencer2": {
+    "Name": "sequencer2",
+    "Kind": "sequencer",
+    "Value": 0,
+    "Input": {
+      "trig": "square7",
+      "v0": "value3",
+      "v1": "value4",
+      "v2": "value5",
+      "v3": "value6"
+    },
+    "Display": {
+      "offset": {
+        "left": 571,
+        "top": 319
+      }
+    }
+  },
+  "sin9": {
+    "Name": "sin9",
+    "Kind": "sin",
+    "Value": 0,
+    "Input": {
+      "pitch": "sequencer2"
+    },
+    "Display": {
+      "offset": {
+        "left": 586,
+        "top": 397
+      }
+    }
+  },
+  "square7": {
+    "Name": "square7",
+    "Kind": "square",
+    "Value": 0,
+    "Input": {
+      "pitch": "value8"
+    },
+    "Display": {
+      "offset": {
+        "left": 685,
+        "top": 141
+      }
+    }
+  },
+  "value3": {
+    "Name": "value3",
+    "Kind": "value",
+    "Value": 0.1,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 295,
+        "top": 238
+      }
+    }
+  },
+  "value4": {
+    "Name": "value4",
+    "Kind": "value",
+    "Value": -0.3,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 375,
+        "top": 237
+      }
+    }
+  },
+  "value5": {
+    "Name": "value5",
+    "Kind": "value",
+    "Value": -0.1,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 448,
+        "top": 238
+      }
+    }
+  },
+  "value6": {
+    "Name": "value6",
+    "Kind": "value",
+    "Value": -0.2,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 522,
+        "top": 238
+      }
+    }
+  },
+  "value8": {
+    "Name": "value8",
+    "Kind": "value",
+    "Value": -0.6,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 712,
+        "top": 63
+      }
+    }
+  }
+}
