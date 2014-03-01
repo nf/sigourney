@@ -35,27 +35,48 @@ function send(msg) {
 }
 
 function onOpen() {
-	$('#status').empty();
+	initPlumb();
+	initLoadSave();
 
+	$('#status').empty();
 	$('#page').selectable({filter: ".object"});
 
+	$(document).keypress(function(e) {
+		switch (e.charCode) {
+		case 100: // d
+			onDup();
+			break;
+		case 24: // ^x
+			onDelete();
+			break;
+		default:
+			return;
+		}
+		e.preventDefault();
+	});
+
+}
+
+function initPlumb() {
 	plumb = jsPlumb.getInstance({Container: 'page'});
 	plumb.bind('connection', function(conn) {
-		changedSinceSave = true;
 		var input = conn.targetEndpoint.getParameter('input');
 		send({Action: 'connect', From: conn.source.id, To: conn.target.id, Input: input});
+		changedSinceSave = true;
 	});
 	plumb.bind('connectionDetached', function(conn) {
 		if (!conn.targetEndpoint.isTarget) return;
-		changedSinceSave = true;
 		var input = conn.targetEndpoint.getParameter('input');
 		send({Action: 'disconnect', From: conn.source.id, To: conn.target.id, Input: input});
+		changedSinceSave = true;
 	});
 	plumb.bind('click', function(conn, e) {
 		if (!e.shiftKey) return;
 		plumb.detach(conn);
 	});
+}
 
+function initLoadSave() {
 	var fn = $('<input type="text"/>');
 	var load = $('<input type="button" value="load"/>');
 	var save = $('<input type="button" value="save"/>');
@@ -65,6 +86,7 @@ function onOpen() {
 		if (changedSinceSave && !confirm(changeWarning)) return;
 		$('.object').each(function() { plumb.remove(this); });
 		send({Action: 'load', Name: fn.val()});
+		fn.blur();
 		changedSinceSave = false;
 	};
 	fn.keypress(function(e) { if (e.charCode == 13) loadFn(); });
@@ -164,6 +186,7 @@ function newObject(kind, display) {
 	if (kind == "engine")
 		name = "engine";
 	newObjectName(name, kind, null, display)
+	return name;
 }
 
 function sendDisplay(obj) {
@@ -264,4 +287,44 @@ function newObjectName(name, kind, value, display) {
 	if (kind != "engine")
 		send({Action: 'new', Name: name, Kind: kind, Value: value});
 	sendDisplay(div);
+}
+
+function onDup() {
+	var names = {};
+	var added = {};
+	$('.ui-selected').each(function() {
+		changedSinceSave = true;
+		names[$(this).attr('id')] = true;
+	}).each(function() {
+		var o = $(this).offset();
+		o.top += 50;
+		o.left += 50;
+		var n = newObject($(this).data('kind'), {offset: o});
+		names[$(this).attr('id')] = n;
+		$('#'+n).addClass('ui-selected');
+	}).each(function() {
+		var conns = plumb.getConnections($(this));
+		var id = $(this).attr('id');
+		for (var i = 0; i < conns.length; i++) {
+			var c = conns[i];
+			if (c.sourceId != id)
+				continue;
+			var source = names[c.sourceId];
+			var target = names[c.targetId];
+			if (!target)
+				continue;
+			var input;
+			for (var j = 0; j < c.endpoints.length; j++) {
+				var e = c.endpoints[j];
+				if (e.elementId == c.targetId)
+					input = e.getParameter('input');
+			}
+			plumb.connect({uuids: [source + '-out', target + '-' + input]});
+		}
+	}).removeClass('ui-selected');
+}
+
+function onDelete() {
+	changedSinceSave = true;
+	$('.ui-selected').each(function() { plumb.remove(this); });
 }
