@@ -9,8 +9,8 @@
     },
     "Display": {
       "offset": {
-        "left": 115,
-        "top": 342
+        "left": 148,
+        "top": 385
       }
     }
   },
@@ -23,8 +23,8 @@
     },
     "Display": {
       "offset": {
-        "left": 404,
-        "top": 480.5
+        "left": 390,
+        "top": 520.5
       }
     }
   },
@@ -39,8 +39,8 @@
     },
     "Display": {
       "offset": {
-        "left": 373,
-        "top": 150
+        "left": 442,
+        "top": 114
       }
     }
   },
@@ -82,8 +82,8 @@
     },
     "Display": {
       "offset": {
-        "left": 296,
-        "top": 319
+        "left": 290,
+        "top": 325
       }
     }
   },
@@ -97,8 +97,8 @@
     },
     "Display": {
       "offset": {
-        "left": 111,
-        "top": 421
+        "left": 147,
+        "top": 463
       }
     }
   },
@@ -112,8 +112,8 @@
     },
     "Display": {
       "offset": {
-        "left": 186,
-        "top": 256
+        "left": 199,
+        "top": 237
       }
     }
   },
@@ -129,17 +129,49 @@
       }
     }
   },
+  "sequencer33": {
+    "Name": "sequencer33",
+    "Kind": "sequencer",
+    "Value": 0,
+    "Input": {
+      "rst": "gate3",
+      "trig": "square40",
+      "v0": "value46",
+      "v1": "value36"
+    },
+    "Display": {
+      "offset": {
+        "left": 642,
+        "top": 296
+      }
+    }
+  },
   "sin4": {
     "Name": "sin4",
     "Kind": "sin",
     "Value": 0,
     "Input": {
-      "pitch": "env10"
+      "pitch": "sum43"
     },
     "Display": {
       "offset": {
         "left": 243,
         "top": 170
+      }
+    }
+  },
+  "square40": {
+    "Name": "square40",
+    "Kind": "square",
+    "Value": 0,
+    "Input": {
+      "pitch": "value41",
+      "syn": "gate3"
+    },
+    "Display": {
+      "offset": {
+        "left": 722,
+        "top": 70
       }
     }
   },
@@ -153,32 +185,47 @@
     },
     "Display": {
       "offset": {
-        "left": 261,
-        "top": 392
+        "left": 314,
+        "top": 416
+      }
+    }
+  },
+  "sum43": {
+    "Name": "sum43",
+    "Kind": "sum",
+    "Value": 0,
+    "Input": {
+      "a": "sequencer33",
+      "b": "env10"
+    },
+    "Display": {
+      "offset": {
+        "left": 489,
+        "top": 324
       }
     }
   },
   "value11": {
     "Name": "value11",
     "Kind": "value",
-    "Value": 0.1,
+    "Value": 0.05,
     "Input": {},
     "Display": {
       "offset": {
-        "left": 432,
-        "top": 48
+        "left": 374,
+        "top": 17
       }
     }
   },
   "value25": {
     "Name": "value25",
     "Kind": "value",
-    "Value": 0.5,
+    "Value": 0.02,
     "Input": {},
     "Display": {
       "offset": {
-        "left": 90,
-        "top": 264
+        "left": 126,
+        "top": 306
       }
     }
   },
@@ -201,15 +248,51 @@
     "Input": {},
     "Display": {
       "offset": {
-        "left": 42,
-        "top": 346
+        "left": 76,
+        "top": 423
+      }
+    }
+  },
+  "value36": {
+    "Name": "value36",
+    "Kind": "value",
+    "Value": 0.0333333,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 540,
+        "top": 141
+      }
+    }
+  },
+  "value41": {
+    "Name": "value41",
+    "Kind": "value",
+    "Value": -0.7,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 698,
+        "top": 7
+      }
+    }
+  },
+  "value46": {
+    "Name": "value46",
+    "Kind": "value",
+    "Value": 0.066666,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 708,
+        "top": 167
       }
     }
   },
   "value7": {
     "Name": "value7",
     "Kind": "value",
-    "Value": 0.001,
+    "Value": 1e-05,
     "Input": {},
     "Display": {
       "offset": {
@@ -221,7 +304,7 @@
   "value8": {
     "Name": "value8",
     "Kind": "value",
-    "Value": 0.03,
+    "Value": 0.001,
     "Input": {},
     "Display": {
       "offset": {

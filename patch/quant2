@@ -1,0 +1,1186 @@
+{
+  "delay13": {
+    "Name": "delay13",
+    "Kind": "delay",
+    "Value": 0,
+    "Input": {
+      "in": "mul14",
+      "len": "value17"
+    },
+    "Display": {
+      "offset": {
+        "left": 434,
+        "top": 520
+      }
+    }
+  },
+  "engine": {
+    "Name": "engine",
+    "Kind": "engine",
+    "Value": 0,
+    "Input": {
+      "in": "sum77"
+    },
+    "Display": {
+      "offset": {
+        "left": 370.5,
+        "top": 605.5
+      }
+    }
+  },
+  "env10": {
+    "Name": "env10",
+    "Kind": "env",
+    "Value": 0,
+    "Input": {
+      "att": "value38",
+      "dec": "sum45",
+      "trig": "mul31"
+    },
+    "Display": {
+      "offset": {
+        "left": 276,
+        "top": 259
+      }
+    }
+  },
+  "env35": {
+    "Name": "env35",
+    "Kind": "env",
+    "Value": 0,
+    "Input": {
+      "att": "value36",
+      "dec": "value36",
+      "gate": "rand28"
+    },
+    "Display": {
+      "offset": {
+        "left": 640,
+        "top": 182
+      }
+    }
+  },
+  "env53": {
+    "Name": "env53",
+    "Kind": "env",
+    "Value": 0,
+    "Input": {
+      "att": "value55",
+      "dec": "rand66",
+      "trig": "skip69"
+    },
+    "Display": {
+      "offset": {
+        "left": 161,
+        "top": 316
+      }
+    }
+  },
+  "env75": {
+    "Name": "env75",
+    "Kind": "env",
+    "Value": 0,
+    "Input": {
+      "att": "value83",
+      "dec": "value82",
+      "trig": "skip80"
+    },
+    "Display": {
+      "offset": {
+        "left": 896,
+        "top": 509
+      }
+    }
+  },
+  "mul102": {
+    "Name": "mul102",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "value103",
+      "b": "quant7"
+    },
+    "Display": {
+      "offset": {
+        "left": 378,
+        "top": 234
+      }
+    }
+  },
+  "mul11": {
+    "Name": "mul11",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "sin8",
+      "b": "env10"
+    },
+    "Display": {
+      "offset": {
+        "left": 369,
+        "top": 331
+      }
+    }
+  },
+  "mul14": {
+    "Name": "mul14",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "sum50",
+      "b": "sum15"
+    },
+    "Display": {
+      "offset": {
+        "left": 424,
+        "top": 447
+      }
+    }
+  },
+  "mul18": {
+    "Name": "mul18",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "value19",
+      "b": "mul11"
+    },
+    "Display": {
+      "offset": {
+        "left": 354,
+        "top": 392
+      }
+    }
+  },
+  "mul23": {
+    "Name": "mul23",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "env35",
+      "b": "sin22"
+    },
+    "Display": {
+      "offset": {
+        "left": 538,
+        "top": 243
+      }
+    }
+  },
+  "mul31": {
+    "Name": "mul31",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "square6",
+      "b": "rand30"
+    },
+    "Display": {
+      "offset": {
+        "left": 161,
+        "top": 173
+      }
+    }
+  },
+  "mul42": {
+    "Name": "mul42",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "value43",
+      "b": "sin40"
+    },
+    "Display": {
+      "offset": {
+        "left": 1087,
+        "top": 271
+      }
+    }
+  },
+  "mul47": {
+    "Name": "mul47",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "sin40",
+      "b": "value48"
+    },
+    "Display": {
+      "offset": {
+        "left": 763,
+        "top": 259
+      }
+    }
+  },
+  "mul49": {
+    "Name": "mul49",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "sin40",
+      "b": "value39"
+    },
+    "Display": {
+      "offset": {
+        "left": 905,
+        "top": 259
+      }
+    }
+  },
+  "mul58": {
+    "Name": "mul58",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "mul59",
+      "b": "sin52"
+    },
+    "Display": {
+      "offset": {
+        "left": 112,
+        "top": 540
+      }
+    }
+  },
+  "mul59": {
+    "Name": "mul59",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "mul62",
+      "b": "env53"
+    },
+    "Display": {
+      "offset": {
+        "left": 167,
+        "top": 475
+      }
+    }
+  },
+  "mul62": {
+    "Name": "mul62",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "sum63",
+      "b": "value60"
+    },
+    "Display": {
+      "offset": {
+        "left": 204,
+        "top": 424
+      }
+    }
+  },
+  "mul76": {
+    "Name": "mul76",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "env75",
+      "b": "sin71"
+    },
+    "Display": {
+      "offset": {
+        "left": 723,
+        "top": 600
+      }
+    }
+  },
+  "mul78": {
+    "Name": "mul78",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "mul76",
+      "b": "sum94"
+    },
+    "Display": {
+      "offset": {
+        "left": 610,
+        "top": 490
+      }
+    }
+  },
+  "mul84": {
+    "Name": "mul84",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "sum90",
+      "b": "sin72"
+    },
+    "Display": {
+      "offset": {
+        "left": 796,
+        "top": 592
+      }
+    }
+  },
+  "mul89": {
+    "Name": "mul89",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "sin87",
+      "b": "value98"
+    },
+    "Display": {
+      "offset": {
+        "left": 1011,
+        "top": 502
+      }
+    }
+  },
+  "mul93": {
+    "Name": "mul93",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "sin40",
+      "b": "value79"
+    },
+    "Display": {
+      "offset": {
+        "left": 614,
+        "top": 349
+      }
+    }
+  },
+  "note105": {
+    "Name": "note105",
+    "Kind": "note",
+    "Value": 0,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 451,
+        "top": 77
+      }
+    }
+  },
+  "quant7": {
+    "Name": "quant7",
+    "Kind": "quant",
+    "Value": 0,
+    "Input": {
+      "in": "rand5"
+    },
+    "Display": {
+      "offset": {
+        "left": 391,
+        "top": 140
+      }
+    }
+  },
+  "rand28": {
+    "Name": "rand28",
+    "Kind": "rand",
+    "Value": 0,
+    "Input": {
+      "max": "sum41",
+      "trig": "square6"
+    },
+    "Display": {
+      "offset": {
+        "left": 904,
+        "top": 99
+      }
+    }
+  },
+  "rand30": {
+    "Name": "rand30",
+    "Kind": "rand",
+    "Value": 0,
+    "Input": {
+      "max": "value32",
+      "trig": "square6"
+    },
+    "Display": {
+      "offset": {
+        "left": 104,
+        "top": 72
+      }
+    }
+  },
+  "rand5": {
+    "Name": "rand5",
+    "Kind": "rand",
+    "Value": 0,
+    "Input": {
+      "max": "value4",
+      "min": "value3",
+      "trig": "square6"
+    },
+    "Display": {
+      "offset": {
+        "left": 370,
+        "top": 82
+      }
+    }
+  },
+  "rand66": {
+    "Name": "rand66",
+    "Kind": "rand",
+    "Value": 0,
+    "Input": {
+      "max": "value67",
+      "min": "value54",
+      "trig": "square6"
+    },
+    "Display": {
+      "offset": {
+        "left": 6,
+        "top": 404
+      }
+    }
+  },
+  "sin22": {
+    "Name": "sin22",
+    "Kind": "sin",
+    "Value": 0,
+    "Input": {
+      "pitch": "sum25"
+    },
+    "Display": {
+      "offset": {
+        "left": 539,
+        "top": 172
+      }
+    }
+  },
+  "sin40": {
+    "Name": "sin40",
+    "Kind": "sin",
+    "Value": 0,
+    "Input": {
+      "pitch": "value44"
+    },
+    "Display": {
+      "offset": {
+        "left": 1046,
+        "top": 100
+      }
+    }
+  },
+  "sin52": {
+    "Name": "sin52",
+    "Kind": "sin",
+    "Value": 0,
+    "Input": {
+      "pitch": "sum56"
+    },
+    "Display": {
+      "offset": {
+        "left": 99,
+        "top": 461
+      }
+    }
+  },
+  "sin71": {
+    "Name": "sin71",
+    "Kind": "sin",
+    "Value": 0,
+    "Input": {
+      "pitch": "sum73"
+    },
+    "Display": {
+      "offset": {
+        "left": 723,
+        "top": 511
+      }
+    }
+  },
+  "sin72": {
+    "Name": "sin72",
+    "Kind": "sin",
+    "Value": 0,
+    "Input": {
+      "pitch": "value99"
+    },
+    "Display": {
+      "offset": {
+        "left": 793,
+        "top": 512
+      }
+    }
+  },
+  "sin8": {
+    "Name": "sin8",
+    "Kind": "sin",
+    "Value": 0,
+    "Input": {
+      "pitch": "sum27"
+    },
+    "Display": {
+      "offset": {
+        "left": 456,
+        "top": 355
+      }
+    }
+  },
+  "sin87": {
+    "Name": "sin87",
+    "Kind": "sin",
+    "Value": 0,
+    "Input": {
+      "pitch": "value88",
+      "syn": "skip80"
+    },
+    "Display": {
+      "offset": {
+        "left": 1066,
+        "top": 443
+      }
+    }
+  },
+  "skip69": {
+    "Name": "skip69",
+    "Kind": "skip",
+    "Value": 0,
+    "Input": {
+      "num": "value70",
+      "trig": "square6"
+    },
+    "Display": {
+      "offset": {
+        "left": 86,
+        "top": 181
+      }
+    }
+  },
+  "skip80": {
+    "Name": "skip80",
+    "Kind": "skip",
+    "Value": 0,
+    "Input": {
+      "num": "value81",
+      "trig": "skip69"
+    },
+    "Display": {
+      "offset": {
+        "left": 909,
+        "top": 400
+      }
+    }
+  },
+  "square6": {
+    "Name": "square6",
+    "Kind": "square",
+    "Value": 0,
+    "Input": {
+      "pitch": "value2"
+    },
+    "Display": {
+      "offset": {
+        "left": 253,
+        "top": 92
+      }
+    }
+  },
+  "sum101": {
+    "Name": "sum101",
+    "Kind": "sum",
+    "Value": 0,
+    "Input": {
+      "a": "note105",
+      "b": "mul102"
+    },
+    "Display": {
+      "offset": {
+        "left": 438,
+        "top": 203
+      }
+    }
+  },
+  "sum15": {
+    "Name": "sum15",
+    "Kind": "sum",
+    "Value": 0,
+    "Input": {
+      "a": "mul18",
+      "b": "delay13"
+    },
+    "Display": {
+      "offset": {
+        "left": 340,
+        "top": 483
+      }
+    }
+  },
+  "sum25": {
+    "Name": "sum25",
+    "Kind": "sum",
+    "Value": 0,
+    "Input": {
+      "a": "value26",
+      "b": "sum101"
+    },
+    "Display": {
+      "offset": {
+        "left": 543,
+        "top": 107
+      }
+    }
+  },
+  "sum27": {
+    "Name": "sum27",
+    "Kind": "sum",
+    "Value": 0,
+    "Input": {
+      "a": "mul23",
+      "b": "sum101"
+    },
+    "Display": {
+      "offset": {
+        "left": 450,
+        "top": 292
+      }
+    }
+  },
+  "sum41": {
+    "Name": "sum41",
+    "Kind": "sum",
+    "Value": 0,
+    "Input": {
+      "a": "mul42",
+      "b": "value24"
+    },
+    "Display": {
+      "offset": {
+        "left": 1058,
+        "top": 337
+      }
+    }
+  },
+  "sum45": {
+    "Name": "sum45",
+    "Kind": "sum",
+    "Value": 0,
+    "Input": {
+      "a": "mul47",
+      "b": "value46"
+    },
+    "Display": {
+      "offset": {
+        "left": 726,
+        "top": 328
+      }
+    }
+  },
+  "sum50": {
+    "Name": "sum50",
+    "Kind": "sum",
+    "Value": 0,
+    "Input": {
+      "a": "mul49",
+      "b": "value51"
+    },
+    "Display": {
+      "offset": {
+        "left": 862,
+        "top": 332
+      }
+    }
+  },
+  "sum56": {
+    "Name": "sum56",
+    "Kind": "sum",
+    "Value": 0,
+    "Input": {
+      "a": "env53",
+      "b": "value57"
+    },
+    "Display": {
+      "offset": {
+        "left": 91,
+        "top": 385
+      }
+    }
+  },
+  "sum61": {
+    "Name": "sum61",
+    "Kind": "sum",
+    "Value": 0,
+    "Input": {
+      "a": "sum15"
+    },
+    "Display": {
+      "offset": {
+        "left": 271,
+        "top": 541
+      }
+    }
+  },
+  "sum63": {
+    "Name": "sum63",
+    "Kind": "sum",
+    "Value": 0,
+    "Input": {
+      "a": "sin40",
+      "b": "value64"
+    },
+    "Display": {
+      "offset": {
+        "left": 276,
+        "top": 426
+      }
+    }
+  },
+  "sum73": {
+    "Name": "sum73",
+    "Kind": "sum",
+    "Value": 0,
+    "Input": {
+      "a": "mul84",
+      "b": "value91"
+    },
+    "Display": {
+      "offset": {
+        "left": 706,
+        "top": 448
+      }
+    }
+  },
+  "sum77": {
+    "Name": "sum77",
+    "Kind": "sum",
+    "Value": 0,
+    "Input": {
+      "a": "mul78",
+      "b": "sum61"
+    },
+    "Display": {
+      "offset": {
+        "left": 286,
+        "top": 604
+      }
+    }
+  },
+  "sum90": {
+    "Name": "sum90",
+    "Kind": "sum",
+    "Value": 0,
+    "Input": {
+      "a": "value98",
+      "b": "mul89"
+    },
+    "Display": {
+      "offset": {
+        "left": 1052,
+        "top": 561
+      }
+    }
+  },
+  "sum94": {
+    "Name": "sum94",
+    "Kind": "sum",
+    "Value": 0,
+    "Input": {
+      "a": "value96",
+      "b": "mul93"
+    },
+    "Display": {
+      "offset": {
+        "left": 534,
+        "top": 353
+      }
+    }
+  },
+  "value103": {
+    "Name": "value103",
+    "Kind": "value",
+    "Value": 12,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 365,
+        "top": 173
+      }
+    }
+  },
+  "value17": {
+    "Name": "value17",
+    "Kind": "value",
+    "Value": 0.02,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 498,
+        "top": 442
+      }
+    }
+  },
+  "value19": {
+    "Name": "value19",
+    "Kind": "value",
+    "Value": 0.15,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 292,
+        "top": 319
+      }
+    }
+  },
+  "value2": {
+    "Name": "value2",
+    "Kind": "value",
+    "Value": -0.6,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 274,
+        "top": 14
+      }
+    }
+  },
+  "value24": {
+    "Name": "value24",
+    "Kind": "value",
+    "Value": 0.3,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 1017,
+        "top": 270
+      }
+    }
+  },
+  "value26": {
+    "Name": "value26",
+    "Kind": "value",
+    "Value": 0.1,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 559,
+        "top": 17
+      }
+    }
+  },
+  "value3": {
+    "Name": "value3",
+    "Kind": "value",
+    "Value": -0.025,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 467,
+        "top": 13
+      }
+    }
+  },
+  "value32": {
+    "Name": "value32",
+    "Kind": "value",
+    "Value": 1,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 143,
+        "top": 10
+      }
+    }
+  },
+  "value36": {
+    "Name": "value36",
+    "Kind": "value",
+    "Value": 0.005,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 634,
+        "top": 104
+      }
+    }
+  },
+  "value38": {
+    "Name": "value38",
+    "Kind": "value",
+    "Value": 0.001,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 288,
+        "top": 175
+      }
+    }
+  },
+  "value39": {
+    "Name": "value39",
+    "Kind": "value",
+    "Value": 0.15,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 859,
+        "top": 205
+      }
+    }
+  },
+  "value4": {
+    "Name": "value4",
+    "Kind": "value",
+    "Value": 0.025,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 370,
+        "top": 13
+      }
+    }
+  },
+  "value43": {
+    "Name": "value43",
+    "Kind": "value",
+    "Value": 0.2,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 1056,
+        "top": 215
+      }
+    }
+  },
+  "value44": {
+    "Name": "value44",
+    "Kind": "value",
+    "Value": -1.5,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 1032,
+        "top": 14
+      }
+    }
+  },
+  "value46": {
+    "Name": "value46",
+    "Kind": "value",
+    "Value": 0.02,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 684,
+        "top": 259
+      }
+    }
+  },
+  "value48": {
+    "Name": "value48",
+    "Kind": "value",
+    "Value": -0.019,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 714,
+        "top": 201
+      }
+    }
+  },
+  "value51": {
+    "Name": "value51",
+    "Kind": "value",
+    "Value": 0.8,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 838,
+        "top": 261
+      }
+    }
+  },
+  "value54": {
+    "Name": "value54",
+    "Kind": "value",
+    "Value": 0.0005,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 73,
+        "top": 233
+      }
+    }
+  },
+  "value55": {
+    "Name": "value55",
+    "Kind": "value",
+    "Value": 1e-05,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 170,
+        "top": 237
+      }
+    }
+  },
+  "value57": {
+    "Name": "value57",
+    "Kind": "value",
+    "Value": -0.6,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 81,
+        "top": 314
+      }
+    }
+  },
+  "value60": {
+    "Name": "value60",
+    "Kind": "value",
+    "Value": 0.1,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 205,
+        "top": 361
+      }
+    }
+  },
+  "value64": {
+    "Name": "value64",
+    "Kind": "value",
+    "Value": -1,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 271,
+        "top": 361
+      }
+    }
+  },
+  "value67": {
+    "Name": "value67",
+    "Kind": "value",
+    "Value": 0.0025,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": -1,
+        "top": 330
+      }
+    }
+  },
+  "value70": {
+    "Name": "value70",
+    "Kind": "value",
+    "Value": 0.8,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 74,
+        "top": 119
+      }
+    }
+  },
+  "value79": {
+    "Name": "value79",
+    "Kind": "value",
+    "Value": -0.2,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 603,
+        "top": 292
+      }
+    }
+  },
+  "value81": {
+    "Name": "value81",
+    "Kind": "value",
+    "Value": 0.8,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 941,
+        "top": 327
+      }
+    }
+  },
+  "value82": {
+    "Name": "value82",
+    "Kind": "value",
+    "Value": 0.6,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 849,
+        "top": 442
+      }
+    }
+  },
+  "value83": {
+    "Name": "value83",
+    "Kind": "value",
+    "Value": 0.01,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 952,
+        "top": 444
+      }
+    }
+  },
+  "value88": {
+    "Name": "value88",
+    "Kind": "value",
+    "Value": -1,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 1120,
+        "top": 375
+      }
+    }
+  },
+  "value91": {
+    "Name": "value91",
+    "Kind": "value",
+    "Value": -0.4,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 705,
+        "top": 380
+      }
+    }
+  },
+  "value96": {
+    "Name": "value96",
+    "Kind": "value",
+    "Value": 0.2,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 528,
+        "top": 291
+      }
+    }
+  },
+  "value98": {
+    "Name": "value98",
+    "Kind": "value",
+    "Value": 0.1,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 1014,
+        "top": 395
+      }
+    }
+  },
+  "value99": {
+    "Name": "value99",
+    "Kind": "value",
+    "Value": -0.41,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 778,
+        "top": 443
+      }
+    }
+  }
+}
