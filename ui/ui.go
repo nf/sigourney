@@ -320,6 +320,12 @@ func NewObject(name, kind string, value float64) *Object {
 		p = audio.NewSum()
 	case "value":
 		p = audio.Value(value)
+	case "filter":
+		p = audio.NewFilter()
+	case "pole":
+		p = audio.NewPole()
+	case "noise":
+		p = audio.NewNoise()
 	default:
 		panic("bad kind: " + kind)
 	}
@@ -368,4 +374,7 @@ var kinds = []string{
 	"square",
 	"sum",
 	"value",
+	"filter",
+	"pole",
+	"noise",
 }

@@ -1,0 +1,150 @@
+{
+  "engine": {
+    "Name": "engine",
+    "Kind": "engine",
+    "Value": 0,
+    "Input": {
+      "in": "filter10"
+    },
+    "Display": {
+      "offset": {
+        "left": 160,
+        "top": 569.5
+      }
+    }
+  },
+  "env5": {
+    "Name": "env5",
+    "Kind": "env",
+    "Value": 0,
+    "Input": {
+      "att": "value7",
+      "dec": "value8",
+      "gate": "gate3"
+    },
+    "Display": {
+      "offset": {
+        "left": 177,
+        "top": 229
+      }
+    }
+  },
+  "filter10": {
+    "Name": "filter10",
+    "Kind": "filter",
+    "Value": 0,
+    "Input": {
+      "in": "square11",
+      "len": "mul13"
+    },
+    "Display": {
+      "offset": {
+        "left": 202,
+        "top": 414
+      }
+    }
+  },
+  "gate3": {
+    "Name": "gate3",
+    "Kind": "gate",
+    "Value": 0,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 198,
+        "top": 36
+      }
+    }
+  },
+  "mul13": {
+    "Name": "mul13",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "env5",
+      "b": "value14"
+    },
+    "Display": {
+      "offset": {
+        "left": 139,
+        "top": 335
+      }
+    }
+  },
+  "note2": {
+    "Name": "note2",
+    "Kind": "note",
+    "Value": 0,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 301,
+        "top": 29
+      }
+    }
+  },
+  "sin4": {
+    "Name": "sin4",
+    "Kind": "sin",
+    "Value": 0,
+    "Input": {
+      "pitch": "note2"
+    },
+    "Display": {
+      "offset": {
+        "left": 355,
+        "top": 190
+      }
+    }
+  },
+  "square11": {
+    "Name": "square11",
+    "Kind": "square",
+    "Value": 0,
+    "Input": {
+      "pitch": "note2"
+    },
+    "Display": {
+      "offset": {
+        "left": 259,
+        "top": 178
+      }
+    }
+  },
+  "value14": {
+    "Name": "value14",
+    "Kind": "value",
+    "Value": 0.99,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 104,
+        "top": 261
+      }
+    }
+  },
+  "value7": {
+    "Name": "value7",
+    "Kind": "value",
+    "Value": 0.0001,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 85,
+        "top": 79
+      }
+    }
+  },
+  "value8": {
+    "Name": "value8",
+    "Kind": "value",
+    "Value": 0.1,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 112,
+        "top": 22
+      }
+    }
+  }
+}

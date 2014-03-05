@@ -367,3 +367,86 @@ func (s *Step) Process(b []Sample) {
 		b[i] = in[s.n][i]
 	}
 }
+
+func NewFilter() *Filter {
+	f := &Filter{buf: make([]Sample, 1000)}
+	f.inputs("in", &f.in, "len", &f.len)
+	return f
+}
+
+type Filter struct {
+	sink
+	in  Processor
+	len source
+
+	p   int
+	buf []Sample
+}
+
+func (d *Filter) Process(s []Sample) {
+	d.in.Process(s)
+	l := d.len.Process()
+	p := d.p
+	for i := range s {
+		max := int((1 - l[i]) * 1000)
+		if max < 1 {
+			max = 1
+		} else if max > 1000 {
+			max = 1000
+		}
+		if p >= max {
+			p = 0
+		}
+		d.buf[p] = s[i]
+		p++
+
+		s[i] = avg(d.buf[:max])
+
+	}
+	d.p = p
+}
+
+func avg(s []Sample) Sample {
+	var b Sample
+	for _, a := range s {
+		b += a
+	}
+	return b / Sample(len(s))
+}
+
+func NewPole() *Pole {
+	f := &Pole{}
+	f.inputs("in", &f.in, "beta", &f.beta)
+	return f
+}
+
+type Pole struct {
+	sink
+	in   Processor
+	beta source
+
+	s Sample
+}
+
+func (p *Pole) Process(s []Sample) {
+	p.in.Process(s)
+	b := p.beta.Process()
+	for i := range s {
+		p.s += s[i]
+		p.s *= Sample(1 - math.Pow(10, float64(-b[i])))
+		s[i] = p.s
+	}
+}
+
+func NewNoise() *Noise {
+	return &Noise{}
+}
+
+type Noise struct {
+}
+
+func (p *Noise) Process(s []Sample) {
+	for i := range s {
+		s[i] = Sample(rand.Float64()*2 - 1)
+	}
+}
