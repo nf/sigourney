@@ -26,6 +26,7 @@ import (
 	"regexp"
 
 	"github.com/nf/sigourney/audio"
+	"github.com/nf/sigourney/midi"
 )
 
 type Handler interface {
@@ -243,12 +244,10 @@ func (o *Object) init() {
 		p = audio.NewEngine()
 	case "env":
 		p = audio.NewEnv()
-	case "gate":
-		p = audio.NewMidiGate()
 	case "mul":
 		p = audio.NewMul()
-	case "note":
-		p = audio.NewMidiNote()
+	case "noise":
+		p = audio.NewNoise()
 	case "quant":
 		p = audio.NewQuant()
 	case "rand":
@@ -265,12 +264,10 @@ func (o *Object) init() {
 		p = audio.NewSum()
 	case "value":
 		p = audio.Value(o.Value)
-	case "filter":
-		p = audio.NewFilter()
-	case "pole":
-		p = audio.NewPole()
-	case "noise":
-		p = audio.NewNoise()
+	case "gate":
+		p = midi.NewGate()
+	case "note":
+		p = midi.NewNote()
 	default:
 		panic("bad kind: " + o.Kind)
 	}
@@ -302,18 +299,17 @@ var kinds = []string{
 	"delay",
 	"engine",
 	"env",
-	"gate",
 	"mul",
-	"note",
+	"noise",
 	"quant",
 	"rand",
+	"sequencer",
 	"sin",
 	"skip",
-	"sequencer",
 	"square",
 	"sum",
 	"value",
-	"filter",
-	"pole",
-	"noise",
+
+	"gate",
+	"note",
 }

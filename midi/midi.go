@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package audio
+package midi
 
 import (
 	"flag"
@@ -23,11 +23,13 @@ import (
 	"sync/atomic"
 
 	"github.com/rakyll/portmidi"
+
+	"github.com/nf/sigourney/audio"
 )
 
 var midiDevice = flag.Int("midi_device", int(portmidi.GetDefaultInputDeviceId()), "MIDI Device ID")
 
-var initMidiOnce sync.Once
+var initOnce sync.Once
 
 func initMidi() {
 	s, err := portmidi.NewInputStream(portmidi.DeviceId(*midiDevice), 1024)
@@ -77,29 +79,29 @@ func midiLoop(s *portmidi.Stream) {
 	}
 }
 
-func NewMidiNote() *MidiNote {
-	initMidiOnce.Do(initMidi)
-	return &MidiNote{}
+func NewNote() *Note {
+	initOnce.Do(initMidi)
+	return &Note{}
 }
 
-type MidiNote struct{}
+type Note struct{}
 
-func (m *MidiNote) Process(s []Sample) {
-	p := (Sample(atomic.LoadInt64(&midiNote)) - 69) / 120
+func (m *Note) Process(s []audio.Sample) {
+	p := (audio.Sample(atomic.LoadInt64(&midiNote)) - 69) / 120
 	for i := range s {
 		s[i] = p
 	}
 }
 
-func NewMidiGate() *MidiGate {
-	initMidiOnce.Do(initMidi)
-	return &MidiGate{}
+func NewGate() *Gate {
+	initOnce.Do(initMidi)
+	return &Gate{}
 }
 
-type MidiGate struct{}
+type Gate struct{}
 
-func (m *MidiGate) Process(s []Sample) {
-	p := Sample(atomic.LoadInt64(&midiGate))
+func (m *Gate) Process(s []audio.Sample) {
+	p := audio.Sample(atomic.LoadInt64(&midiGate))
 	for i := range s {
 		s[i] = p
 	}
