@@ -203,6 +203,17 @@ func (u *UI) SetDisplay(name string, display map[string]interface{}) error {
 	return nil
 }
 
+func (u *UI) NewObject(name, kind string, value float64) {
+	o := &Object{Name: name, Kind: kind, Value: value, Input: make(map[string]string)}
+	o.init()
+	if o.dup != nil {
+		u.engine.Lock()
+		u.engine.AddTicker(o.dup)
+		u.engine.Unlock()
+	}
+	u.objects[name] = o
+}
+
 type Object struct {
 	Name    string
 	Kind    string
@@ -219,19 +230,9 @@ type dest struct {
 	name, input string
 }
 
-func (u *UI) NewObject(name, kind string, value float64) {
-	o := NewObject(name, kind, value)
-	if o.dup != nil {
-		u.engine.Lock()
-		u.engine.AddTicker(o.dup)
-		u.engine.Unlock()
-	}
-	u.objects[name] = o
-}
-
-func NewObject(name, kind string, value float64) *Object {
+func (o *Object) init() {
 	var p interface{}
-	switch kind {
+	switch o.Kind {
 	case "clip":
 		p = audio.NewClip()
 	case "delay":
@@ -261,7 +262,7 @@ func NewObject(name, kind string, value float64) *Object {
 	case "sum":
 		p = audio.NewSum()
 	case "value":
-		p = audio.Value(value)
+		p = audio.Value(o.Value)
 	case "filter":
 		p = audio.NewFilter()
 	case "pole":
@@ -269,28 +270,22 @@ func NewObject(name, kind string, value float64) *Object {
 	case "noise":
 		p = audio.NewNoise()
 	default:
-		panic("bad kind: " + kind)
+		panic("bad kind: " + o.Kind)
 	}
 	var dup *audio.Dup
 	if proc, ok := p.(audio.Processor); ok {
 		dup = audio.NewDup(proc)
 	}
-	return &Object{
-		Name:  name,
-		Kind:  kind,
-		Value: value,
-		Input: make(map[string]string),
-
-		proc:   p,
-		dup:    dup,
-		output: make(map[dest]*audio.Output),
-	}
+	o.proc = p
+	o.dup = dup
+	o.output = make(map[dest]*audio.Output)
 }
 
 func kindInputs() map[string][]string {
 	m := make(map[string][]string)
 	for _, k := range kinds {
-		o := NewObject("unnamed", k, 0)
+		o := &Object{Name: "unnamed", Kind: k}
+		o.init()
 		var in []string
 		if s, ok := o.proc.(audio.Sink); ok {
 			in = s.Inputs()
