@@ -94,7 +94,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 			}
 			return
 		}
-		if err := s.handle(m); err != nil {
+		if err := s.Handle(m); err != nil {
 			log.Println(err)
 		}
 	}
@@ -130,7 +130,7 @@ func (s *Session) SetGraph(graph []*ui.Object) {
 	s.m <- &Message{Action: "setGraph", Graph: graph}
 }
 
-func (s *Session) handle(m *Message) (err error) {
+func (s *Session) Handle(m *Message) (err error) {
 	defer func() {
 		if err != nil {
 			s.m <- &Message{
