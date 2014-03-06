@@ -50,16 +50,10 @@ Sigourney.UI = function() {
 			case 'hello':
 				handleHello(m.KindInputs);
 				break;
-			case 'new':
-				bumpNCount(m.Name);
-				newObjectName(m.Name, m.Kind, m.Value, m.Display);
-				break;
-			case 'connect':
-				var target = ui.objects[m.To];
-				if (!target)
-					return;
-				target.inputs[m.Input] = m.From
-				plumb.connect({uuids: [m.From + '-out', m.To + '-' + m.Input]});
+			case 'setGraph':
+				plumb.doWhileSuspended(function() {
+					handleSetGraph(m.Graph);
+				});
 				break;
 			case 'message':
 				var div = $('<div></div>').text(m.Message);
@@ -153,7 +147,7 @@ Sigourney.UI = function() {
 		for (var k in inputs) {
 			kindInputs[k] = inputs[k];
 			if (k == "engine") {
-				newObject(k, {offset: engineOffset()});
+				createObject(k, {offset: engineOffset()});
 			} else {
 				addKind(k, inputs[k]);
 			}
@@ -173,10 +167,27 @@ Sigourney.UI = function() {
 				revert: true, revertDuration: 0,
 				helper: 'clone',
 				stop: function(e, ui) {
-					newObject(kind, {offset: ui.position});
+					createObject(kind, {offset: ui.position});
 					ui.changedSinceSave = true;
 				}
 			});
+	}
+
+	function handleSetGraph(graph) {
+		for (var i = 0; i < graph.length; i++) {
+			var o = graph[i];
+			bumpNCount(o.Name);
+			newObject(o);
+		}
+		for (var i = 0; i < graph.length; i++) {
+			var o = graph[i];
+			for (var input in o.Input) {
+				var from = o.Input[input];
+				if (!from) continue;
+				plumb.connect({uuids: [from + '-out', o.Name + '-' + input]});
+				ui.objects[o.Name].inputs[input] = from
+			}
+		}
 	}
 
 	var nCount = 0;
@@ -190,13 +201,13 @@ Sigourney.UI = function() {
 		}
 	}
 
-	function newObject(kind, display) {
+	function createObject(kind, display) {
 		nCount++;
 		var name = kind + nCount;
 		if (kind == "engine")
 			name = "engine";
 
-		var obj = newObjectName(name, kind, null, display);
+		var obj = newObject({Name: name, Kind: kind, Display: display});
 
 		if (kind != "engine") {
 			var m = {Action: 'new', Name: name, Kind: kind};
@@ -209,17 +220,17 @@ Sigourney.UI = function() {
 		return obj;
 	}
 
-	function newObjectName(name, kind, value, display) {
+	function newObject(b) {
 		var inputs = {};
-		var kInputs = kindInputs[kind];
+		var kInputs = kindInputs[b.Kind];
 		if (kInputs != null) {
 			for (var i = 0; i < kInputs.length; i++) {
 				inputs[kInputs[i]] = null;
 			}
 		}
 
-		var obj = new Sigourney.Object(ui, name, kind, value, display, inputs);
-		ui.objects[name] = obj;
+		var obj = new Sigourney.Object(ui, b, inputs);
+		ui.objects[b.Name] = obj;
 		obj.element();
 
 		return obj;
@@ -232,7 +243,7 @@ Sigourney.UI = function() {
 			var obj1 = $(this).data('object');
 			var o1 = obj1.display.offset;
 			var o2 = {top: o1.top + 50, left: o1.left + 50};
-			var obj2 = newObject(obj1.kind, {offset: o2});
+			var obj2 = createObject(obj1.kind, {offset: o2});
 			names[obj1.name] = obj2.name;
 			obj2.element().addClass('ui-selected');
 			if (obj1.kind == 'value') {
@@ -282,13 +293,15 @@ Sigourney.UI.prototype.onDestroy = function(obj) {
 	delete(objects[obj.name]);
 };
 
-Sigourney.Object = function(ui, name, kind, value, display, inputs) {
-	this.el = null;
+Sigourney.Object = function(ui, b, inputs) {
 	this.ui = ui;
-	this.name = name;
-	this.kind = kind;
-	this.value = (value == null)?0:value;
-	this.display = display;
+	this.el = null;
+
+	this.name = b.Name;
+	this.kind = b.Kind;
+	this.value = b.Value || 0;
+	this.display = b.Display;
+
 	this.inputs = inputs;
 };
 

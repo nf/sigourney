@@ -30,8 +30,7 @@ import (
 
 type Handler interface {
 	Hello(kindInputs map[string][]string)
-	New(o *Object)
-	Connect(from, to, input string)
+	SetGraph(graph []*Object)
 }
 
 type UI struct {
@@ -120,16 +119,19 @@ func (u *UI) Load(name string) error {
 			u.NewObject(o.Name, o.Kind, float64(o.Value))
 		}
 		u.objects[o.Name].Display = o.Display
-		u.h.New(o)
 	}
 	for to, o := range objs {
 		for input, from := range o.Input {
 			if err := u.Connect(from, to, input); err != nil {
 				return err
 			}
-			u.h.Connect(from, to, input)
 		}
 	}
+	var graph []*Object
+	for _, o := range objs {
+		graph = append(graph, o)
+	}
+	u.h.SetGraph(graph)
 	return u.engine.Start()
 }
 
