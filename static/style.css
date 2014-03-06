@@ -83,14 +83,17 @@ body {
 .kind-clip { background: #533; }
 .kind-delay { background: #553; }
 .kind-engine { background: #535; }
-.kind-env { background: #353; }
-.kind-gate { background: #355; }
+.kind-env { background: #333; }
 .kind-mul { background: #335; }
-.kind-note { background: #333; }
+.kind-noise { background: #443; }
 .kind-quant { background: #543; }
 .kind-rand { background: #554; }
+.kind-sequencer { background: #344; }
 .kind-sin { background: #545; }
 .kind-skip { background: #453; }
 .kind-square { background: #354; }
 .kind-sum { background: #434; }
 .kind-value { background: #433; }
+
+.kind-gate { background: #355; }
+.kind-note { background: #353; }
