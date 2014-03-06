@@ -198,8 +198,12 @@ Sigourney.UI = function() {
 
 		var obj = newObjectName(name, kind, null, display);
 
-		if (kind != "engine")
-			ui.send({Action: 'new', Name: name, Kind: kind, Value: value});
+		if (kind != "engine") {
+			var m = {Action: 'new', Name: name, Kind: kind};
+			if (kind == "value")
+				m.Value = obj.value;
+			ui.send(m);
+		}
 		ui.onDisplayUpdate(obj);
 
 		return obj;
