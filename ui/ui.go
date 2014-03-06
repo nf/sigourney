@@ -137,7 +137,7 @@ func (u *UI) Handle(m *Message) (err error) {
 			o.Display[k] = v
 		}
 	default:
-		return fmt.Errorf("unrecognized Action:", a)
+		return fmt.Errorf("unrecognized Action: %v", a)
 	}
 	return nil
 }
