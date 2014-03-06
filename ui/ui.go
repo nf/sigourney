@@ -178,7 +178,7 @@ func (u *UI) save(name string) error {
 	return ioutil.WriteFile(path, b, 0644)
 }
 
-func (u UI) load(name string) error {
+func (u *UI) load(name string) error {
 	if !validName.MatchString(name) {
 		return fmt.Errorf("load: name doesn't match %v", validName)
 	}
@@ -195,6 +195,7 @@ func (u UI) load(name string) error {
 		if o.Kind != "engine" {
 			u.newObject(o.Name, o.Kind, float64(o.Value))
 		}
+		u.objects[o.Name].Display = o.Display
 		u.m <- &Message{
 			Action:  "new",
 			Name:    o.Name,

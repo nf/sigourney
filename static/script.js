@@ -14,171 +14,279 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-var ws;
-var plumb;
+var Sigourney = {};
 
-var changedSinceSave = false;
-var changeWarning = "There are unsaved changes!\nOK to continue?";
+Sigourney.Debug = false;
 
-jsPlumb.bind('ready', function() {
-	$('#status').text('Connecting to back end...');
-	ws = new WebSocket('ws://localhost:8080/socket');
-	ws.onopen = onOpen;
-	ws.onmessage = onMessage;
-	ws.onclose = function() {
-		$('#status').append('<div>Lost connection to back end!</div>');
-	};
-});
+Sigourney.UI = function() {
+	var ui = this;
+	var plumb;
 
-function send(m) {
-	console.log(">", m);
-	ws.send(JSON.stringify(m));
-}
+	ui.objects = {};
+	ui.changedSinceSave = false;
 
-function onOpen() {
-	$('#status').empty();
+	var kindInputs = {};
+	var colorIndex = 0;
 
-	initPlumb();
-	initUI();
-}
+	jsPlumb.bind('ready', function() {
+		$('#status').text('Connecting to back end...');
+		ui.ws = new WebSocket('ws://localhost:8080/socket');
+		ui.ws.onopen = function() {
+			$('#status').empty();
 
-function initPlumb() {
-	plumb = jsPlumb.getInstance({Container: 'page'});
-	plumb.bind('connection', function(conn) {
-		var input = conn.targetEndpoint.getParameter('input');
-		send({Action: 'connect', From: conn.source.id, To: conn.target.id, Input: input});
-		changedSinceSave = true;
-	});
-	plumb.bind('connectionDetached', function(conn) {
-		if (!conn.targetEndpoint.isTarget) return;
-		var input = conn.targetEndpoint.getParameter('input');
-		send({Action: 'disconnect', From: conn.source.id, To: conn.target.id, Input: input});
-		changedSinceSave = true;
-	});
-	plumb.bind('click', function(conn, e) {
-		if (!e.shiftKey) return;
-		plumb.detach(conn);
-	});
-}
-
-function setValue(obj, v) {
-	$(obj).data('value', v).text(v);
-	plumb.repaint($(obj));
-	send({Action: 'set', Name: $(obj).attr('id'), Value: v});
-	changedSinceSave = true;
-}
-
-function destroy(obj) {
-	plumb.remove($(obj));
-	send({Action: 'destroy', Name: $(obj).attr('id')});
-	changedSinceSave = true;
-}
-
-function initUI() {
-	var fn = $('<input type="text"/>');
-	var load = $('<input type="button" value="load"/>');
-	var save = $('<input type="button" value="save"/>');
-	$('#control').append(fn, load, save);
-
-	var loadFn  = function() {
-		if (changedSinceSave && !confirm(changeWarning)) return;
-		$('.object').each(function() { plumb.remove(this); });
-		send({Action: 'load', Name: fn.val()});
-		fn.blur();
-		load.blur();
-		changedSinceSave = false;
-	};
-	fn.keypress(function(e) { if (e.charCode == 13) loadFn(); });
-	load.click(loadFn);
-	save.click(function() {
-		send({Action: 'save', Name: fn.val()});
-		save.blur();
-		changedSinceSave = false;
+			initPlumb();
+			initUI();
+		};
+		ui.ws.onclose = function() {
+			$('#status').append('<div>Lost connection to back end!</div>');
+		};
+		ui.ws.onmessage = onMessage;
 	});
 
-	// Handle keypresses while fn field is not focused.
-	$(document).keypress(function(e) {
-		if (fn.is(':focus'))
-			return;
-		switch (e.charCode) {
-		case 100: // d
-			onDup();
-			break;
-		case 24: // ^x
-			onDelete();
-			break;
-		default:
-			return;
-		}
-		e.preventDefault();
-	})
-
-	// Blur inputs on clicks outside controls.
-	$('#page, #objects').mousedown(function(e) {
-		if (!$(e.originalEvent.target).is('#control input')) {
-			$('#control input').blur();
-			console.log('false');
-		}
-	});
-
-	$('#page').selectable({filter: ".object"})
-}
-
-function onMessage(msg) {
-	var m = JSON.parse(msg.data);
-	console.log("<", m);
-	switch (m.Action) {
-		case 'hello':
-			handleHello(m.KindInputs);
-			break;
-		case 'new':
-			bumpNCount(m.Name);
-			newObjectName(m.Name, m.Kind, m.Value, m.Display);
-			break;
-		case 'connect':
-			plumb.connect({uuids: [m.From + '-out', m.To + '-' + m.Input]});
-			break;
-		case 'message':
-			var div = $('<div></div>').text(m.Message);
-			$('#status').append(div);
-			setTimeout(function() { div.remove(); }, 5000);
-			break;
-	}
-}
-
-var kindInputs = {};
-var colorIndex = 0;
-
-function handleHello(inputs) {
-	var k;
-	for (k in inputs) {
-		kindInputs[k] = inputs[k];
-		if (k == "engine") {
-			newObject(k, {offset: engineOffset()});
-		} else {
-			addKind(k, inputs[k]);
+	function onMessage(msg) {
+		var m = JSON.parse(msg.data);
+		if (Sigourney.Debug) console.log("<", m);
+		switch (m.Action) {
+			case 'hello':
+				handleHello(m.KindInputs);
+				break;
+			case 'new':
+				bumpNCount(m.Name);
+				newObjectName(m.Name, m.Kind, m.Value, m.Display);
+				break;
+			case 'connect':
+				var target = ui.objects[m.To];
+				if (!target)
+					return;
+				target.inputs[m.Input] = m.From
+				plumb.connect({uuids: [m.From + '-out', m.To + '-' + m.Input]});
+				break;
+			case 'message':
+				var div = $('<div></div>').text(m.Message);
+				$('#status').append(div);
+				setTimeout(function() { div.remove(); }, 5000);
+				break;
 		}
 	}
-}
 
-function engineOffset() {
-	var w = $('#page').width(), h = $('#page').height();
-	return {top: 3*h/4, left: w/2-(49+20+20+1+1)/2};
-}
-
-function addKind(kind, inputs) {
-	$('<li></li>').text(kind).data('inputs', inputs)
-		.addClass('kind-'+kind)
-		.appendTo('#objects')
-		.draggable({
-			revert: true, revertDuration: 0,
-			helper: 'clone',
-			stop: function(e, ui) {
-				newObject(kind, {offset: ui.position});
-				changedSinceSave = true;
+	function initPlumb() {
+		ui.plumb = plumb = jsPlumb.getInstance({Container: 'page'});
+		plumb.bind('connection', function(conn) {
+			var source = ui.objects[conn.sourceId];
+			var target = ui.objects[conn.targetId];
+			var input = conn.targetEndpoint.getParameter('input');
+			if (target.inputs[input] != source.name) {
+				target.inputs[input] = source.name;
+				ui.send({Action: 'connect', From: source.name, To: target.name, Input: input});
+				ui.changedSinceSave = true;
 			}
 		});
+		plumb.bind('connectionDetached', function(conn) {
+			if (!conn.targetEndpoint.isTarget) return;
+			var target = ui.objects[conn.targetId];
+			var source = ui.objects[conn.sourceId];
+			var input = conn.targetEndpoint.getParameter('input');
+			target.inputs[input] = null;
+			ui.send({Action: 'disconnect', From: conn.source.id, To: conn.target.id, Input: input});
+			ui.changedSinceSave = true;
+		});
+		plumb.bind('click', function(conn, e) {
+			if (!e.shiftKey) return;
+			plumb.detach(conn);
+		});
+	}
+
+	function initUI() {
+		var fn = $('<input type="text"/>');
+		var load = $('<input type="button" value="load"/>');
+		var save = $('<input type="button" value="save"/>');
+		$('#control').append(fn, load, save);
+
+		var loadFn  = function() {
+			var changeWarning = "There are unsaved changes!\nOK to continue?";
+			if (ui.changedSinceSave && !confirm(changeWarning)) return;
+			for (var name in ui.objects) {
+				ui.objects[name].destroy();
+			}
+			ui.objects = {};
+			ui.send({Action: 'load', Name: fn.val()});
+			fn.blur();
+			load.blur();
+			ui.changedSinceSave = false;
+		};
+		fn.keypress(function(e) { if (e.charCode == 13) loadFn(); });
+		load.click(loadFn);
+		save.click(function() {
+			ui.send({Action: 'save', Name: fn.val()});
+			save.blur();
+			ui.changedSinceSave = false;
+		});
+
+		// Handle keypresses while fn field is not focused.
+		$(document).keypress(function(e) {
+			if (fn.is(':focus'))
+				return;
+			switch (e.charCode) {
+			case 100: // d
+				onDup();
+				break;
+			case 24: // ^x
+				onDelete();
+				break;
+			default:
+				return;
+			}
+			e.preventDefault();
+		})
+
+		// Blur inputs on clicks outside controls.
+		$('#page, #objects').mousedown(function(e) {
+			if (!$(e.originalEvent.target).is('#control input')) {
+				$('#control input').blur();
+			}
+		});
+
+		$('#page').selectable({filter: ".object"})
+	}
+
+	function handleHello(inputs) {
+		for (var k in inputs) {
+			kindInputs[k] = inputs[k];
+			if (k == "engine") {
+				newObject(k, {offset: engineOffset()});
+			} else {
+				addKind(k, inputs[k]);
+			}
+		}
+	}
+
+	function engineOffset() {
+		var w = $('#page').width(), h = $('#page').height();
+		return {top: 3*h/4, left: w/2-(49+20+20+1+1)/2};
+	}
+
+	function addKind(kind, inputs) {
+		$('<li></li>').text(kind).data('inputs', inputs)
+			.addClass('kind-'+kind)
+			.appendTo('#objects')
+			.draggable({
+				revert: true, revertDuration: 0,
+				helper: 'clone',
+				stop: function(e, ui) {
+					newObject(kind, {offset: ui.position});
+					ui.changedSinceSave = true;
+				}
+			});
+	}
+
+	var nCount = 0;
+
+	function bumpNCount(name) {
+		var r = /[0-9]+$/.exec(name);
+		if (r === null) return; // unknown name
+		var n = r[0]*1;
+		if (nCount <= n) {
+			nCount = n + 1;
+		}
+	}
+
+	function newObject(kind, display) {
+		nCount++;
+		var name = kind + nCount;
+		if (kind == "engine")
+			name = "engine";
+
+		var obj = newObjectName(name, kind, null, display);
+
+		if (kind != "engine")
+			ui.send({Action: 'new', Name: name, Kind: kind, Value: value});
+		ui.onDisplayUpdate(obj);
+
+		return obj;
+	}
+
+	function newObjectName(name, kind, value, display) {
+		var inputs = {};
+		var kInputs = kindInputs[kind];
+		if (kInputs != null) {
+			for (var i = 0; i < kInputs.length; i++) {
+				inputs[kInputs[i]] = null;
+			}
+		}
+
+		var obj = new Sigourney.Object(ui, name, kind, value, display, inputs);
+		ui.objects[name] = obj;
+		obj.element();
+
+		return obj;
+	}
+
+	function onDup() {
+		var names = {};
+		$('.ui-selected').not('#engine').each(function() {
+			// duplicate objects
+			var obj1 = $(this).data('object');
+			var o1 = obj1.display.offset;
+			var o2 = {top: o1.top + 50, left: o1.left + 50};
+			var obj2 = newObject(obj1.kind, {offset: o2});
+			names[obj1.name] = obj2.name;
+			obj2.element().addClass('ui-selected');
+			if (obj1.kind == 'value') {
+				obj2.setValue(obj1.value);
+				ui.onSetValue(obj2);
+			}
+		}).each(function() {
+			// connect new objects
+			var obj = $(this).data('object');
+			for (var input in obj.inputs) {
+				var targetName = names[obj.name];
+				var sourceName = names[obj.inputs[input]];
+				if (!sourceName)
+					continue;
+				plumb.connect({uuids: [sourceName + '-out', targetName + '-' + input]});
+			}
+		}).removeClass('ui-selected');
+	}
+
+	function onDelete() {
+		$('.ui-selected').not('#engine').each(function() {
+			var obj = $(this).data('object');
+			obj.destroy();
+			ui.onDestroy(obj);
+		});
+	}
+};
+
+Sigourney.UI.prototype.send = function(m) {
+	if (Sigourney.Debug) console.log(">", m);
+	this.ws.send(JSON.stringify(m));
 }
+
+Sigourney.UI.prototype.onDisplayUpdate = function(obj, nosend) {
+	this.send({Action: 'setDisplay', Name: obj.name, Display: obj.display});
+	this.changedSinceSave = true;
+};
+
+Sigourney.UI.prototype.onSetValue = function(obj) {
+	this.send({Action: 'set', Name: obj.name, Value: obj.value});
+	this.changedSinceSave = true;
+};
+
+Sigourney.UI.prototype.onDestroy = function(obj) {
+	this.send({Action: 'destroy', Name: obj.name});
+	this.changedSinceSave = true;
+	delete(objects[obj.name]);
+};
+
+Sigourney.Object = function(ui, name, kind, value, display, inputs) {
+	this.el = null;
+	this.ui = ui;
+	this.name = name;
+	this.kind = kind;
+	this.value = (value == null)?0:value;
+	this.display = display;
+	this.inputs = inputs;
+};
 
 var endpointCommon = {
 	endpoint: "Dot",
@@ -199,52 +307,31 @@ var endpointCommon = {
 	}
 };
 
-var nCount = 0;
-
-function bumpNCount(name) {
-	var r = /[0-9]+$/.exec(name);
-	if (r === null) return; // unknown name
-	var n = r[0]*1;
-	if (nCount <= n) {
-		nCount = n + 1;
+Sigourney.Object.prototype.element = function() {
+	if (this.el != null) {
+		return this.el;
 	}
-}
 
-function newObject(kind, display) {
-	nCount++;
-	var name = kind + nCount;
-	if (kind == "engine")
-		name = "engine";
-	newObjectName(name, kind, null, display)
-	return name;
-}
+	var obj = this;
+	var ui = obj.ui;
+	var plumb = ui.plumb;
 
-function sendDisplay(obj) {
-	send({
-		Action: 'setDisplay',
-		Name: $(obj).attr('id'),
-		Display: {offset: $(obj).offset()}
-	});
-}
-
-function newObjectName(name, kind, value, display) {
-	var div = $('<div class="object"></div>')
-		.text(kind)
-		.attr('id', name)
-		.data('kind', kind)
-		.css('top', display.offset.top)
-		.css('left', display.offset.left)
-		.addClass('kind-'+kind)
+	obj.el = $('<div class="object"></div>')
+		.data('object', obj)
+		.attr('id', obj.name)
+		.text(obj.kind).addClass('kind-'+obj.kind)
+		.css('top', obj.display.offset.top)
+		.css('left', obj.display.offset.left)
 		.appendTo('#page')
 
-	plumb.draggable(div, {
-		start: function(e, ui) {
+	plumb.draggable(obj.el, {
+		start: function() {
 			if (!$(this).is('.ui-selected')) return;
 		},
-		drag: function(e, ui) {
+		drag: function(e, jqUI) {
 			if (!$(this).is('.ui-selected')) return;
 			var o1 = $(this).offset();
-			var p = ui.position;
+			var p = jqUI.position;
 			$('.ui-selected').not(this).each(function() {
 				var o2 = $(this).offset();
 				$(this).css({
@@ -254,54 +341,59 @@ function newObjectName(name, kind, value, display) {
 				plumb.repaint(this);
 			});
 		},
-		stop: function(e, ui) {
-			sendDisplay(this);
-			if (!$(this).is('.ui-selected')) return;
+		stop: function() {
+			obj.setDisplay();
+			ui.onDisplayUpdate(obj);
+			if (!$(this).is('.ui-selected'))
+				return;
 			$('.ui-selected').not(this).each(function() {
 				plumb.repaint(this);
-			}).each(function() {
-				sendDisplay(this);
+				var obj = $(this).data('object');
+				obj.setDisplay();
+				ui.onDisplayUpdate(obj);
 			});
 		}
 	});
 
-	if (kind == "value") {
-		if (value === null) value = 0;
-		div.data('value', value).text(value).dblclick(function(e) {
-			setValue(this, window.prompt("Value? (-1 to +1)")*1);
+	if (obj.kind == "value") {
+		obj.setValue(obj.value);
+		obj.el.dblclick(function(e) {
+			var v = window.prompt("Value? (-1 to +1)")*1;
+			obj.setValue(v);
+			ui.onSetValue(obj);
 		});
 	}
 
-	if (kind != "engine") {
-		div.click(function(e) {
+	if (obj.kind != "engine") {
+		obj.el.click(function(e) {
 			if (!e.shiftKey) return;
-			destroy(this);
+			obj.destroy();
+			ui.onDestroy(obj);
 		});
 	}
 
 	// add input and output endpoints
 	plumb.doWhileSuspended(function() {
-		var inputs = kindInputs[kind];
-		if (inputs) {
-			for (var i = 0; i < inputs.length; i++) {
-				plumb.addEndpoint(div, {
-					uuid: name + '-' + inputs[i],
-					parameters: {input: inputs[i]},
+		if (obj.inputs) {
+			for (var input in obj.inputs) {
+				plumb.addEndpoint(obj.el, {
+					uuid: obj.name + '-' + input,
+					parameters: {input: input},
 					anchor: "ContinuousTop",
 					isSource: false,
 					isTarget: true,
 					overlays: [
 						[ 'Label', {
-							label: inputs[i],
+							label: input,
 							cssClass: 'label'
 						} ]
 					]
 				}, endpointCommon);
 			}
 		}
-		if (kind != "engine") {
-			plumb.addEndpoint(div, {
-				uuid: name + '-out',
+		if (obj.kind != "engine") {
+			plumb.addEndpoint(obj.el, {
+				uuid: obj.name + '-out',
 				anchor: "Bottom",
 				isSource: true,
 				isTarget: false,
@@ -310,50 +402,22 @@ function newObjectName(name, kind, value, display) {
 		}
 	});
 
-	if (kind != "engine")
-		send({Action: 'new', Name: name, Kind: kind, Value: value});
-	sendDisplay(div);
+	return this.el;
 }
 
-function onDup() {
-	var names = {};
-	var added = {};
-	$('.ui-selected').removeClass('ui-selected').not('#engine').each(function() {
-		changedSinceSave = true;
-		names[$(this).attr('id')] = true;
-	}).each(function() {
-		var o = $(this).offset();
-		o.top += 50;
-		o.left += 50;
-		var k = $(this).data('kind')
-		var n = newObject(k, {offset: o});
-		names[$(this).attr('id')] = n;
-		var el = $('#'+n).addClass('ui-selected');
-		if (k == 'value') {
-			setValue(el, $(this).data('value'));
-		}
-	}).each(function() {
-		var id = $(this).attr('id');
-		var conns = plumb.getConnections($(this));
-		for (var i = 0; i < conns.length; i++) {
-			var c = conns[i];
-			if (c.sourceId != id)
-				continue;
-			var source = names[c.sourceId];
-			var target = names[c.targetId];
-			if (!target)
-				continue;
-			var input;
-			for (var j = 0; j < c.endpoints.length; j++) {
-				var e = c.endpoints[j];
-				if (e.elementId == c.targetId)
-					input = e.getParameter('input');
-			}
-			plumb.connect({uuids: [source + '-out', target + '-' + input]});
-		}
-	});
+Sigourney.Object.prototype.setDisplay = function() {
+	this.display = {offset: this.element().offset()};
 }
 
-function onDelete() {
-	$('.ui-selected').not('#engine').each(function() { destroy(this); });
+Sigourney.Object.prototype.setValue = function(v) {
+	this.value = v;
+	this.ui.plumb.repaint(this.element().text(v));
 }
+
+Sigourney.Object.prototype.destroy = function() {
+	if (this.el == null) return;
+	this.ui.plumb.remove($(this.el));
+
+}
+
+var ui = new Sigourney.UI;
