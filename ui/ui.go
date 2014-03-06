@@ -28,50 +28,27 @@ import (
 	"github.com/nf/sigourney/audio"
 )
 
-type Message struct {
-	Action string
-
-	// "new", "set", "destroy", "save", "load", "setDisplay"
-	Name string `json:",omitempty"`
-
-	// "new"
-	Kind string `json:",omitempty"`
-
-	// "new", "set"
-	Value float64 `json:",omitempty"` // for Kind: "value"
-
-	// "connect", "disconnect"
-	From  string `json:",omitEmpty"`
-	To    string `json:",omitempty"`
-	Input string `json:",omitempty"`
-
-	// "hello"
-	KindInputs map[string][]string `json:",omitempty"`
-
-	// "setDisplay"
-	Display map[string]interface{} `json:",omitempty"`
-
-	// "message"
-	Message string
+type Handler interface {
+	Hello(kindInputs map[string][]string)
+	New(o *Object)
+	Connect(from, to, input string)
 }
 
 type UI struct {
-	M <-chan *Message
-	m chan *Message
+	h Handler
 
 	objects map[string]*Object
 	engine  *audio.Engine
 }
 
-func New() (*UI, error) {
-	m := make(chan *Message, 1)
-	u := &UI{M: m, m: m, objects: make(map[string]*Object)}
-	u.newObject("engine", "engine", 0)
+func New(h Handler) (*UI, error) {
+	u := &UI{h: h, objects: make(map[string]*Object)}
+	u.NewObject("engine", "engine", 0)
 	u.engine = u.objects["engine"].proc.(*audio.Engine)
 	if err := u.engine.Start(); err != nil {
 		return nil, err
 	}
-	m <- &Message{Action: "hello", KindInputs: kindInputs()}
+	h.Hello(kindInputs())
 	return u, nil
 }
 
@@ -79,70 +56,7 @@ func (u *UI) Close() error {
 	return u.engine.Stop()
 }
 
-func (u *UI) Handle(m *Message) (err error) {
-	defer func() {
-		if err != nil {
-			u.m <- &Message{
-				Action:  "message",
-				Message: err.Error(),
-			}
-		}
-	}()
-	switch a := m.Action; a {
-	case "new":
-		u.newObject(m.Name, m.Kind, m.Value)
-	case "connect":
-		return u.connect(m.From, m.To, m.Input)
-	case "disconnect":
-		return u.disconnect(m.From, m.To, m.Input)
-	case "set":
-		o, ok := u.objects[m.Name]
-		if !ok {
-			return errors.New("unknown object: " + m.Name)
-		}
-		o.Value = m.Value
-		v := audio.Value(m.Value)
-		o.proc = v
-		u.engine.Lock()
-		o.dup.SetSource(v)
-		u.engine.Unlock()
-	case "destroy":
-		return u.destroy(m.Name)
-	case "save":
-		return u.save(m.Name)
-	case "load":
-		if err := u.engine.Stop(); err != nil {
-			return err
-		}
-		for name := range u.objects {
-			if name != "engine" {
-				if err := u.destroy(name); err != nil {
-					return err
-				}
-			}
-		}
-		if err := u.load(m.Name); err != nil {
-			return err
-		}
-		return u.engine.Start()
-	case "setDisplay":
-		o, ok := u.objects[m.Name]
-		if !ok {
-			return errors.New("bad Name: " + m.Name)
-		}
-		for k, v := range m.Display {
-			if o.Display == nil {
-				o.Display = make(map[string]interface{})
-			}
-			o.Display[k] = v
-		}
-	default:
-		return fmt.Errorf("unrecognized Action: %v", a)
-	}
-	return nil
-}
-
-func (u *UI) destroy(name string) error {
+func (u *UI) Destroy(name string) error {
 	o, ok := u.objects[name]
 	if !ok {
 		return errors.New("bad Name: " + name)
@@ -153,10 +67,10 @@ func (u *UI) destroy(name string) error {
 		u.engine.Unlock()
 	}
 	for d := range o.output {
-		u.disconnect(name, d.name, d.input)
+		u.Disconnect(name, d.name, d.input)
 	}
 	for input, from := range o.Input {
-		u.disconnect(from, name, input)
+		u.Disconnect(from, name, input)
 	}
 	delete(u.objects, name)
 	return nil
@@ -166,7 +80,7 @@ const filePrefix = "patch/"
 
 var validName = regexp.MustCompile(`^[a-zA-Z0-9._-]+$`)
 
-func (u *UI) save(name string) error {
+func (u *UI) Save(name string) error {
 	if !validName.MatchString(name) {
 		return fmt.Errorf("name %q doesn't match %v", name, validName)
 	}
@@ -178,7 +92,17 @@ func (u *UI) save(name string) error {
 	return ioutil.WriteFile(path, b, 0644)
 }
 
-func (u *UI) load(name string) error {
+func (u *UI) Load(name string) error {
+	if err := u.engine.Stop(); err != nil {
+		return err
+	}
+	for name := range u.objects {
+		if name != "engine" {
+			if err := u.Destroy(name); err != nil {
+				return err
+			}
+		}
+	}
 	if !validName.MatchString(name) {
 		return fmt.Errorf("load: name doesn't match %v", validName)
 	}
@@ -193,34 +117,23 @@ func (u *UI) load(name string) error {
 	}
 	for _, o := range objs {
 		if o.Kind != "engine" {
-			u.newObject(o.Name, o.Kind, float64(o.Value))
+			u.NewObject(o.Name, o.Kind, float64(o.Value))
 		}
 		u.objects[o.Name].Display = o.Display
-		u.m <- &Message{
-			Action:  "new",
-			Name:    o.Name,
-			Kind:    o.Kind,
-			Value:   o.Value,
-			Display: o.Display,
-		}
+		u.h.New(o)
 	}
 	for to, o := range objs {
 		for input, from := range o.Input {
-			if err := u.connect(from, to, input); err != nil {
+			if err := u.Connect(from, to, input); err != nil {
 				return err
 			}
-			u.m <- &Message{
-				Action: "connect",
-				From:   from,
-				To:     to,
-				Input:  input,
-			}
+			u.h.Connect(from, to, input)
 		}
 	}
-	return nil
+	return u.engine.Start()
 }
 
-func (u *UI) disconnect(from, to, input string) error {
+func (u *UI) Disconnect(from, to, input string) error {
 	f, ok := u.objects[from]
 	if !ok {
 		return errors.New("unknown From: " + from)
@@ -241,7 +154,7 @@ func (u *UI) disconnect(from, to, input string) error {
 	return nil
 }
 
-func (u *UI) connect(from, to, input string) error {
+func (u *UI) Connect(from, to, input string) error {
 	f, ok := u.objects[from]
 	if !ok {
 		return errors.New("unknown From: " + from)
@@ -262,6 +175,34 @@ func (u *UI) connect(from, to, input string) error {
 	return nil
 }
 
+func (u *UI) Set(name string, v float64) error {
+	o, ok := u.objects[name]
+	if !ok {
+		return errors.New("unknown object: " + name)
+	}
+	o.Value = v
+	av := audio.Value(v)
+	o.proc = av
+	u.engine.Lock()
+	o.dup.SetSource(av)
+	u.engine.Unlock()
+	return nil
+}
+
+func (u *UI) SetDisplay(name string, display map[string]interface{}) error {
+	o, ok := u.objects[name]
+	if !ok {
+		return errors.New("unknown object: " + name)
+	}
+	for k, v := range display {
+		if o.Display == nil {
+			o.Display = make(map[string]interface{})
+		}
+		o.Display[k] = v
+	}
+	return nil
+}
+
 type Object struct {
 	Name    string
 	Kind    string
@@ -278,7 +219,7 @@ type dest struct {
 	name, input string
 }
 
-func (u *UI) newObject(name, kind string, value float64) {
+func (u *UI) NewObject(name, kind string, value float64) {
 	o := NewObject(name, kind, value)
 	if o.dup != nil {
 		u.engine.Lock()

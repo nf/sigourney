@@ -19,7 +19,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"io"
 	"log"
 	"net"
 	"net/http"
@@ -27,11 +26,10 @@ import (
 	"os/exec"
 	"runtime"
 
-	"github.com/nf/sigourney/ui"
-
 	"code.google.com/p/portaudio-go/portaudio"
-	"github.com/gorilla/websocket"
 	"github.com/rakyll/portmidi"
+
+	"github.com/nf/sigourney/socket"
 )
 
 var (
@@ -57,7 +55,7 @@ func main() {
 	}
 
 	http.Handle("/", http.FileServer(http.Dir("static")))
-	http.HandleFunc("/socket", socketHandler)
+	http.HandleFunc("/socket", socket.Handler)
 
 	l, err := net.Listen("tcp", *listenAddr)
 	if err != nil {
@@ -72,45 +70,6 @@ func main() {
 
 	fmt.Println("Press enter to quit...")
 	os.Stdin.Read([]byte{0})
-}
-
-func socketHandler(w http.ResponseWriter, r *http.Request) {
-	c, err := websocket.Upgrade(w, r, nil, 1024, 1024)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-
-	u, err := ui.New()
-	if err != nil {
-		log.Println(err)
-		return
-	}
-	defer u.Close()
-
-	go func() {
-		for m := range u.M {
-			if err := c.WriteJSON(m); err != nil {
-				if err != io.EOF {
-					log.Println(err)
-				}
-				return
-			}
-		}
-	}()
-
-	for {
-		m := new(ui.Message)
-		if err := c.ReadJSON(m); err != nil {
-			if err != io.EOF {
-				log.Println(err)
-			}
-			return
-		}
-		if err := u.Handle(m); err != nil {
-			log.Println(err)
-		}
-	}
 }
 
 // openBrowser tries to open the URL in a browser,

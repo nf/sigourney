@@ -21,7 +21,6 @@ import (
 	"time"
 
 	"github.com/nf/sigourney/audio"
-	"github.com/nf/sigourney/ui"
 )
 
 func demo() error {
@@ -32,40 +31,6 @@ func demo() error {
 	}
 	time.Sleep(time.Second)
 	if err := e.Stop(); err != nil {
-		return err
-	}
-
-	u, err := ui.New()
-	if err != nil {
-		return err
-	}
-	for _, m := range []*ui.Message{
-		{Action: "new", Name: "sin1", Kind: "sin"},
-		{Action: "new", Name: "sin2", Kind: "sin"},
-		{Action: "new", Name: "sum1", Kind: "sum"},
-		{Action: "new", Name: "mul1", Kind: "mul"},
-		{Action: "new", Name: "mul2", Kind: "mul"},
-		{Action: "new", Name: "val1", Kind: "value", Value: 0.1},
-		{Action: "connect", From: "sin1", To: "engine", Input: "in"},
-		{Action: "connect", From: "mul1", To: "sin1", Input: "pitch"},
-		{Action: "connect", From: "sin2", To: "mul1", Input: "a"},
-		{Action: "connect", From: "val1", To: "mul1", Input: "b"},
-		{Action: "connect", From: "val1", To: "sin2", Input: "pitch"},
-	} {
-		if err := u.Handle(m); err != nil {
-			return err
-		}
-	}
-	time.Sleep(time.Second)
-	for _, m := range []*ui.Message{
-		{Action: "set", Name: "val1", Value: 0.15},
-	} {
-		if err := u.Handle(m); err != nil {
-			return err
-		}
-	}
-	time.Sleep(time.Second)
-	if err := u.Close(); err != nil {
 		return err
 	}
 
