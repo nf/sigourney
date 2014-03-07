@@ -27,12 +27,16 @@ import (
 	"github.com/nf/sigourney/audio"
 )
 
-var midiDevice = flag.Int("midi_device", int(portmidi.GetDefaultInputDeviceId()), "MIDI Device ID")
+var midiDevice = flag.Int("midi_device", -1, "MIDI Device ID")
 
 var initOnce sync.Once
 
 func initMidi() {
-	s, err := portmidi.NewInputStream(portmidi.DeviceId(*midiDevice), 1024)
+	device := portmidi.DeviceId(*midiDevice)
+	if device == -1 {
+		device = portmidi.GetDefaultInputDeviceId()
+	}
+	s, err := portmidi.NewInputStream(device, 1024)
 	if err != nil {
 		log.Println(err)
 		return
