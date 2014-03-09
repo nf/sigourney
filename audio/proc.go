@@ -141,6 +141,27 @@ func (s *Sum) Process(a []Sample) {
 	}
 }
 
+func NewMulSum() *MulSum {
+	m := &MulSum{}
+	m.inputs("a", &m.a, "b", &m.b, "x", &m.x)
+	return m
+}
+
+type MulSum struct {
+	sink
+	a    Processor
+	b, x source
+}
+
+func (m *MulSum) Process(s []Sample) {
+	m.a.Process(s)
+	b, x := m.b.Process(), m.x.Process()
+	for i := range s {
+		s[i] *= x[i]
+		s[i] += b[i]
+	}
+}
+
 func NewEnv() *Env {
 	e := &Env{}
 	e.inputs("gate", &e.gate, "trig", &e.trig, "att", &e.att, "dec", &e.dec)
