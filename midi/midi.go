@@ -18,11 +18,8 @@ package midi
 
 import (
 	"flag"
-	"log"
 	"sync"
 	"sync/atomic"
-
-	"github.com/rakyll/portmidi"
 
 	"github.com/nf/sigourney/audio"
 )
@@ -31,57 +28,7 @@ var midiDevice = flag.Int("midi_device", -1, "MIDI Device ID")
 
 var initOnce sync.Once
 
-func initMidi() {
-	device := portmidi.DeviceId(*midiDevice)
-	if device == -1 {
-		device = portmidi.GetDefaultInputDeviceId()
-	}
-	s, err := portmidi.NewInputStream(device, 1024)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-	if s == nil {
-		log.Println("could not initialize MIDI input device")
-		return
-	}
-	go midiLoop(s)
-}
-
-var midiNote, midiGate int64 // atomic
-
-func midiLoop(s *portmidi.Stream) {
-	noteOn := make([]int64, 0, 128)
-	for e := range s.Listen() {
-		switch e.Status {
-		case 144: // note on
-			on := false
-			for _, n := range noteOn {
-				if n == e.Data1 {
-					on = true
-				}
-			}
-			if !on {
-				noteOn = append(noteOn, e.Data1)
-			}
-			atomic.StoreInt64(&midiNote, e.Data1)
-			atomic.StoreInt64(&midiGate, 1)
-		case 128: // note off
-			for i, n := range noteOn {
-				if n == e.Data1 {
-					copy(noteOn[i:], noteOn[i+1:])
-					noteOn = noteOn[:len(noteOn)-1]
-				}
-			}
-			if len(noteOn) > 0 {
-				n := noteOn[len(noteOn)-1]
-				atomic.StoreInt64(&midiNote, n)
-			} else {
-				atomic.StoreInt64(&midiGate, 0)
-			}
-		}
-	}
-}
+var midiNote, midiGate int64 // set atomically by midiLoop
 
 func NewNote() *Note {
 	initOnce.Do(initMidi)
