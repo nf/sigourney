@@ -103,8 +103,8 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 func NewSession() (*Session, error) {
 	m := make(chan *Message, 1)
 	s := &Session{M: m, m: m}
-	u, err := ui.New(s)
-	if err != nil {
+	u := ui.New(s)
+	if err := u.Start(); err != nil {
 		return nil, err
 	}
 	s.u = u
@@ -119,7 +119,7 @@ type Session struct {
 }
 
 func (s *Session) Close() error {
-	return s.u.Close()
+	return s.u.Stop()
 }
 
 func (s *Session) Hello(kindInputs map[string][]string) {
@@ -153,7 +153,13 @@ func (s *Session) Handle(m *Message) (err error) {
 	case "save":
 		return s.u.Save(m.Name)
 	case "load":
-		return s.u.Load(m.Name)
+		if err := s.u.Stop(); err != nil {
+			return err
+		}
+		if err := s.u.Load(m.Name); err != nil {
+			return err
+		}
+		return s.u.Start()
 	case "setDisplay":
 		return s.u.SetDisplay(m.Name, m.Display)
 	default:

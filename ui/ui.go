@@ -41,18 +41,19 @@ type UI struct {
 	engine  *audio.Engine
 }
 
-func New(h Handler) (*UI, error) {
+func New(h Handler) *UI {
 	u := &UI{h: h, objects: make(map[string]*Object)}
 	u.NewObject("engine", "engine", 0)
 	u.engine = u.objects["engine"].proc.(*audio.Engine)
-	if err := u.engine.Start(); err != nil {
-		return nil, err
-	}
 	h.Hello(kindInputs())
-	return u, nil
+	return u
 }
 
-func (u *UI) Close() error {
+func (u *UI) Start() error {
+	return u.engine.Start()
+}
+
+func (u *UI) Stop() error {
 	return u.engine.Stop()
 }
 
@@ -93,9 +94,6 @@ func (u *UI) Save(name string) error {
 }
 
 func (u *UI) Load(name string) error {
-	if err := u.engine.Stop(); err != nil {
-		return err
-	}
 	for name := range u.objects {
 		if name != "engine" {
 			if err := u.Destroy(name); err != nil {
@@ -133,7 +131,7 @@ func (u *UI) Load(name string) error {
 		graph = append(graph, o)
 	}
 	u.h.SetGraph(graph)
-	return u.engine.Start()
+	return nil
 }
 
 func (u *UI) Disconnect(from, to, input string) error {
