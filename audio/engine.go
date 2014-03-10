@@ -54,15 +54,27 @@ func (e *Engine) RemoveTicker(t Ticker) {
 }
 
 func (e *Engine) processAudio(_, out []int16) {
+	for i, s := range e.Process() {
+		out[i] = int16(s * waveAmp * 0.9)
+	}
+}
+
+func (e *Engine) Process() []Sample {
 	e.Lock()
 	buf := e.in.Process()
 	for _, t := range e.tickers {
 		t.Tick()
 	}
 	e.Unlock()
-	for i := range buf {
-		out[i] = int16(buf[i] * waveAmp * 0.9)
+	return buf
+}
+
+func (e *Engine) Render(frames int) []Sample {
+	out := make([]Sample, 0, frames*nSamples)
+	for i := 0; i < frames; i++ {
+		out = append(out, e.Process()...)
 	}
+	return out
 }
 
 func (e *Engine) Start() error {
