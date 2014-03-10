@@ -21,7 +21,7 @@ package audio
 import "fmt"
 
 func (e *Engine) Start() error {
-	return fmt.Errorf("must have cgo enabled to use audio")
+	return fmt.Errorf("audio disabled: package audio was compiled without cgo")
 }
 
 func (e *Engine) Stop() error {
