@@ -244,8 +244,6 @@ func (o *Object) init() {
 		p = audio.NewEnv()
 	case "mul":
 		p = audio.NewMul()
-	case "mulsum":
-		p = audio.NewMulSum()
 	case "noise":
 		p = audio.NewNoise()
 	case "quant":
@@ -300,7 +298,6 @@ var kinds = []string{
 	"engine",
 	"env",
 	"mul",
-	"mulsum",
 	"noise",
 	"quant",
 	"rand",
