@@ -22,8 +22,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"path/filepath"
-	"regexp"
 
 	"github.com/nf/sigourney/audio"
 	"github.com/nf/sigourney/midi"
@@ -57,6 +55,10 @@ func (u *UI) Stop() error {
 	return u.engine.Stop()
 }
 
+func (u *UI) Render(frames int) []audio.Sample {
+	return u.engine.Render(frames)
+}
+
 func (u *UI) Destroy(name string) error {
 	o, ok := u.objects[name]
 	if !ok {
@@ -77,15 +79,7 @@ func (u *UI) Destroy(name string) error {
 	return nil
 }
 
-const filePrefix = "patch/"
-
-var validName = regexp.MustCompile(`^[a-zA-Z0-9._-]+$`)
-
-func (u *UI) Save(name string) error {
-	if !validName.MatchString(name) {
-		return fmt.Errorf("name %q doesn't match %v", name, validName)
-	}
-	path := filepath.Join(filePrefix, name)
+func (u *UI) Save(path string) error {
 	b, err := json.MarshalIndent(u.objects, "", "  ")
 	if err != nil {
 		return fmt.Errorf("save: %v", err)
@@ -93,7 +87,7 @@ func (u *UI) Save(name string) error {
 	return ioutil.WriteFile(path, b, 0644)
 }
 
-func (u *UI) Load(name string) error {
+func (u *UI) Load(path string) error {
 	for name := range u.objects {
 		if name != "engine" {
 			if err := u.Destroy(name); err != nil {
@@ -101,10 +95,7 @@ func (u *UI) Load(name string) error {
 			}
 		}
 	}
-	if !validName.MatchString(name) {
-		return fmt.Errorf("load: name doesn't match %v", validName)
-	}
-	f, err := os.Open(filepath.Join(filePrefix, name))
+	f, err := os.Open(path)
 	if err != nil {
 		return fmt.Errorf("load: %v", err)
 	}

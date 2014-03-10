@@ -21,11 +21,17 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"path/filepath"
+	"regexp"
 
 	"github.com/gorilla/websocket"
 
 	"github.com/nf/sigourney/ui"
 )
+
+const filePrefix = "patch/"
+
+var validName = regexp.MustCompile(`^[a-zA-Z0-9._-]+$`)
 
 type Message struct {
 	Action string
@@ -150,16 +156,23 @@ func (s *Session) Handle(m *Message) (err error) {
 		return s.u.Set(m.Name, m.Value)
 	case "destroy":
 		return s.u.Destroy(m.Name)
-	case "save":
-		return s.u.Save(m.Name)
-	case "load":
-		if err := s.u.Stop(); err != nil {
-			return err
+	case "load", "save":
+		if !validName.MatchString(m.Name) {
+			return fmt.Errorf("name %q doesn't match %v", m.Name, validName)
 		}
-		if err := s.u.Load(m.Name); err != nil {
-			return err
+		filename := filepath.Join(filePrefix, m.Name)
+		switch a {
+		case "load":
+			if err := s.u.Stop(); err != nil {
+				return err
+			}
+			if err := s.u.Load(filename); err != nil {
+				return err
+			}
+			return s.u.Start()
+		case "save":
+			return s.u.Save(filename)
 		}
-		return s.u.Start()
 	case "setDisplay":
 		return s.u.SetDisplay(m.Name, m.Display)
 	default:
