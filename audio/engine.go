@@ -16,11 +16,7 @@ limitations under the License.
 
 package audio
 
-import (
-	"sync"
-
-	"code.google.com/p/portaudio-go/portaudio"
-)
+import "sync"
 
 func NewEngine() *Engine {
 	e := &Engine{done: make(chan error)}
@@ -53,12 +49,6 @@ func (e *Engine) RemoveTicker(t Ticker) {
 	}
 }
 
-func (e *Engine) processAudio(_, out []int16) {
-	for i, s := range e.Process() {
-		out[i] = int16(s * waveAmp)
-	}
-}
-
 func (e *Engine) Process() []Sample {
 	e.Lock()
 	buf := e.in.Process()
@@ -78,31 +68,4 @@ func (e *Engine) Render(frames int) []Sample {
 		out = append(out, e.Process()...)
 	}
 	return out
-}
-
-func (e *Engine) Start() error {
-	stream, err := portaudio.OpenDefaultStream(0, 1, waveHz, nSamples, e.processAudio)
-	if err != nil {
-		return err
-	}
-	errc := make(chan error)
-	go func() {
-		err = stream.Start()
-		errc <- err
-		if err != nil {
-			return
-		}
-		<-e.done
-		err = stream.Stop()
-		if err == nil {
-			err = stream.Close()
-		}
-		e.done <- err
-	}()
-	return <-errc
-}
-
-func (e *Engine) Stop() error {
-	e.done <- nil
-	return <-e.done
 }
