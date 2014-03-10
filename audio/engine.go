@@ -19,7 +19,7 @@ package audio
 import "sync"
 
 func NewEngine() *Engine {
-	e := &Engine{done: make(chan error)}
+	e := &Engine{done: make(chan error), max: 1}
 	e.inputs("in", &e.in)
 	return e
 }
@@ -32,6 +32,8 @@ type Engine struct {
 
 	done    chan error
 	tickers []Ticker
+
+	max Sample // for limiter
 }
 
 func (e *Engine) AddTicker(t Ticker) {
@@ -56,9 +58,7 @@ func (e *Engine) Process() []Sample {
 		t.Tick()
 	}
 	e.Unlock()
-	for i := range buf {
-		buf[i] *= 0.9 // headroom
-	}
+
 	return buf
 }
 

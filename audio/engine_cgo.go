@@ -48,7 +48,20 @@ func (e *Engine) Stop() error {
 }
 
 func (e *Engine) processAudio(_, out []int16) {
-	for i, s := range e.Process() {
+	buf := e.Process()
+
+	// Limiter
+	for i, v := range buf {
+		if v < 0 {
+			v *= -1
+		}
+		if v > e.max {
+			e.max = v
+		}
+		buf[i] *= 1 / e.max
+	}
+
+	for i, s := range buf {
 		out[i] = int16(s * waveAmp)
 	}
 }
