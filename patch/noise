@@ -8,8 +8,8 @@
     },
     "Display": {
       "offset": {
-        "left": 515.5,
-        "top": 696
+        "left": 550.5,
+        "top": 487
       }
     }
   },
@@ -18,14 +18,13 @@
     "Kind": "env",
     "Value": 0,
     "Input": {
-      "att": "value12",
-      "dec": "value13",
+      "dec": "value112",
       "trig": "skip23"
     },
     "Display": {
       "offset": {
-        "left": 235,
-        "top": 206
+        "left": 225,
+        "top": 217
       }
     }
   },
@@ -34,14 +33,13 @@
     "Kind": "env",
     "Value": 0,
     "Input": {
-      "att": "value32",
       "dec": "value30",
       "trig": "skip20"
     },
     "Display": {
       "offset": {
-        "left": 977,
-        "top": 170
+        "left": 1010,
+        "top": 176
       }
     }
   },
@@ -50,14 +48,13 @@
     "Kind": "env",
     "Value": 0,
     "Input": {
-      "att": "value32",
       "dec": "value33",
       "trig": "skip20"
     },
     "Display": {
       "offset": {
-        "left": 936,
-        "top": 332
+        "left": 935,
+        "top": 351
       }
     }
   },
@@ -66,14 +63,13 @@
     "Kind": "env",
     "Value": 0,
     "Input": {
-      "att": "value7",
-      "dec": "value8",
+      "dec": "value112",
       "trig": "skip23"
     },
     "Display": {
       "offset": {
-        "left": 385,
-        "top": 258
+        "left": 378,
+        "top": 263
       }
     }
   },
@@ -102,8 +98,8 @@
     },
     "Display": {
       "offset": {
-        "left": 317,
-        "top": 482
+        "left": 292,
+        "top": 434
       }
     }
   },
@@ -117,8 +113,8 @@
     },
     "Display": {
       "offset": {
-        "left": 903,
-        "top": 437
+        "left": 896,
+        "top": 405
       }
     }
   },
@@ -132,8 +128,8 @@
     },
     "Display": {
       "offset": {
-        "left": 1023,
-        "top": 608
+        "left": 914,
+        "top": 519
       }
     }
   },
@@ -162,8 +158,8 @@
     },
     "Display": {
       "offset": {
-        "left": 889,
-        "top": 232
+        "left": 892,
+        "top": 226
       }
     }
   },
@@ -179,17 +175,34 @@
       }
     }
   },
+  "sequencer109": {
+    "Name": "sequencer109",
+    "Kind": "sequencer",
+    "Value": 0,
+    "Input": {
+      "trig": "skip20",
+      "v0": "value110",
+      "v2": "value24"
+    },
+    "Display": {
+      "offset": {
+        "left": 475,
+        "top": 109
+      }
+    }
+  },
   "sin26": {
     "Name": "sin26",
     "Kind": "sin",
     "Value": 0,
     "Input": {
-      "pitch": "sum41"
+      "pitch": "sum41",
+      "syn": "skip20"
     },
     "Display": {
       "offset": {
-        "left": 836,
-        "top": 363
+        "left": 842,
+        "top": 355
       }
     }
   },
@@ -198,7 +211,8 @@
     "Kind": "sin",
     "Value": 0,
     "Input": {
-      "pitch": "value18"
+      "pitch": "value18",
+      "syn": "skip23"
     },
     "Display": {
       "offset": {
@@ -217,8 +231,8 @@
     },
     "Display": {
       "offset": {
-        "left": 657,
-        "top": 172
+        "left": 650,
+        "top": 189
       }
     }
   },
@@ -227,13 +241,13 @@
     "Kind": "skip",
     "Value": 0,
     "Input": {
-      "num": "value24",
-      "trig": "skip20"
+      "num": "sequencer109",
+      "trig": "square19"
     },
     "Display": {
       "offset": {
-        "left": 550,
-        "top": 217
+        "left": 551,
+        "top": 204
       }
     }
   },
@@ -275,8 +289,8 @@
     },
     "Display": {
       "offset": {
-        "left": 959,
-        "top": 497
+        "left": 855,
+        "top": 467
       }
     }
   },
@@ -290,8 +304,8 @@
     },
     "Display": {
       "offset": {
-        "left": 527,
-        "top": 631
+        "left": 562,
+        "top": 422
       }
     }
   },
@@ -310,27 +324,27 @@
       }
     }
   },
-  "value12": {
-    "Name": "value12",
+  "value110": {
+    "Name": "value110",
     "Kind": "value",
-    "Value": 1e-05,
+    "Value": 0.2,
     "Input": {},
     "Display": {
       "offset": {
-        "left": 197,
-        "top": 76
+        "left": 475,
+        "top": 25
       }
     }
   },
-  "value13": {
-    "Name": "value13",
+  "value112": {
+    "Name": "value112",
     "Kind": "value",
-    "Value": 0.01,
+    "Value": 0.003,
     "Input": {},
     "Display": {
       "offset": {
-        "left": 269,
-        "top": 130
+        "left": 298,
+        "top": 102
       }
     }
   },
@@ -342,19 +356,19 @@
     "Display": {
       "offset": {
         "left": 334,
-        "top": 383
+        "top": 373
       }
     }
   },
   "value18": {
     "Name": "value18",
     "Kind": "value",
-    "Value": -0.06666,
+    "Value": -0.066666,
     "Input": {},
     "Display": {
       "offset": {
-        "left": 117,
-        "top": 141
+        "left": 136,
+        "top": 133
       }
     }
   },
@@ -377,56 +391,44 @@
     "Input": {},
     "Display": {
       "offset": {
-        "left": 600,
-        "top": 111
+        "left": 601,
+        "top": 106
       }
     }
   },
   "value24": {
     "Name": "value24",
     "Kind": "value",
-    "Value": 0.2,
+    "Value": 0.4,
     "Input": {},
     "Display": {
       "offset": {
-        "left": 525,
-        "top": 141
+        "left": 544,
+        "top": 23
       }
     }
   },
   "value30": {
     "Name": "value30",
     "Kind": "value",
-    "Value": 0.001,
+    "Value": 0.005,
     "Input": {},
     "Display": {
       "offset": {
-        "left": 1012,
-        "top": 80
-      }
-    }
-  },
-  "value32": {
-    "Name": "value32",
-    "Kind": "value",
-    "Value": 1e-06,
-    "Input": {},
-    "Display": {
-      "offset": {
-        "left": 942,
-        "top": 25
+        "left": 1048,
+        "top": 103
       }
     }
   },
   "value33": {
     "Name": "value33",
     "Kind": "value",
-    "Value": 0.1,
+    "Value": 0.03,
     "Input": {},
     "Display": {
       "offset": {
-        "left": 994,
-        "top": 257
+        "left": 992,
+        "top": 288
       }
     }
   },
@@ -437,20 +439,20 @@
     "Input": {},
     "Display": {
       "offset": {
-        "left": 1039,
-        "top": 510
+        "left": 934,
+        "top": 462
       }
     }
   },
   "value38": {
     "Name": "value38",
     "Kind": "value",
-    "Value": -0.3,
+    "Value": -0.3333333,
     "Input": {},
     "Display": {
       "offset": {
-        "left": 787,
-        "top": 176
+        "left": 747,
+        "top": 167
       }
     }
   },
@@ -463,30 +465,6 @@
       "offset": {
         "left": 872,
         "top": 167
-      }
-    }
-  },
-  "value7": {
-    "Name": "value7",
-    "Kind": "value",
-    "Value": 1e-05,
-    "Input": {},
-    "Display": {
-      "offset": {
-        "left": 349,
-        "top": 120
-      }
-    }
-  },
-  "value8": {
-    "Name": "value8",
-    "Kind": "value",
-    "Value": 0.004,
-    "Input": {},
-    "Display": {
-      "offset": {
-        "left": 420,
-        "top": 169
       }
     }
   }

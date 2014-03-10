@@ -193,6 +193,8 @@ func (e *Env) Process(s []Sample) {
 				if v < s[i] {
 					v = s[i]
 				}
+			} else {
+				v = s[i]
 			}
 		}
 		if e.up || v < s[i] {
@@ -206,6 +208,11 @@ func (e *Env) Process(s []Sample) {
 				} else if v > s[i] {
 					v = s[i]
 				}
+			} else if e.up {
+				v = 1
+				e.up = false
+			} else if v < s[i] {
+				v = s[i]
 			}
 		}
 		s[i] = v
