@@ -55,7 +55,7 @@ func (e *Engine) RemoveTicker(t Ticker) {
 
 func (e *Engine) processAudio(_, out []int16) {
 	for i, s := range e.Process() {
-		out[i] = int16(s * waveAmp * 0.9)
+		out[i] = int16(s * waveAmp)
 	}
 }
 
@@ -66,6 +66,9 @@ func (e *Engine) Process() []Sample {
 		t.Tick()
 	}
 	e.Unlock()
+	for i := range buf {
+		buf[i] *= 0.9 // headroom
+	}
 	return buf
 }
 
