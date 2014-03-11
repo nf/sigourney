@@ -300,7 +300,7 @@ Sigourney.Object = function(ui, b, inputs) {
 	this.name = b.Name;
 	this.kind = b.Kind;
 	this.value = b.Value || 0;
-	this.display = b.Display;
+	this.display = b.Display || {};
 
 	this.inputs = inputs;
 };
@@ -341,6 +341,9 @@ Sigourney.Object.prototype.element = function() {
 		.css('left', obj.display.offset.left)
 		.appendTo('#page')
 
+	if (obj.display.label != null) 
+		obj.el.text(obj.display.label);
+
 	plumb.draggable(obj.el, {
 		start: function() {
 			if (!$(this).is('.ui-selected')) return;
@@ -359,14 +362,14 @@ Sigourney.Object.prototype.element = function() {
 			});
 		},
 		stop: function() {
-			obj.setDisplay();
+			obj.updateOffset();
 			ui.onDisplayUpdate(obj);
 			if (!$(this).is('.ui-selected'))
 				return;
 			$('.ui-selected').not(this).each(function() {
 				plumb.repaint(this);
 				var obj = $(this).data('object');
-				obj.setDisplay();
+				obj.updateOffset();
 				ui.onDisplayUpdate(obj);
 			});
 		}
@@ -375,8 +378,14 @@ Sigourney.Object.prototype.element = function() {
 	if (obj.kind == "value") {
 		obj.setValue(obj.value);
 		obj.el.dblclick(function(e) {
-			var v = window.prompt("Value? (-1 to +1)")*1;
-			obj.setValue(v);
+			var v = window.prompt("Value? (-1 to +1)");
+			var n = Sigourney.noteToValue(v);
+			if (n != null) {
+				obj.setLabel(v);
+				ui.onDisplayUpdate(obj);
+				v = n;
+			}
+			obj.setValue(v*1);
 			ui.onSetValue(obj);
 		});
 	}
@@ -419,22 +428,37 @@ Sigourney.Object.prototype.element = function() {
 		}
 	});
 
-	return this.el;
+	return obj.el;
 }
 
-Sigourney.Object.prototype.setDisplay = function() {
-	this.display = {offset: this.element().offset()};
+Sigourney.Object.prototype.updateOffset = function() {
+	this.display.offset = this.element().offset();
 }
 
 Sigourney.Object.prototype.setValue = function(v) {
 	this.value = v;
-	this.ui.plumb.repaint(this.element().text(v));
+	if (this.display.label == null)
+		this.ui.plumb.repaint(this.element().text(v));
+}
+
+Sigourney.Object.prototype.setLabel = function(l) {
+	this.display.label = l;
+	this.ui.plumb.repaint(this.element().text(l));
 }
 
 Sigourney.Object.prototype.destroy = function() {
 	if (this.el == null) return;
 	this.ui.plumb.remove($(this.el));
+}
 
+Sigourney.noteToValue = function(note) {
+	var n = /^([a-zA-Z])(#)?([0-9]+)$/.exec(note);
+	if (n == null) return null;
+	return (
+		{c: -9, d: -7, e: -5, f: -4, g: -2, a: 0, b: 2}[n[1]] +
+		((n[2] == "#")?1:0) +
+		(n[3]-4)*12
+	) / 120;
 }
 
 var ui = new Sigourney.UI;
