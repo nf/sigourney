@@ -243,7 +243,9 @@ Sigourney.UI = function() {
 			var obj1 = $(this).data('object');
 			var o1 = obj1.display.offset;
 			var o2 = {top: o1.top + 50, left: o1.left + 50};
-			var obj2 = createObject(obj1.kind, {offset: o2});
+			var d = {};
+			$.extend(true, d, obj1.display, {offset: o2});
+			var obj2 = createObject(obj1.kind, d);
 			names[obj1.name] = obj2.name;
 			obj2.element().addClass('ui-selected');
 			if (obj1.kind == 'value') {
