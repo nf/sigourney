@@ -24,8 +24,8 @@
     },
     "Display": {
       "offset": {
-        "left": 1148,
-        "top": 461
+        "left": 1083,
+        "top": 499
       }
     }
   },
@@ -38,8 +38,8 @@
     },
     "Display": {
       "offset": {
-        "left": 791.953125,
-        "top": 613.75
+        "left": 771.953125,
+        "top": 636.75
       }
     }
   },
@@ -133,6 +133,21 @@
       }
     }
   },
+  "mul107": {
+    "Name": "mul107",
+    "Kind": "mul",
+    "Value": 0,
+    "Input": {
+      "a": "sum62",
+      "b": "value108"
+    },
+    "Display": {
+      "offset": {
+        "left": 893,
+        "top": 584
+      }
+    }
+  },
   "mul41": {
     "Name": "mul41",
     "Kind": "mul",
@@ -153,13 +168,13 @@
     "Kind": "mul",
     "Value": 0,
     "Input": {
-      "a": "sin3",
+      "a": "square106",
       "b": "env43"
     },
     "Display": {
       "offset": {
-        "left": 880,
-        "top": 454
+        "left": 890,
+        "top": 451
       }
     }
   },
@@ -188,8 +203,8 @@
     },
     "Display": {
       "offset": {
-        "left": 1059,
-        "top": 498
+        "left": 999,
+        "top": 561
       }
     }
   },
@@ -203,8 +218,8 @@
     },
     "Display": {
       "offset": {
-        "left": 282,
-        "top": 263
+        "left": 287,
+        "top": 265
       }
     }
   },
@@ -233,8 +248,8 @@
     },
     "Display": {
       "offset": {
-        "left": 104,
-        "top": 506
+        "left": 108,
+        "top": 527
       }
     }
   },
@@ -275,8 +290,8 @@
     "Input": {},
     "Display": {
       "offset": {
-        "left": 243,
-        "top": 204
+        "left": 248,
+        "top": 205
       }
     }
   },
@@ -313,8 +328,8 @@
     },
     "Display": {
       "offset": {
-        "left": 896.984375,
-        "top": 320.984375
+        "left": 897.984375,
+        "top": 323.984375
       }
     }
   },
@@ -351,21 +366,6 @@
       }
     }
   },
-  "sin3": {
-    "Name": "sin3",
-    "Kind": "sin",
-    "Value": 0,
-    "Input": {
-      "pitch": "sequencer32",
-      "syn": "skip36"
-    },
-    "Display": {
-      "offset": {
-        "left": 919.953125,
-        "top": 397
-      }
-    }
-  },
   "sin82": {
     "Name": "sin82",
     "Kind": "sin",
@@ -389,8 +389,8 @@
     },
     "Display": {
       "offset": {
-        "left": 25,
-        "top": 449
+        "left": 29,
+        "top": 470
       }
     }
   },
@@ -433,7 +433,7 @@
     },
     "Display": {
       "offset": {
-        "left": 501,
+        "left": 502,
         "top": 131
       }
     }
@@ -498,6 +498,21 @@
       }
     }
   },
+  "square106": {
+    "Name": "square106",
+    "Kind": "square",
+    "Value": 0,
+    "Input": {
+      "pitch": "sequencer32",
+      "syn": "skip36"
+    },
+    "Display": {
+      "offset": {
+        "left": 916,
+        "top": 394
+      }
+    }
+  },
   "square17": {
     "Name": "square17",
     "Kind": "square",
@@ -532,13 +547,13 @@
     "Kind": "sum",
     "Value": 0,
     "Input": {
-      "a": "sum65",
+      "a": "mul107",
       "b": "sum59"
     },
     "Display": {
       "offset": {
-        "left": 796.96875,
-        "top": 507.96875
+        "left": 799.96875,
+        "top": 513.96875
       }
     }
   },
@@ -582,23 +597,8 @@
     },
     "Display": {
       "offset": {
-        "left": 1069,
-        "top": 431
-      }
-    }
-  },
-  "sum65": {
-    "Name": "sum65",
-    "Kind": "sum",
-    "Value": 0,
-    "Input": {
-      "a": "mul44",
-      "b": "mul61"
-    },
-    "Display": {
-      "offset": {
-        "left": 979,
-        "top": 557
+        "left": 998,
+        "top": 466
       }
     }
   },
@@ -627,8 +627,8 @@
     },
     "Display": {
       "offset": {
-        "left": 756,
-        "top": 562
+        "left": 747,
+        "top": 569
       }
     }
   },
@@ -642,8 +642,8 @@
     },
     "Display": {
       "offset": {
-        "left": 66,
-        "top": 565
+        "left": 70,
+        "top": 586
       }
     }
   },
@@ -696,6 +696,18 @@
       "offset": {
         "left": 565,
         "top": 223
+      }
+    }
+  },
+  "value108": {
+    "Name": "value108",
+    "Kind": "value",
+    "Value": 0.5,
+    "Input": {},
+    "Display": {
+      "offset": {
+        "left": 880,
+        "top": 520
       }
     }
   },
@@ -846,20 +858,20 @@
     "Input": {},
     "Display": {
       "offset": {
-        "left": 17,
-        "top": 505
+        "left": 21,
+        "top": 526
       }
     }
   },
   "value45": {
     "Name": "value45",
     "Kind": "value",
-    "Value": 0.2,
+    "Value": 0.1,
     "Input": {},
     "Display": {
       "offset": {
-        "left": 819,
-        "top": 321
+        "left": 825,
+        "top": 322
       }
     }
   },
@@ -941,24 +953,24 @@
   "value63": {
     "Name": "value63",
     "Kind": "value",
-    "Value": 0.5,
+    "Value": 0.3,
     "Input": {},
     "Display": {
       "offset": {
-        "left": 1026,
-        "top": 442
+        "left": 963,
+        "top": 502
       }
     }
   },
   "value64": {
     "Name": "value64",
     "Kind": "value",
-    "Value": 0.9,
+    "Value": 0.6,
     "Input": {},
     "Display": {
       "offset": {
-        "left": 1165,
-        "top": 400
+        "left": 1108,
+        "top": 436
       }
     }
   },
@@ -1030,8 +1042,8 @@
     "Input": {},
     "Display": {
       "offset": {
-        "left": 37,
-        "top": 393
+        "left": 41,
+        "top": 414
       }
     }
   },
@@ -1042,8 +1054,8 @@
     "Input": {},
     "Display": {
       "offset": {
-        "left": 106,
-        "top": 447
+        "left": 110,
+        "top": 468
       }
     }
   },
