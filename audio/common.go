@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+// Package audio implements the Sigourney audio engine.
 package audio
 
 import (
@@ -33,18 +34,32 @@ const (
 	waveAmp = 1 << 15
 )
 
+// A Sample is a single frame of audio.
 type Sample float64
 
+// Processor implements an audio source.
+//
+// As with io.Reader, the caller passes a buffer to the Processor
+// and the Processor populates the buffer with sample data.
+// Unlike io.Reader, the Processor must populate the entire buffer.
+//
+// While audio is being generated and the Processor is active, its Process
+// method will be called for each audio buffer in the stream, so the Processor
+// may use on the number of Process calls to maintain its internal state.
 type Processor interface {
-	Process([]Sample)
+	Process(buffer []Sample)
 }
 
 type Ticker interface {
 	Tick()
 }
 
+// A Sink is a consumer of audio data with one or more named inputs.
 type Sink interface {
+	// Input attaches the given Processor to the specified named input.
 	Input(name string, g Processor)
+
+	// Inputs enumerates the Sink's named inputs.
 	Inputs() []string
 }
 
