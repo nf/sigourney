@@ -1,0 +1,19 @@
+{
+	"ImportPath": "github.com/nf/sigourney",
+	"GoVersion": "devel +97ba656ccd5d Thu Apr 03 11:34:31 2014 +1100",
+	"Deps": [
+		{
+			"ImportPath": "code.google.com/p/portaudio-go/portaudio",
+			"Comment": "null-23",
+			"Rev": "8728fce2d74b17b775b5607d8068f6070ab094b0"
+		},
+		{
+			"ImportPath": "github.com/gorilla/websocket",
+			"Rev": "03206ef31ebe44a6db9e66f3b466e05a31790631"
+		},
+		{
+			"ImportPath": "github.com/rakyll/portmidi",
+			"Rev": "1bae01a168ae1e7f19bcac04cd32a0f21e1dc3b6"
+		}
+	]
+}
