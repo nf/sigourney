@@ -55,8 +55,110 @@ func TestDelay(t *testing.T) {
 	for i := 0; i < 6; i++ {
 		dup.Tick()
 		out.Process(b)
+		t.Logf("iteration %d: b[0] == %v", i, b[0])
 	}
 	if b[0] != 3 {
 		t.Errorf("b[0] == %v, want 3", b[0])
 	}
+}
+
+func TestDup(t *testing.T) {
+	var p countingProcessor
+	d := NewDup(&p)
+	o1, o2 := d.Output(), d.Output()
+
+	n := 0
+	b := make([]Sample, nSamples)
+
+	check := func() {
+		if int(p) != n {
+			t.Errorf("n == %v, p == %v", n, p)
+		}
+		if int(b[0]) != n {
+			t.Errorf("n == %v, b[0] == %v", n, b[0])
+		}
+	}
+	tick := func() {
+		n++
+		d.Tick()
+	}
+
+	tick()
+	o1.Process(b)
+	check()
+	o2.Process(b)
+	check()
+
+	tick()
+	o1.Process(b)
+	check()
+
+	tick()
+	o1.Process(b)
+	check()
+	o2.Process(b)
+	check()
+
+	tick()
+	o2.Process(b)
+	check()
+	o1.Process(b)
+	check()
+
+	tick()
+	o2.Process(b)
+	check()
+
+	tick()
+	o2.Process(b)
+	check()
+
+	o3 := d.Output()
+
+	tick()
+	o3.Process(b)
+	check()
+	o2.Process(b)
+	check()
+	o1.Process(b)
+	check()
+
+	tick()
+	o1.Process(b)
+	check()
+	o3.Process(b)
+	check()
+
+	tick()
+	o3.Process(b)
+	check()
+	o1.Process(b)
+	check()
+
+	o4 := d.Output()
+
+	tick()
+	o3.Process(b)
+	check()
+	o4.Process(b)
+	check()
+
+	tick()
+	o4.Process(b)
+	check()
+	o4.Process(b)
+	check()
+	o4.Process(b)
+	check()
+	o4.Process(b)
+	check()
+	o4.Process(b)
+	check()
+}
+
+type countingProcessor int
+
+func (p *countingProcessor) Process(b []Sample) {
+	(*p)++
+	Value(*p).Process(b)
 }

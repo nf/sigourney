@@ -24,8 +24,9 @@ func NewEngine() *Engine {
 	return e
 }
 
+// Engine implements the root of an Processor graph.
 type Engine struct {
-	sync.Mutex // Held while processing.
+	sync.Mutex // Must be held while mutating the Processor graph.
 
 	sink
 	in source
