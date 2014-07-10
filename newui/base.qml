@@ -1,4 +1,5 @@
 import QtQuick 2.0
+import Sigourney 1.0
 
 Rectangle {
 	id: canvas
@@ -9,6 +10,14 @@ Rectangle {
 	Column {
 		objectName: "kindColumn"
 		spacing: 10
+	}
+
+	DropArea {
+		anchors.fill: parent
+		onDropped: {
+			if (drop.source.objectName == "kind")
+				ctrl.onDropKind(drop.source)
+		}
 	}
 
 	property var kindComponent: Component {
@@ -47,14 +56,6 @@ Rectangle {
 					parent.y = parent.origY
 				}
 			}
-		}
-	}
-
-	DropArea {
-		anchors.fill: parent
-		onDropped: {
-			if (drop.source.objectName == "kind")
-				ctrl.onDropKind(drop.source)
 		}
 	}
 }

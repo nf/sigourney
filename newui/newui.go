@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"gopkg.in/qml.v1"
+	"gopkg.in/qml.v1/gl"
 )
 
 func main() {
@@ -22,6 +23,10 @@ var kinds = []string{
 }
 
 func run() error {
+	qml.RegisterTypes("Sigourney", 1, 0, []qml.TypeSpec{{
+		Init: func(r *Path, obj qml.Object) { r.Object = obj },
+	}})
+
 	engine := qml.NewEngine()
 
 	base, err := engine.LoadFile("base.qml")
@@ -55,4 +60,19 @@ type Controller struct {
 
 func (c *Controller) OnDropKind(o qml.Object) {
 	log.Println("drop", o.String("kind"), o.Int("x"), o.Int("y"))
+}
+
+type Path struct {
+	qml.Object
+	X1, Y1, X2, Y2 int
+}
+
+func (r *Path) Paint(p *qml.Painter) {
+	height := r.Int("height")
+	gl.LineWidth(2)
+	gl.Color4f(0.0, 1.0, 0.0, 1.0)
+	gl.Begin(gl.LINES)
+	gl.Vertex2f(gl.Float(r.X1), gl.Float(height-r.Y1))
+	gl.Vertex2f(gl.Float(r.X2), gl.Float(height-r.Y2))
+	gl.End()
 }
