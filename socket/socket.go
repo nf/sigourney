@@ -26,46 +26,13 @@ import (
 
 	"github.com/gorilla/websocket"
 
+	"github.com/nf/sigourney/protocol"
 	"github.com/nf/sigourney/ui"
 )
 
 const filePrefix = "patch/"
 
 var validName = regexp.MustCompile(`^[a-zA-Z0-9._-]+$`)
-
-type Message struct {
-	Action string
-
-	// Incoming messages
-
-	// "new", "set", "destroy", "save", "load", "setDisplay"
-	Name string `json:",omitempty"`
-
-	// "new"
-	Kind string `json:",omitempty"`
-
-	// "new", "set"
-	Value float64 `json:",omitempty"` // for Kind: "value"
-
-	// "connect", "disconnect"
-	From  string `json:",omitEmpty"`
-	To    string `json:",omitempty"`
-	Input string `json:",omitempty"`
-
-	// "setDisplay"
-	Display map[string]interface{} `json:",omitempty"`
-
-	// Outgoing messages
-
-	// "hello"
-	KindInputs map[string][]string `json:",omitempty"`
-
-	// "setGraph"
-	Graph []*ui.Object `json:",omitempty"`
-
-	// "message"
-	Message string
-}
 
 func Handler(w http.ResponseWriter, r *http.Request) {
 	c, err := websocket.Upgrade(w, r, nil, 1024, 1024)
@@ -93,7 +60,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	}()
 
 	for {
-		m := new(Message)
+		m := new(protocol.Message)
 		if err := c.ReadJSON(m); err != nil {
 			if err != io.EOF {
 				log.Println(err)
@@ -107,7 +74,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func NewSession() (*Session, error) {
-	m := make(chan *Message, 1)
+	m := make(chan *protocol.Message, 1)
 	s := &Session{M: m, m: m}
 	u := ui.New(s)
 	if err := u.Start(); err != nil {
@@ -118,9 +85,9 @@ func NewSession() (*Session, error) {
 }
 
 type Session struct {
-	M <-chan *Message
+	M <-chan *protocol.Message
 
-	m chan *Message
+	m chan *protocol.Message
 	u *ui.UI
 }
 
@@ -129,17 +96,17 @@ func (s *Session) Close() error {
 }
 
 func (s *Session) Hello(kindInputs map[string][]string) {
-	s.m <- &Message{Action: "hello", KindInputs: kindInputs}
+	s.m <- &protocol.Message{Action: "hello", KindInputs: kindInputs}
 }
 
-func (s *Session) SetGraph(graph []*ui.Object) {
-	s.m <- &Message{Action: "setGraph", Graph: graph}
+func (s *Session) SetGraph(graph []*protocol.Object) {
+	s.m <- &protocol.Message{Action: "setGraph", Graph: graph}
 }
 
-func (s *Session) Handle(m *Message) (err error) {
+func (s *Session) Handle(m *protocol.Message) (err error) {
 	defer func() {
 		if err != nil {
-			s.m <- &Message{
+			s.m <- &protocol.Message{
 				Action:  "message",
 				Message: err.Error(),
 			}

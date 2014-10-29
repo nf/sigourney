@@ -25,11 +25,12 @@ import (
 
 	"github.com/nf/sigourney/audio"
 	"github.com/nf/sigourney/midi"
+	"github.com/nf/sigourney/protocol"
 )
 
 type Handler interface {
 	Hello(kindInputs map[string][]string)
-	SetGraph(graph []*Object)
+	SetGraph(graph []*protocol.Object)
 }
 
 type UI struct {
@@ -117,9 +118,9 @@ func (u *UI) Load(path string) error {
 			}
 		}
 	}
-	var graph []*Object
+	var graph []*protocol.Object
 	for _, o := range objs {
-		graph = append(graph, o)
+		graph = append(graph, &o.Object)
 	}
 	u.h.SetGraph(graph)
 	return nil
@@ -181,22 +182,17 @@ func (u *UI) Set(name string, v float64) error {
 	return nil
 }
 
-func (u *UI) SetDisplay(name string, display map[string]interface{}) error {
+func (u *UI) SetDisplay(name string, display protocol.Display) error {
 	o, ok := u.objects[name]
 	if !ok {
 		return errors.New("unknown object: " + name)
 	}
-	for k, v := range display {
-		if o.Display == nil {
-			o.Display = make(map[string]interface{})
-		}
-		o.Display[k] = v
-	}
+	o.Display = display
 	return nil
 }
 
 func (u *UI) NewObject(name, kind string, value float64) {
-	o := &Object{Name: name, Kind: kind, Value: value, Input: make(map[string]string)}
+	o := &Object{Object: protocol.Object{Name: name, Kind: kind, Value: value, Input: make(map[string]string)}}
 	o.init()
 	if o.dup != nil {
 		u.engine.Lock()
@@ -207,11 +203,7 @@ func (u *UI) NewObject(name, kind string, value float64) {
 }
 
 type Object struct {
-	Name    string
-	Kind    string
-	Value   float64
-	Input   map[string]string
-	Display map[string]interface{}
+	protocol.Object
 
 	proc   interface{}
 	dup    *audio.Dup
@@ -272,7 +264,7 @@ func (o *Object) init() {
 func kindInputs() map[string][]string {
 	m := make(map[string][]string)
 	for _, k := range kinds {
-		o := &Object{Name: "unnamed", Kind: k}
+		o := &Object{Object: protocol.Object{Name: "unnamed", Kind: k}}
 		o.init()
 		var in []string
 		if s, ok := o.proc.(audio.Sink); ok {
