@@ -408,3 +408,41 @@ func (p *Noise) Process(s []Sample) {
 		s[i] = Sample(rand.Float64()*2 - 1)
 	}
 }
+
+func NewFilter() *Filter {
+	f := &Filter{buf: make([]Sample, 1024)}
+	f.inputs("in", &f.in, "f", &f.f)
+	return f
+}
+
+type Filter struct {
+	sink
+	in Processor
+	f  source
+
+	buf  []Sample // Circular buffer.
+	bufp int      // Pointer into circular buffer.
+	avg  Sample   // Rolling average.
+}
+
+func (f *Filter) Process(s []Sample) {
+	f.in.Process(s)
+	//fr := f.f.Process()
+
+	const n = 100
+	avg, buf, bufp := f.avg, f.buf, f.bufp
+	for i := range s {
+		// TODO(adg): compute n from fr
+		// Add current sample and subtract last sample.
+		cur := s[i] / n
+		avg += cur - buf[bufp]
+		// Replace last sample in buffer with current sample.
+		buf[bufp] = cur
+		// Bump buffer pointer.
+		bufp++
+		bufp %= n
+		// Use rolling average as output.
+		s[i] = avg
+	}
+	f.avg, f.buf, f.bufp = avg, buf, bufp
+}

@@ -162,3 +162,12 @@ func (p *countingProcessor) Process(b []Sample) {
 	(*p)++
 	Value(*p).Process(b)
 }
+
+func BenchmarkFilter(b *testing.B) {
+	f := NewFilter()
+	f.Input("in", Value(0))
+	s := make([]Sample, FrameLength)
+	for i := 0; i < b.N; i++ {
+		f.Process(s)
+	}
+}
