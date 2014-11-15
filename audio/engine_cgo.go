@@ -21,7 +21,7 @@ package audio
 import "code.google.com/p/portaudio-go/portaudio"
 
 func (e *Engine) Start() error {
-	stream, err := portaudio.OpenDefaultStream(0, 1, waveHz, nSamples, e.processAudio)
+	stream, err := portaudio.OpenDefaultStream(0, 1, waveHz, FrameLength, e.processAudio)
 	if err != nil {
 		return err
 	}

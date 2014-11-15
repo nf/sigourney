@@ -20,7 +20,7 @@ import "testing"
 
 func BenchmarkSin(b *testing.B) {
 	b.StopTimer()
-	buf := make([]Sample, nSamples)
+	buf := make([]Sample, FrameLength)
 	o := NewSin()
 	o.Input("pitch", Value(0))
 	b.StartTimer()
@@ -31,7 +31,7 @@ func BenchmarkSin(b *testing.B) {
 
 func BenchmarkFMSin(b *testing.B) {
 	b.StopTimer()
-	buf := make([]Sample, nSamples)
+	buf := make([]Sample, FrameLength)
 	o, o2 := NewSin(), NewSin()
 	o.Input("pitch", o2)
 	o2.Input("pitch", Value(0))
@@ -46,12 +46,12 @@ func TestDelay(t *testing.T) {
 	sum.Input("a", Value(1))
 	dly := NewDelay()
 	dly.Input("in", sum)
-	dly.Input("len", Value(Sample(nSamples)/waveHz))
+	dly.Input("len", Value(Sample(FrameLength)/waveHz))
 	dup := NewDup(dly)
 	out := dup.Output()
 	sum.Input("b", dup.Output())
 
-	b := make([]Sample, nSamples)
+	b := make([]Sample, FrameLength)
 	for i := 0; i < 6; i++ {
 		dup.Tick()
 		out.Process(b)
@@ -68,7 +68,7 @@ func TestDup(t *testing.T) {
 	o1, o2 := d.Output(), d.Output()
 
 	n := 0
-	b := make([]Sample, nSamples)
+	b := make([]Sample, FrameLength)
 
 	check := func() {
 		if int(p) != n {

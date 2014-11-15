@@ -26,7 +26,7 @@ import (
 
 const (
 	nChannels = 1
-	nSamples  = 256 * nChannels
+	FrameLength  = 256 * nChannels
 )
 
 const (
@@ -89,14 +89,14 @@ func (s *sink) inputs(args ...interface{}) {
 			*v = Value(0)
 		case *source:
 			(*v).p = Value(0)
-			(*v).b = make([]Sample, nSamples)
+			(*v).b = make([]Sample, FrameLength)
 		case *trigger:
 			(*v).p = Value(0)
-			(*v).b = make([]Sample, nSamples)
+			(*v).b = make([]Sample, FrameLength)
 		case []source:
 			for i := range v {
 				v[i].p = Value(0)
-				v[i].b = make([]Sample, nSamples)
+				v[i].b = make([]Sample, FrameLength)
 			}
 		}
 	}

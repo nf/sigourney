@@ -299,7 +299,7 @@ func (d *Delay) Process(s []Sample) {
 	p := d.p
 	for i := range s {
 		max := int(l[i] * waveHz)
-		if max < nSamples {
+		if max < FrameLength {
 			continue
 		}
 		if max > waveHz {

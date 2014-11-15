@@ -44,7 +44,7 @@ func (d *Dup) Output() *Output {
 	o := &Output{d: d}
 	d.outs = append(d.outs, o)
 	if len(d.outs) > 1 && d.buf == nil {
-		d.buf = make([]Sample, nSamples)
+		d.buf = make([]Sample, FrameLength)
 	}
 	return o
 }

@@ -64,7 +64,7 @@ func (e *Engine) Process() []Sample {
 }
 
 func (e *Engine) Render(frames int) []Sample {
-	out := make([]Sample, 0, frames*nSamples)
+	out := make([]Sample, 0, frames*FrameLength)
 	for i := 0; i < frames; i++ {
 		out = append(out, e.Process()...)
 	}
