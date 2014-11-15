@@ -410,39 +410,59 @@ func (p *Noise) Process(s []Sample) {
 }
 
 func NewFilter() *Filter {
-	f := &Filter{buf: make([]Sample, 1024)}
-	f.inputs("in", &f.in, "f", &f.f)
+	f := &Filter{buf: make([]Sample, maxFilterBufferLength)}
+	f.inputs("in", &f.in, "freq", &f.freq)
 	return f
 }
 
+const maxFilterBufferLength = 1024
+
 type Filter struct {
 	sink
-	in Processor
-	f  source
+	in   Processor
+	freq source
 
 	buf  []Sample // Circular buffer.
 	bufp int      // Pointer into circular buffer.
 	avg  Sample   // Rolling average.
 }
 
+// TODO(adg): write a better circular buffer implementation that can
+// grow and shrink as necessary, while maintaining its circularity.
+
 func (f *Filter) Process(s []Sample) {
 	f.in.Process(s)
-	//fr := f.f.Process()
+	freq := f.freq.Process()
 
-	const n = 100
 	avg, buf, bufp := f.avg, f.buf, f.bufp
+	n, lastFreq := filterBufferLength(freq[0]), freq[0]
 	for i := range s {
-		// TODO(adg): compute n from fr
+		// Recompute n if freq has changed.
+		if freq[i] != lastFreq {
+			n, lastFreq = filterBufferLength(freq[i]), freq[i]
+		}
 		// Add current sample and subtract last sample.
-		cur := s[i] / n
+		cur := s[i] / Sample(n)
 		avg += cur - buf[bufp]
 		// Replace last sample in buffer with current sample.
 		buf[bufp] = cur
 		// Bump buffer pointer.
 		bufp++
-		bufp %= n
+		bufp %= int(n)
 		// Use rolling average as output.
 		s[i] = avg
 	}
 	f.avg, f.buf, f.bufp = avg, buf, bufp
+}
+
+func filterBufferLength(freq Sample) Sample {
+	s := Sample(waveHz / sampleToHz(freq))
+	if s >= maxFilterBufferLength {
+		return maxFilterBufferLength
+	}
+	if s < 0 {
+		return 0
+	}
+	return s
+
 }
