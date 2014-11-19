@@ -61,7 +61,7 @@ type Ticker interface {
 // A Sink is a consumer of audio data with one or more named inputs.
 type Sink interface {
 	// Input attaches the given Processor to the specified named input.
-	Input(name string, g Processor)
+	Input(name string, p Processor)
 
 	// Inputs enumerates the Sink's named inputs.
 	Inputs() []string
