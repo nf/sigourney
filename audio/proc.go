@@ -27,45 +27,6 @@ func sampleToHz(s Sample) float64 {
 	return 440 * fast.Exp2(float64(s)*10)
 }
 
-func NewSquare() *Square {
-	o := &Square{}
-	o.inputs("pitch", &o.pitch, "syn", &o.syn)
-	return o
-}
-
-type Square struct {
-	sink
-	pitch Processor // 0.1/oct, 0 == 440Hz
-	syn   trigger
-
-	pos float64
-}
-
-func (o *Square) Process(s []Sample) {
-	o.pitch.Process(s)
-	t := o.syn.Process()
-	p := o.pos
-	hz, lastS := sampleToHz(s[0]), s[0]
-	for i := range s {
-		if o.syn.isTrigger(t[i]) {
-			p = 0
-		}
-		if s[i] != lastS {
-			hz = sampleToHz(s[i])
-		}
-		p += hz
-		if p > waveHz {
-			p -= waveHz
-		}
-		if p > waveHz/2 {
-			s[i] = -1
-		} else {
-			s[i] = 1
-		}
-	}
-	o.pos = p
-}
-
 func NewSin() *Sin {
 	o := &Sin{}
 	o.inputs("pitch", &o.pitch, "syn", &o.syn)
