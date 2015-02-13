@@ -64,9 +64,15 @@ func init() {
 	oddHarmonics := []int{1, 3, 5, 7, 9, 11}
 	allHarmonics := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}
 	nSamples := 1024 * 16
-	bandLimitedSquareTable = newHarmonicTable(nSamples, oddHarmonics, func(k int) float64 { return 1 / float64(k) })
-	bandLimitedTriangleTable = newHarmonicTable(nSamples, oddHarmonics, func(k int) float64 { return 1 / float64(k) / float64(k) })
-	bandLimitedSawTable = newHarmonicTable(nSamples, allHarmonics, func(k int) float64 { return 2. / math.Pi * math.Pow(-1.0, float64(k)) })
+	bandLimitedSquareTable = newHarmonicTable(nSamples, oddHarmonics, func(k int) float64 {
+		return 1 / float64(k)
+	})
+	bandLimitedTriangleTable = newHarmonicTable(nSamples, oddHarmonics, func(k int) float64 {
+		return 1 / float64(k) / float64(k)
+	})
+	bandLimitedSawTable = newHarmonicTable(nSamples, allHarmonics, func(k int) float64 {
+		return 2. / math.Pi * math.Pow(-1.0, float64(k)) / float64(k)
+	})
 }
 
 func newHarmonicTable(samples int, harmonics []int, amp func(int) float64) []float64 {
