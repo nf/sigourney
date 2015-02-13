@@ -241,6 +241,8 @@ func (o *Object) init() {
 		p = audio.NewQuant()
 	case "rand":
 		p = audio.NewRand()
+	case "saw":
+		p = audio.NewBandLimitedSaw()
 	case "sin":
 		p = audio.NewSin()
 	case "skip":
@@ -248,9 +250,11 @@ func (o *Object) init() {
 	case "sequencer":
 		p = audio.NewStep()
 	case "square":
-		p = audio.NewSquare()
+		p = audio.NewBandLimitedSquare()
 	case "sum":
 		p = audio.NewSum()
+	case "triangle":
+		p = audio.NewBandLimitedTriangle()
 	case "value":
 		p = audio.Value(o.Value)
 	case "gate":
@@ -292,11 +296,14 @@ var kinds = []string{
 	"noise",
 	"quant",
 	"rand",
+	"saw",
 	"sequencer",
+	"square",
 	"sin",
 	"skip",
 	"square",
 	"sum",
+	"triangle",
 	"value",
 
 	"gate",
