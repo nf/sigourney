@@ -26,7 +26,7 @@ import (
 	"os/exec"
 	"runtime"
 
-	"code.google.com/p/portaudio-go/portaudio"
+	"github.com/gordonklaus/portaudio"
 	"github.com/rakyll/portmidi"
 
 	"github.com/nf/sigourney/socket"
