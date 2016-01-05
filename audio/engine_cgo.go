@@ -18,7 +18,7 @@ limitations under the License.
 
 package audio
 
-import "code.google.com/p/portaudio-go/portaudio"
+import "github.com/gordonklaus/portaudio"
 
 func (e *Engine) Start() error {
 	stream, err := portaudio.OpenDefaultStream(0, 1, waveHz, FrameLength, e.processAudio)
