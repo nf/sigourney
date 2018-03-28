@@ -26,9 +26,9 @@ import (
 )
 
 func initMidi() {
-	device := portmidi.DeviceId(*midiDevice)
+	device := portmidi.DeviceID(*midiDevice)
 	if device == -1 {
-		device = portmidi.GetDefaultInputDeviceId()
+		device = portmidi.DefaultInputDeviceID()
 	}
 	s, err := portmidi.NewInputStream(device, 1024)
 	if err != nil {
