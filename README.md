@@ -2,7 +2,7 @@
 
 Sigourney is a modular audio synthesizer.
 
-It is mostly written in Go, with a thin layer of JavaScript to provide the UI.
+It is written in Go, with a thin layer of Go compiled to JavaScript to provide the UI.
 
 ## Project status
 
@@ -28,6 +28,13 @@ Third, download (or update) and build Sigourney and its dependencies:
 
 	$ go get -u github.com/nf/sigourney
 
+Fourth, install [GopherJS](https://github.com/gopherjs/gopherjs):
+
+	$ go get -u github.com/gopherjs/gopherjs
+
+Fifth, build the frontend:
+
+	$ gopherjs build $GOPATH/src/github.com/nf/sigourney/static/script.go -o $GOPATH/src/github.com/nf/sigourney/static/script.js
 
 ## Usage
 
