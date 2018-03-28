@@ -4,6 +4,11 @@ Sigourney is a modular audio synthesizer.
 
 It is mostly written in Go, with a thin layer of JavaScript to provide the UI.
 
+## Project status
+
+Sigourney is largely unmaintained these days.
+Pull requests that keep it building will be accepted,
+but no further development work will happen in this repo.
 
 ## Installation
 
