@@ -64,7 +64,13 @@ func main() {
 	go http.Serve(l, nil)
 
 	u := fmt.Sprintf("http://%v/", *listenAddr)
-	if !*doBrowser || !openBrowser(u) {
+	browserOpened := false
+	if *doBrowser {
+		if openBrowser(u) {
+			browserOpened = true
+		}
+	}
+	if !browserOpened {
 		fmt.Printf("Open your web browser to %v\n\n", u)
 	}
 
